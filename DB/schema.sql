@@ -61,11 +61,10 @@ CREATE TABLE IF NOT EXISTS galleria.VIDEO(
 //perche foto e nome soggetto
 //non capisco non posso fare MOSTRA e RAPPRESENTA
 CREATE TABLE IF NOT EXISTS galleria.SOGGETTO(
-	Foto galleria.id_object_dt NOT NULL,
     NomeSoggetto galleria.string NOT NULL,
     Categoria galleria.string NOT NULL,
 
-    CONSTRAINT soggetto_pk PRIMARY KEY (Foto, NomeSoggetto),
+    CONSTRAINT soggetto_pk PRIMARY KEY (NomeSoggetto),
 );
 
 CREATE TABLE IF NOT EXISTS galleria.UTENTE(
@@ -126,3 +125,4 @@ CREATE TABLE IF NOT EXISTS galleria.COMPONE(
     ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
+CREATE TABLE IF NOT EXISTS
