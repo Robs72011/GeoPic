@@ -24,8 +24,17 @@ CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA(
 	IDFoto galleria.id_object_dt NOT NULL,
 	Dispositivo galleria.string NOT NULL DEFAULT 'Nameless', --il dispositivo non e' specificato nel caso l'utente non lo inserisce
 
+    Autore galleria.id_user_dt NOT NULL,
+    Coordinate galleria.coo_dt,
+
     CONSTRAINT foto_pk PRIMARY KEY (IDFoto),
-);
+
+    CONSTRAINT autore_fk FOREIGN KEY (Autore) REFERENCES galleria.UTENTE(IDUtente)
+    ON UPDATE CASCADE ON DELETE CASCADE
+
+    CONSTRAINT coordinate_fk FOREIGN KEY (Coordinate) REFERENCES galleria.LUOGO(Coordinate)
+    ON UPDATE CASCADE ON DELETE NO ACTION,
+    );
 
 CREATE TABLE IF NOT EXISTS galleria.LUOGO(
     Coordinate  galleria.coo_dt NOT NULL,
@@ -40,10 +49,17 @@ CREATE TABLE IF NOT EXISTS galleria.VIDEO(
     TitoloVideo galleria.string NOT NULL,
     Descrizione TEXT,
 
-	CONSTRAINT video_pk PRIMAR KEY (IDVideo)
+    Galleria galleria.id_object_dt NOT NULL,
+
+
+    CONSTRAINT video_pk PRIMAR KEY (IDVideo)
+
+    CONSTRAINT galleria_fk FOREIGN KEY (Galleria) REFERENCES galleria.GALLERIA(IDGalleria)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-
+//perche foto e nome soggetto
+//non capisco non posso fare MOSTRA e RAPPRESENTA
 CREATE TABLE IF NOT EXISTS galleria.SOGGETTO(
 	Foto galleria.id_object_dt NOT NULL,
     NomeSoggetto galleria.string NOT NULL,
@@ -65,4 +81,48 @@ CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
     NomeGalleria galleria.string  NOT NULL,
     tipo ENUM('PERSONALE', 'CONDIVISA') NOT NULL,
     Proprietario galleria.id_user_dt  NOT NULL,
+
+    Proprietario galleria.id_user_dt  NOT NULL,
+
+    CONSTRAINT galleria_pk PRIMARY KEY (IDGalleria),
+
+    CONSTRAINT proprietario_fk FOREIGN KEY (Proprietario) REFERENCES galleria.UTENTE(IDUtente)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS galleria.PARTECIPA(
+    IDGalleria galleria.id_object_dt  NOT NULL,
+    IDUtente galleria.id_user_dt  NOT NULL,
+
+    CONSTRAINT partecipa_pk PRIMARY KEY (IDGalleria, IDUtente),
+
+    CONSTRAINT galleria_fk FOREIGN KEY (IDGalleria) REFERENCES galleria.GALLERIA(IDGalleria)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT utente_partecipante_fk FOREIGN KEY (IDUtente) REFERENCES galleria.UTENTE(IDUtente)
+    ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS galleria.CONTENUTA(
+     IDGalleria galleria.id_object_dt  NOT NULL,
+     IDFoto galleria.id_object_dt  NOT NULL,
+
+     CONSTRAINT contenuta_pk PRIMARY KEY (IDGalleria, IDFoto),
+
+    CONSTRAINT galleria_contenitrice_fk FOREIGN KEY (IDGalleria) REFERENCES galleria.GALLERIA(IDGalleria)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT foto_contenuta_fk FOREIGN KEY (IDFoto) REFERENCES galleria.FOTO(IDFoto)
+    ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS galleria.COMPONE(
+    IDVideo galleria.id_object_dt  NOT NULL,
+    IDFoto galleria.id_object_dt  NOT NULL,
+
+    CONSTRAINT compone_pk PRIMARY KEY (IDVideo, IDFoto),
+
+    CONSTRAINT video_fk FOREIGN KEY (IDVideo) REFERENCES galleria.VIDEO(IDVideo)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT foto_fk FOREIGN KEY (IDFoto) REFERENCES galleria.FOTO(IDFoto)
+    ON UPDATE CASCADE ON DELETE NO ACTION
+);
+
