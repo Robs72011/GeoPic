@@ -1,8 +1,10 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Fotografia {
 
-    private String idFoto;
+    private String idfoto;
     private String dispositivo;
     private LocalDate dataDiScatto;
     private LocalDate dataDiEliminazione = null;
@@ -22,5 +24,7 @@ public class Fotografia {
 
     //Rappresenta l'associazione "Mostra"tra foto e soggetto
     private ArrayList<Soggetto> soggetti;
+    
+    
 
 }

@@ -1,10 +1,12 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Utente {
 
-    private string IDutente;
-    private string Username;
-    private boolean Isadmin;
+    private String idutente;
+    private String username;
+    private boolean isadmin;
 
 
 
@@ -19,5 +21,16 @@ public class Utente {
 
     //Rappresenta la relazione "partecipa" tra utente e gallerie condivise
     private ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa;
-    
+
+    //costruttore
+    public Utente (String idutente, String username, boolean isadmin){
+        this.idutente = idutente;
+        this.username = username;
+        this.isadmin = isadmin;
+
+        this.rappresentoDaSoggetto = new ArrayList<>();
+        this.fotoScattate = new ArrayList<>();
+        this.galleriePossedute = new ArrayList<>();
+        this.utentePartecipaGalleriaCondivisa = new ArrayList<>();
+    }
 }

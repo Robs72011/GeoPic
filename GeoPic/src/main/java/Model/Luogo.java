@@ -7,7 +7,15 @@ public class Luogo {
     private String coordinate;
     private String nomeMnemonico;
 
-    //rappresenta la relazzione Raffigura tra foto e Luogo
-    private ArrayList<Fotografia> Raffigura;
+    //rappresenta la relazione Raffigura tra foto e Luogo
+    private ArrayList<Fotografia> raffigura;
+
+    //costruttore
+    public Luogo(String coordinate, String nomeMnemonico) {
+        this.coordinate = coordinate;
+        this.nomeMnemonico = nomeMnemonico;
+
+        this.raffigura = new ArrayList<>();
+    }
 
 }

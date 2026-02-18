@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaPrivata.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaPrivata.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +86,7 @@
       <workItem from="1771444202613" duration="82000" />
       <workItem from="1771444291443" duration="1434000" />
       <workItem from="1771445736399" duration="198000" />
-      <workItem from="1771445952061" duration="4588000" />
+      <workItem from="1771445952061" duration="6891000" />
     </task>
     <servers />
   </component>
