@@ -1,0 +1,29 @@
+Classi:
+	- Fotografia;
+	- Utente;
+	- Luogo;
+	- Soggetto;
+	- Galleria;
+	- Colezzioni condivise;
+	- Video;
+	- Admin.
+Relazioni:
+	- Scattata (utente-foto):
+		si riferisce all'utente che ha scattato la foto.
+	- Scattata (dispositivo-foto):
+		si riferisce al dispositivo con cui e' stata scattata la foto
+	- Scattata (luogo-foto):
+		si riferisce al luogo dove e' stata scattata la foto
+Generalizzazioni:
+	- Galleria fotografica: (galleria (personale, condivisa));
+	- Utente: (utente (user normale, admin));
+
+
+
+Comments:
+Soggetto non e' una sotto classe di utente, in quanto tutti gli utenti possono essere soggetto, ma non tutti i soggetti di una foto sono utenti. 
+Galleria classe astratta, galleria personale e condivisa sono sotto classi concrete
+Possiede e' un ralazione di composizione tra galleria e utente, se non esiste l'utente proprietario della galleria, allora non esiste la galleria
+Per fare la sessione (classe session) utilizzare pattern singleton, lo stesso del DB
+Amministratore come variabile Boole di utente, fatto il login, se user e' admin, allora ha come schermata solo quella che mostra gli utenti e un bottone per eliminare l'utente.
+Un utente puo' eliminare una galleria condivisa, in questo caso, la galleria e le foto al suo interno vengono eliminate. Non va ad invalidare la traccia in quanto, la ttraccia specifica che cosa accade quando un utente viene eliminato dall'admin
