@@ -23,17 +23,17 @@ CREATE DOMAIN galleria.string VARCHAR(50);
 CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA( 
 	IDFoto galleria.id_object_dt NOT NULL,
 	Dispositivo galleria.string NOT NULL DEFAULT 'Nameless', --il dispositivo non e' specificato nel caso l'utente non lo inserisce
-
     Autore galleria.id_user_dt NOT NULL,
     Coordinate galleria.coo_dt,
+	Visibilita	BOOLEAN NOT NULL DEFAULT TRUE,
+	DataScatto DATE NOT NULL,
+	DataEliminazione DEFAULT NULL,
 
     CONSTRAINT foto_pk PRIMARY KEY (IDFoto),
 
-    CONSTRAINT autore_fk FOREIGN KEY (Autore) REFERENCES galleria.UTENTE(IDUtente)
-    ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT autore_fk FOREIGN KEY (Autore) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
 
-    CONSTRAINT coordinate_fk FOREIGN KEY (Coordinate) REFERENCES galleria.LUOGO(Coordinate)
-    ON UPDATE CASCADE ON DELETE NO ACTION,
+    CONSTRAINT coordinate_fk FOREIGN KEY (Coordinate) REFERENCES galleria.LUOGO(Coordinate) ON UPDATE CASCADE ON DELETE NO ACTION,
     );
 
 CREATE TABLE IF NOT EXISTS galleria.LUOGO(
@@ -96,11 +96,11 @@ CREATE TABLE IF NOT EXISTS galleria.PARTECIPA(
     CONSTRAINT utente_partecipante_fk FOREIGN KEY (IDUtente) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS galleria.CONTENUTA(
+CREATE TABLE IF NOT EXISTS galleria.CONTIENE(
      IDGalleria galleria.id_object_dt  NOT NULL,
      IDFoto galleria.id_object_dt  NOT NULL,
 
-     CONSTRAINT contenuta_pk PRIMARY KEY (IDGalleria, IDFoto),
+     CONSTRAINT contiene_pk PRIMARY KEY (IDGalleria, IDFoto),
 
     CONSTRAINT galleria_contenitrice_fk FOREIGN KEY (IDGalleria) REFERENCES galleria.GALLERIA(IDGalleria) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT foto_contenuta_fk FOREIGN KEY (IDFoto) REFERENCES galleria.FOTOGRAFIA(IDFoto) ON UPDATE CASCADE ON DELETE CASCADE
