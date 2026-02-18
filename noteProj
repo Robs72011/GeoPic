@@ -27,3 +27,4 @@ Possiede e' un ralazione di composizione tra galleria e utente, se non esiste l'
 Per fare la sessione (classe session) utilizzare pattern singleton, lo stesso del DB
 Amministratore come variabile Boole di utente, fatto il login, se user e' admin, allora ha come schermata solo quella che mostra gli utenti e un bottone per eliminare l'utente.
 Un utente puo' eliminare una galleria condivisa, in questo caso, la galleria e le foto al suo interno vengono eliminate. Non va ad invalidare la traccia in quanto, la ttraccia specifica che cosa accade quando un utente viene eliminato dall'admin
+Per la realizzazione della tabella SQL della classe Galleria, viene scelto il pattern Single Table Inheritance, dove la tabella rappresenta la classe astratta, con un record che indica il tipo di classe concreta (personale o condivisa).
