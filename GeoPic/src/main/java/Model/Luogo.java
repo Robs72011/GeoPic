@@ -11,11 +11,11 @@ public class Luogo {
     private ArrayList<Fotografia> luogoRaffiguratoIn;
 
     //costruttore
-    public Luogo(String coordinate, String nomeMnemonico) {
+    public Luogo(String coordinate, String nomeMnemonico, ArrayList<Fotografia> luogoRaffiguratoIn) {
         this.coordinate = coordinate;
         this.nomeMnemonico = nomeMnemonico;
 
-        this.luogoRaffiguratoIn = new ArrayList<>();
+        this.luogoRaffiguratoIn=luogoRaffiguratoIn;
     }
 
 }

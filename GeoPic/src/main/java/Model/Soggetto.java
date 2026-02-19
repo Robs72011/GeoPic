@@ -6,6 +6,14 @@ public class Soggetto {
 
     private Utente utenteRappresentato;
 
+    //costruttore c'è tutto
+    public Soggetto(String nomeSoggetto, String categoria, Utente utenteRappresentato) {
+        this.nomeSoggetto = nomeSoggetto;
+        this.categoria = categoria;
+        this.utenteRappresentato = utenteRappresentato;
+    }
+
+    //costruttore manca utenteRappresentato
     public Soggetto(String nomeSoggetto, String categoria) {
         this.nomeSoggetto = nomeSoggetto;
         this.categoria = categoria;
