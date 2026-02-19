@@ -9,5 +9,5 @@ public class Video {
     private String nome;
 
     //Rappresenta l'associazione "Compone" tra video e foto
-    private ArrayList<Foto> compostoDaFoto;
+    private ArrayList<Fotografia> compostoDaFoto;
 }

@@ -1,10 +1,10 @@
 package Model;
 
-import java.utils.ArrayList;
+import java.util.ArrayList;
 
 public class GalleriaPrivata extends Galleria{
 
     //Rappresenta la relazione "Salvato in" tra GalleriaPersonale e Video
-    private ArrayList<Video> SalvatoIn = null;
+    private ArrayList<Video> videos = null;
 
 }

@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Fotografia {
 
-    private String idfoto;
+    private String idFoto;
     private String dispositivo;
     private LocalDate dataDiScatto;
     private LocalDate dataDiEliminazione = null;
@@ -23,7 +23,7 @@ public class Fotografia {
     //Rappresenta l'associazione "Compone" tra foto e video
     private ArrayList<Video> fotoComponeSlideshows;
 
-    //Rappresenta l'associazione "Mostra"tra foto e soggetto
+    //Rappresenta l'associazione "Mostra" tra foto e soggetto
     private ArrayList<Soggetto> soggetti;
     
     
