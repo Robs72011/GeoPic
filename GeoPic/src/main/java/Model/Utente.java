@@ -4,14 +4,12 @@ import java.util.ArrayList;
 
 public class Utente {
 
-    private String idutente;
+    private String idUtente;
     private String username;
-    private boolean isadmin;
-
-
+    private boolean isAdmin;
 
     //Rappresenta la relazione "Rappresenta" tra utente e soggetto
-    private Soggetto rappresentoDaSoggetto;
+    private boolean isSoggetto;
 
     //Rappresenta la relazione "Scatta" tra utente e foto
     private ArrayList<Fotografia> fotoScattate;
@@ -23,12 +21,12 @@ public class Utente {
     private ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa;
 
     //costruttore
-    public Utente (String idutente, String username, boolean isadmin){
-        this.idutente = idutente;
+    public Utente (String idutente, String username, boolean isAdmin){
+        this.idUtente = idutente;
         this.username = username;
-        this.isadmin = isadmin;
+        this.isAdmin = isAdmin;
 
-        this.rappresentoDaSoggetto = new ArrayList<>();
+        this.isSoggetto = false;
         this.fotoScattate = new ArrayList<>();
         this.galleriePossedute = new ArrayList<>();
         this.utentePartecipaGalleriaCondivisa = new ArrayList<>();

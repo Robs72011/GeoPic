@@ -55,15 +55,18 @@ CREATE TABLE IF NOT EXISTS galleria.VIDEO(
 
     CONSTRAINT video_pk PRIMARY KEY (IDVideo),
 
-    CONSTRAINT galleria_fk FOREIGN KEY (Galleria) REFERENCES galleria.GALLERIA(IDGalleria)
-    ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT galleria_fk FOREIGN KEY (Galleria) REFERENCES galleria.GALLERIA(IDGalleria) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS galleria.SOGGETTO(
     NomeSoggetto galleria.string NOT NULL,
     Categoria galleria.string NOT NULL,
 
-    CONSTRAINT soggetto_pk PRIMARY KEY (NomeSoggetto)
+	IDUtente gallerria.id_user_dt UNIQUE DEFAULT NULL,
+
+    CONSTRAINT soggetto_pk PRIMARY KEY (NomeSoggetto),
+
+    CONSTRAINT idutente_fk FOREIGN KEY (IDUtente) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS galleria.UTENTE(
@@ -71,6 +74,8 @@ CREATE TABLE IF NOT EXISTS galleria.UTENTE(
     Username galleria.string NOT NULL,
     IsAdmin BOOLEAN NOT NULL DEFAULT FALSE,
     
+	IsSoggetto BOOLEAN NOT NULL DEFAULT FALSE,
+
     CONSTRAINT utente_pk PRIMARY KEY (IDUtente)
 );
 
@@ -125,15 +130,4 @@ CREATE TABLE IF NOT EXISTS galleria.MOSTRA(
 
     CONSTRAINT nome_soggetto_fk FOREIGN KEY (NomeSoggetto) REFERENCES galleria.SOGGETTO(NomeSoggetto)ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT foto_fk FOREIGN KEY (IDFoto) REFERENCES galleria.FOTOGRAFIA(IDFoto) ON UPDATE CASCADE ON DELETE NO ACTION
-);
-
-CREATE TABLE IF NOT EXISTS galleria.RAPPRESENTA(
-	NomeSoggetto galleria.string NOT NULL,
-	IDUtente galleria.id_object_dt NOT NULL,
-
-		
-	CONSTRAINT rappresenta_fk PRIMARY KEY (NomeSoggetto, IDUtente),
-
-    CONSTRAINT nome_soggetto_fk FOREIGN KEY (NomeSoggetto) REFERENCES galleria.SOGGETTO(NomeSoggetto)ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT utente_fk FOREIGN KEY (IDUtente) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE NO ACTION
 );

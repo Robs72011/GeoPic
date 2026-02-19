@@ -5,13 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,17 +35,22 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/giovanni/uni/oo/nuovo/GeoPic&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rob/Documents/uni/oo/GeoPic&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -53,24 +59,11 @@
     ]
   }
 }</component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="GeoPic" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="GeoPic" />
-      <option name="filePath" />
-      <method v="2" />
-    </configuration>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -87,6 +80,9 @@
       <workItem from="1771444291443" duration="1434000" />
       <workItem from="1771445736399" duration="198000" />
       <workItem from="1771445952061" duration="6891000" />
+      <workItem from="1771488479684" duration="34000" />
+      <workItem from="1771488520435" duration="292000" />
+      <workItem from="1771488818273" duration="5187000" />
     </task>
     <servers />
   </component>
