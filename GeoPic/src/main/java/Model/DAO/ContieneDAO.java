@@ -1,6 +1,6 @@
 package Model.DAO;
 
-public interface Contiene {
+public interface ContieneDAO {
     void addFotoAGalleria(String IDGalleria, String IDFoto);
 
     void removeFotoDAGalleria(String IDGalleria, String IDFoto);

@@ -1,6 +1,6 @@
 package Model.DAO;
 
-public interface Video {
+public interface VideoDAO {
     void createVideo(String idVideo, String titoloVideo, String descrizione, String galleria);
 
     void removeVideo(String idVideo);
