@@ -1,6 +1,6 @@
 package Model.DAO;
 
-public interface Utente {
+public interface UtenteDAO {
     void addUtente(String idUtente, String nome, boolean isAdmin);
 
     void removeUtente(String idUtente);

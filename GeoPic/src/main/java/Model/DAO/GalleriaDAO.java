@@ -1,6 +1,6 @@
 package Model.DAO;
 
-public interface Galleria {
+public interface GalleriaDAO {
     void addGalleria(String idGalleria, String nomeGalleria, boolean condivisione,
                      String proprietario);
 
