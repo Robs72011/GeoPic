@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Luogo {
 
@@ -15,7 +16,41 @@ public class Luogo {
         this.coordinate = coordinate;
         this.nomeMnemonico = nomeMnemonico;
 
-        this.luogoRaffiguratoIn=luogoRaffiguratoIn;
+        if(luogoRaffiguratoIn != null){
+            this.luogoRaffiguratoIn = luogoRaffiguratoIn;
+        }else{
+            this.luogoRaffiguratoIn = new ArrayList<>();
+        }
     }
 
+    public String getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(String coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public String getNomeMnemonico() {
+        return nomeMnemonico;
+    }
+
+    public void setNomeMnemonico(String nomeMnemonico) {
+        this.nomeMnemonico = nomeMnemonico;
+    }
+
+    public ArrayList<Fotografia> getLuogoRaffiguratoIn() {
+        return  luogoRaffiguratoIn;
+    }
+
+    @Override
+    public boolean equals(final Object obj){
+        if(obj == this) return true;
+
+        if(obj == null || !(obj instanceof Luogo)) return false;
+
+        Luogo luogo = (Luogo) obj;
+
+        return Objects.equals(coordinate, luogo.coordinate);
+    }
 }
