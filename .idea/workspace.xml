@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AdminHomePanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AdminHomePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AppMain.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AppMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/GalleryPanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/GalleryPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/PhotoPanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/PhotoPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/StartPanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/StartPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UploadFilePanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UploadFilePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UserHomePanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UserHomePanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/VistaGalleria.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/VistaGalleria.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/AppMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AppMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/UploadFilePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UploadFilePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +56,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   },
