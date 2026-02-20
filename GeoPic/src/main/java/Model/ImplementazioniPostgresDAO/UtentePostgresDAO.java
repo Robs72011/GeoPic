@@ -11,14 +11,16 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     @Override
-    public void addUtente(String idUtente, String nome, boolean isAdmin) {
-        String statement = "INSERT INTO galleria.UTENTE VALUES(?, ?, ?)";
+    public void addUtente(String idUtente, String username, String password, boolean isAdmin, boolean isSoggetto){
+        String statement = "INSERT INTO galleria.UTENTE VALUES(?, ?, ?, ?, ?)";
 
         try(PreparedStatement aggiuntaUtente = connection.prepareStatement(statement)) {
 
             aggiuntaUtente.setString(1, idUtente);
-            aggiuntaUtente.setString(2, nome);
-            aggiuntaUtente.setBoolean(3, isAdmin);
+            aggiuntaUtente.setString(2, username);
+            aggiuntaUtente.setString(3, password);
+            aggiuntaUtente.setBoolean(4, isAdmin);
+            aggiuntaUtente.setBoolean(5, isSoggetto);
 
             aggiuntaUtente.executeUpdate();
 

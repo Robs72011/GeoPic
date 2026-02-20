@@ -25,6 +25,7 @@ CREATE DOMAIN galleria.string VARCHAR(50);
 CREATE TABLE IF NOT EXISTS galleria.UTENTE(
     IDUtente galleria.id_user_dt NOT NULL,
     Username galleria.string NOT NULL,
+	Password galleria.string NOT NULL,
     IsAdmin BOOLEAN NOT NULL DEFAULT FALSE,
     
 	IsSoggetto BOOLEAN NOT NULL DEFAULT FALSE,

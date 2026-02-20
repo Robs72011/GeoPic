@@ -6,6 +6,7 @@ public class Utente {
 
     private String idUtente;
     private String username;
+    private String password;
     private boolean isAdmin;
 
     //Rappresenta la relazione "Rappresenta" tra utente e soggetto
@@ -23,6 +24,19 @@ public class Utente {
 
 
     //costruttore manca fotoScattate e utentePartecipaGalleriaCondivisa
+    public Utente (String idutente, String username, String password, boolean isAdmin, boolean isSoggetto, ArrayList<Galleria> galleriePossedute){
+        this.idUtente = idutente;
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
+
+        this.isSoggetto = isSoggetto;
+        this.fotoScattate = new ArrayList<>();
+        this.galleriePossedute = galleriePossedute;
+        this.utentePartecipaGalleriaCondivisa = new ArrayList<>();
+    }
+
+    //costruttore manca fotoScattate, utentePartecipaGalleriaCondivisa e PASSWORD
     public Utente (String idutente, String username, boolean isAdmin, boolean isSoggetto, ArrayList<Galleria> galleriePossedute){
         this.idUtente = idutente;
         this.username = username;
