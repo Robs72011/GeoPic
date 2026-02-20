@@ -1,160 +1,127 @@
 package View;
 
-import Model.Soggetto;
-
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class UploadFilePanel extends JPanel {
-
     private final JLabel title = new JLabel();
+    private final JTextField dispositivoField = new JTextField();
+    private final JTextField dataScattoField = new JTextField();
+    private final JTextField latField = new JTextField();
+    private final JTextField lonField = new JTextField();
+    private final JTextField luogoField = new JTextField();
+    private final DefaultTableModel soggettiModel;
+    private final JTable soggettiTable;
 
     private Runnable onBack = () -> {};
-
-    // callback verso il controller:
-    // dispositivo, luogo, soggetti inseriti
-    private Consumer<DatiFotoInput> onSave = (d) -> {};
-
-    // campi form
-    private final JTextField dispositivoField = new JTextField();
-    private final JTextField luogoField = new JTextField();
-
-    // inserimento soggetti
-    private final JTextField nomeSoggettoField = new JTextField();
-    private final JTextField categoriaField = new JTextField();
-
-    private final DefaultListModel<Soggetto> soggettiModel = new DefaultListModel<>();
-    private final JList<Soggetto> soggettiList = new JList<>(soggettiModel);
+    private Consumer<DatiFotoInput> onSave = d -> {};
 
     public UploadFilePanel() {
         super(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        title.setFont(new Font("SansSerif", Font.BOLD, 18));
 
-        title.setFont(title.getFont().deriveFont(Font.BOLD, 16f));
+        JPanel form = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(4, 4, 4, 4);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
 
-        JButton back = new JButton("Indietro");
-        JButton addSoggetto = new JButton("Aggiungi soggetto");
-        JButton save = new JButton("Salva Foto");
+        int row = 0;
+        addField(form, c, row++, "Dispositivo:", dispositivoField);
+        addField(form, c, row++, "Data scatto (yyyy-MM-dd HH:mm:ss):", dataScattoField);
+        addField(form, c, row++, "Coordinate - Spazio 1 (latitudine):", latField);
+        addField(form, c, row++, "Coordinate - Spazio 2 (longitudine):", lonField);
+        addField(form, c, row++, "Nome luogo:", luogoField);
 
-        // --- TOP ---
-        JPanel top = new JPanel(new BorderLayout());
-        top.add(title, BorderLayout.WEST);
-        top.add(back, BorderLayout.EAST);
+        c.gridx = 0; c.gridy = row; c.gridwidth = 2;
 
-        // --- FORM ---
-        JPanel form = new JPanel();
-        form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
+        soggettiModel = new DefaultTableModel(new Object[]{"Soggetto", "Categoria"}, 0);
+        soggettiTable = new JTable(soggettiModel);
 
-        form.add(new JLabel("Dispositivo (obbligatorio):"));
-        form.add(dispositivoField);
+        JPanel soggettiPanel = new JPanel(new BorderLayout(5, 5));
+        soggettiPanel.setBorder(BorderFactory.createTitledBorder("Soggetti (ogni soggetto ha una categoria)"));
+        soggettiPanel.add(new JScrollPane(soggettiTable), BorderLayout.CENTER);
 
-        form.add(Box.createVerticalStrut(10));
+        JButton addS = new JButton("Aggiungi soggetto");
+        JButton remS = new JButton("Rimuovi soggetto");
+        JPanel sogBtn = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        sogBtn.add(addS); sogBtn.add(remS);
+        soggettiPanel.add(sogBtn, BorderLayout.SOUTH);
+        addS.addActionListener(e -> soggettiModel.addRow(new Object[]{"", ""}));
+        remS.addActionListener(e -> { int r = soggettiTable.getSelectedRow(); if (r != -1) soggettiModel.removeRow(r); });
 
-        form.add(new JLabel("Luogo (opzionale):"));
-        form.add(luogoField);
+        JPanel center = new JPanel(new BorderLayout(10, 10));
+        center.add(form, BorderLayout.NORTH);
+        center.add(soggettiPanel, BorderLayout.CENTER);
 
-        form.add(Box.createVerticalStrut(20));
-        form.add(new JLabel("Inserisci soggetto"));
+        JButton save = new JButton("Salva");
+        JButton back = new JButton("Annulla");
+        JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        south.add(back); south.add(save);
 
-        form.add(new JLabel("Nome:"));
-        form.add(nomeSoggettoField);
+        add(title, BorderLayout.NORTH);
+        add(center, BorderLayout.CENTER);
+        add(south, BorderLayout.SOUTH);
 
-        form.add(new JLabel("Categoria:"));
-        form.add(categoriaField);
-
-        form.add(addSoggetto);
-
-        form.add(Box.createVerticalStrut(10));
-        form.add(new JLabel("Soggetti inseriti:"));
-        form.add(new JScrollPane(soggettiList));
-
-        // --- BOTTOM ---
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottom.add(save);
-
-        add(top, BorderLayout.NORTH);
-        add(form, BorderLayout.CENTER);
-        add(bottom, BorderLayout.SOUTH);
-
-        // --- AZIONI ---
+        save.addActionListener(e -> handleSave());
         back.addActionListener(e -> onBack.run());
-
-        addSoggetto.addActionListener(e -> aggiungiSoggetto());
-
-        save.addActionListener(e -> salva());
     }
 
-    private void aggiungiSoggetto() {
-        String nome = nomeSoggettoField.getText().trim();
-        String categoria = categoriaField.getText().trim();
-
-        if (nome.isEmpty() || categoria.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Inserisci nome e categoria");
-            return;
-        }
-
-        // uso direttamente il tuo Model
-        Soggetto s = new Soggetto(nome, categoria);
-        soggettiModel.addElement(s);
-
-        nomeSoggettoField.setText("");
-        categoriaField.setText("");
+    private void addField(JPanel form, GridBagConstraints c, int row, String label, JTextField field) {
+        c.gridwidth = 1;
+        c.gridx = 0; c.gridy = row; c.weightx = 0.35;
+        form.add(new JLabel(label), c);
+        c.gridx = 1; c.weightx = 0.65;
+        form.add(field, c);
     }
 
-    private void salva() {
+    private void handleSave() {
         String dispositivo = dispositivoField.getText().trim();
+        String data = dataScattoField.getText().trim();
+        String lat = latField.getText().trim();
+        String lon = lonField.getText().trim();
         String luogo = luogoField.getText().trim();
 
-        if (dispositivo.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Il dispositivo è obbligatorio.");
-            return;
+        if (dispositivo.isEmpty()) { JOptionPane.showMessageDialog(this, "Inserisci il dispositivo."); return; }
+        if (lat.isEmpty() || lon.isEmpty()) { JOptionPane.showMessageDialog(this, "Inserisci le coordinate in 2 spazi (latitudine e longitudine)."); return; }
+        if (luogo.isEmpty()) { JOptionPane.showMessageDialog(this, "Inserisci il nome del luogo."); return; }
+
+        List<SubjectInput> soggetti = new ArrayList<>();
+        for (int r = 0; r < soggettiModel.getRowCount(); r++) {
+            String nome = String.valueOf(soggettiModel.getValueAt(r, 0) == null ? "" : soggettiModel.getValueAt(r, 0)).trim();
+            String cat = String.valueOf(soggettiModel.getValueAt(r, 1) == null ? "" : soggettiModel.getValueAt(r, 1)).trim();
+            if (nome.isEmpty() || cat.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ogni soggetto deve avere nome e categoria (riga " + (r + 1) + ").");
+                return;
+            }
+            soggetti.add(new SubjectInput(nome, cat));
         }
 
-        ArrayList<Soggetto> soggetti = new ArrayList<>();
-        for (int i = 0; i < soggettiModel.size(); i++) {
-            soggetti.add(soggettiModel.get(i));
-        }
-
-        // passo i dati al controller
-        onSave.accept(new DatiFotoInput(dispositivo, luogo, soggetti));
-
-        JOptionPane.showMessageDialog(this, "Foto inserita!");
-        reset();
+        onSave.accept(new DatiFotoInput(dispositivo, data, lat, lon, luogo, soggetti));
+        JOptionPane.showMessageDialog(this, "Foto inserita (demo).\nPuoi aprirla dalla galleria per vedere i dettagli.");
     }
 
-    public void configure(String titleText,
-                          Runnable onBack,
-                          Consumer<DatiFotoInput> onSave) {
-
-        this.title.setText(titleText);
-        this.onBack = onBack;
-        this.onSave = onSave;
-        reset();
+    public void configure(String t, Runnable b, Consumer<DatiFotoInput> s) {
+        title.setText(t);
+        onBack = b != null ? b : () -> {};
+        onSave = s != null ? s : d -> {};
+        clear();
     }
 
-    public void reset() {
+    private void clear() {
         dispositivoField.setText("");
+        dataScattoField.setText("");
+        latField.setText("");
+        lonField.setText("");
         luogoField.setText("");
-        nomeSoggettoField.setText("");
-        categoriaField.setText("");
-        soggettiModel.clear();
+        soggettiModel.setRowCount(0);
     }
 
-    /**
-     * Piccolo contenitore SOLO per passare i dati alla controller.
-     * NON è un DTO di dominio, serve solo come evento della GUI.
-     */
-    public static class DatiFotoInput {
-        public final String dispositivo;
-        public final String luogo;
-        public final ArrayList<Soggetto> soggetti;
-
-        public DatiFotoInput(String dispositivo, String luogo, ArrayList<Soggetto> soggetti) {
-            this.dispositivo = dispositivo;
-            this.luogo = luogo;
-            this.soggetti = soggetti;
-        }
-    }
+    public record SubjectInput(String nome, String categoria) {}
+    public record DatiFotoInput(String dispositivo, String dataScatto, String latitudine, String longitudine, String luogo, List<SubjectInput> soggetti) {}
 }
