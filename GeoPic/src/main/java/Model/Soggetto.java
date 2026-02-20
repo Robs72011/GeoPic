@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Objects;
+
 public class Soggetto {
     private String nomeSoggetto;
     private String categoria;
@@ -10,7 +12,12 @@ public class Soggetto {
     public Soggetto(String nomeSoggetto, String categoria, Utente utenteRappresentato) {
         this.nomeSoggetto = nomeSoggetto;
         this.categoria = categoria;
-        this.utenteRappresentato = utenteRappresentato;
+
+        if(utenteRappresentato != null){
+            this.utenteRappresentato = utenteRappresentato;
+        }else{
+            this.utenteRappresentato = null;
+        }
     }
 
     //costruttore manca utenteRappresentato
@@ -45,5 +52,16 @@ public class Soggetto {
 
     public void setUtenteRappresentato(Utente utente) {
         this.utenteRappresentato = utente;
+    }
+
+    @Override
+    public boolean equals(final Object obj){
+        if(obj == this) return true;
+
+        if(obj == null || !(obj instanceof Soggetto)) return false;
+
+        Soggetto soggetto = (Soggetto) obj;
+
+        return Objects.equals(nomeSoggetto, soggetto.nomeSoggetto);
     }
 }

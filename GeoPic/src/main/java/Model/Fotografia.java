@@ -27,30 +27,34 @@ public class Fotografia {
     private ArrayList<Soggetto> soggetti;
 
     //costruttore manca luogo e fotoComponeVideo
-    public Fotografia(String idFoto, String dispositivo, LocalDate dataDiScatto, boolean visibility, Utente autore, ArrayList<Galleria> galleriaContenitrice, ArrayList<Soggetto> soggetti){
+    public Fotografia(String idFoto, String dispositivo, LocalDate dataDiScatto, boolean visibility, Utente autore,
+                      Luogo luogo, ArrayList<Galleria> galleriaContenitrice, ArrayList<Soggetto> soggetti){
 
-        this.idFoto=idFoto;
-        this.dispositivo=dispositivo;
-        this.dataDiScatto=dataDiScatto;
-        this.dataDiEliminazione=null;
-        this.visibility=visibility;
+        this.idFoto = idFoto;
+        this.dispositivo = dispositivo;
+        this.dataDiScatto = dataDiScatto;
+        this.dataDiEliminazione = null;
+        this.visibility = visibility;
 
-        this.luogo=null;
+        if(luogo == null){
+            this.luogo = new Luogo("", "", new ArrayList<>());
+        }else{
+            this.luogo = luogo;
+        }
 
         if(galleriaContenitrice != null){
-            this.galleriaContenitrice=galleriaContenitrice;
+            this.galleriaContenitrice = galleriaContenitrice;
         }else{
-            this.galleriaContenitrice=new ArrayList<>();
+            this.galleriaContenitrice = new ArrayList<>();
         }
 
-        this.fotoComponeVideo=new ArrayList<>();
+        this.fotoComponeVideo = new ArrayList<>();
 
         if(soggetti != null){
-            this.soggetti=soggetti;
+            this.soggetti = soggetti;
         }else{
-            this.soggetti = snew ArrayList<>();
+            this.soggetti = new ArrayList<>();
         }
-
     }
 
     public String getIdFoto() {
@@ -116,10 +120,6 @@ public class Fotografia {
     public boolean addGalleriaContenitrice(Galleria galleria){
         boolean aggiunta = false;
 
-        if(this.galleriaContenitrice == null){
-            this.galleriaContenitrice = new ArrayList<>();
-        }
-
         if(!(this.galleriaContenitrice.contains(galleria))){
             this.galleriaContenitrice.add(galleria);
 
@@ -127,5 +127,90 @@ public class Fotografia {
         }
 
         return aggiunta;
+    }
+
+    public boolean removeGalleriaContenitrice(Galleria galleria){
+        boolean rimozione = false;
+
+        if(this.galleriaContenitrice.contains(galleria)){
+            this.galleriaContenitrice.remove(galleria);
+
+            rimozione = true;
+        }
+
+        return rimozione;
+    }
+
+    //soggetti
+    public ArrayList<Soggetto> getSoggetti() {
+        return soggetti;
+    }
+
+    public boolean addSoggetto(Soggetto soggetto){
+        boolean aggiunta = false;
+
+        if(!(this.soggetti.contains(soggetto))){
+            this.soggetti.add(soggetto);
+
+            aggiunta = true;
+        }
+
+        return aggiunta;
+    }
+
+    public boolean removeSoggetto(Soggetto soggetto){
+        boolean rimozione = false;
+
+        if(this.soggetti.contains(soggetto)){
+            this.soggetti.remove(soggetto);
+
+            rimozione = true;
+        }
+
+        return rimozione;
+    }
+
+
+    //foto compone vide
+
+    public ArrayList<Video> getFotoComponeVideo() {
+        return fotoComponeVideo;
+    }
+
+
+    //Funzione che aggiunge all'array list di video in cui la foto appare
+    public boolean addVideo(Video video){
+        boolean aggiunta = false;
+
+        if(!(this.fotoComponeVideo.contains(video))){
+            this.fotoComponeVideo.add(video);
+
+            aggiunta = true;
+        }
+
+        return aggiunta;
+    }
+
+    public boolean removeVideo(Video video){
+        boolean rimozione = false;
+
+        if(this.fotoComponeVideo.contains(video)){
+            this.fotoComponeVideo.remove(video);
+
+            rimozione = true;
+        }
+
+        return rimozione;
+    }
+
+    @Override
+    public boolean equals(final Object obj){
+        if(obj == this) return true;
+
+        if(obj == null || !(obj instanceof Fotografia)) return false;
+
+        Fotografia fotografia = (Fotografia) obj;
+
+        return Objects.equals(idFoto, fotografia.idFoto);
     }
 }
