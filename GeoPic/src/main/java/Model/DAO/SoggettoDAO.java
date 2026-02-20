@@ -9,5 +9,5 @@ public interface SoggettoDAO {
 
     void addUtenteSoggetto(String nomeUtente, String categoria, String idUtente);
 
-    void removeUtenteSoggetto(String nomeUtente, String categoria, String idUtente);
+    void removeUtenteSoggetto(String nomeUtente);
 }

@@ -2,6 +2,7 @@ DROP SCHEMA IF EXISTS galleria CASCADE;
 
 CREATE SCHEMA galleria AUTHORIZATION postgres;
 
+
 ------------------------------------------------------------------------------------
 --dominio dedicato agli identificativi degli utenti. dt sta per "data type"
 CREATE DOMAIN galleria.id_user_dt CHAR(5)
@@ -21,6 +22,35 @@ CREATE DOMAIN galleria.string VARCHAR(50);
 
 ------------------------------------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS galleria.UTENTE(
+    IDUtente galleria.id_user_dt NOT NULL,
+    Username galleria.string NOT NULL,
+    IsAdmin BOOLEAN NOT NULL DEFAULT FALSE,
+    
+	IsSoggetto BOOLEAN NOT NULL DEFAULT FALSE,
+
+    CONSTRAINT utente_pk PRIMARY KEY (IDUtente)
+);
+
+CREATE TABLE IF NOT EXISTS galleria.LUOGO(
+    Coordinate  galleria.coo_dt NOT NULL,
+    Toponimo galleria.string UNIQUE,
+
+    CONSTRAINT luogo_pk PRIMARY KEY (Coordinate)
+
+);
+
+CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
+    IDGalleria galleria.id_object_dt  NOT NULL,
+    NomeGalleria galleria.string  NOT NULL,
+    Condivisa BOOLEAN NOT NULL DEFAULT FALSE,
+    Proprietario galleria.id_user_dt  NOT NULL,
+
+    CONSTRAINT galleria_pk PRIMARY KEY (IDGalleria),
+
+    CONSTRAINT proprietario_fk FOREIGN KEY (Proprietario) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA( 
 	IDFoto galleria.id_object_dt NOT NULL,
 	Dispositivo galleria.string NOT NULL DEFAULT 'Nameless', --il dispositivo non e' specificato nel caso l'utente non lo inserisce
@@ -37,13 +67,7 @@ CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA(
     CONSTRAINT coordinate_fk FOREIGN KEY (Coordinate) REFERENCES galleria.LUOGO(Coordinate) ON UPDATE CASCADE ON DELETE NO ACTION
     );
 
-CREATE TABLE IF NOT EXISTS galleria.LUOGO(
-    Coordinate  galleria.coo_dt NOT NULL,
-    Toponimo galleria.string UNIQUE,
 
-    CONSTRAINT luogo_pk PRIMARY KEY (Coordinate)
-
-);
 
 CREATE TABLE IF NOT EXISTS galleria.VIDEO(
     IDVideo galleria.id_object_dt NOT NULL,
@@ -62,33 +86,16 @@ CREATE TABLE IF NOT EXISTS galleria.SOGGETTO(
     NomeSoggetto galleria.string NOT NULL,
     Categoria galleria.string NOT NULL,
 
-	IDUtente gallerria.id_user_dt UNIQUE DEFAULT NULL,
+	IDUtente galleria.id_user_dt UNIQUE DEFAULT NULL,
 
     CONSTRAINT soggetto_pk PRIMARY KEY (NomeSoggetto),
 
     CONSTRAINT idutente_fk FOREIGN KEY (IDUtente) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS galleria.UTENTE(
-    IDUtente galleria.id_user_dt NOT NULL,
-    Username galleria.string NOT NULL,
-    IsAdmin BOOLEAN NOT NULL DEFAULT FALSE,
-    
-	IsSoggetto BOOLEAN NOT NULL DEFAULT FALSE,
 
-    CONSTRAINT utente_pk PRIMARY KEY (IDUtente)
-);
 
-CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
-    IDGalleria galleria.id_object_dt  NOT NULL,
-    NomeGalleria galleria.string  NOT NULL,
-    Condivisa BOOLEAN NOT NULL DEFAULT FALSE,
-    Proprietario galleria.id_user_dt  NOT NULL,
 
-    CONSTRAINT galleria_pk PRIMARY KEY (IDGalleria),
-
-    CONSTRAINT proprietario_fk FOREIGN KEY (Proprietario) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
-);
 
 CREATE TABLE IF NOT EXISTS galleria.PARTECIPA(
     IDGalleria galleria.id_object_dt  NOT NULL,
@@ -126,7 +133,7 @@ CREATE TABLE IF NOT EXISTS galleria.MOSTRA(
     NomeSoggetto galleria.string NOT NULL,
 	IDFoto galleria.id_object_dt NOT NULL,
 
-	CONSTRAINT compone_pk PRIMARY KEY (NomeSoggetto, IDFoto),
+	CONSTRAINT mostra_pk PRIMARY KEY (NomeSoggetto, IDFoto),
 
     CONSTRAINT nome_soggetto_fk FOREIGN KEY (NomeSoggetto) REFERENCES galleria.SOGGETTO(NomeSoggetto)ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT foto_fk FOREIGN KEY (IDFoto) REFERENCES galleria.FOTOGRAFIA(IDFoto) ON UPDATE CASCADE ON DELETE NO ACTION
