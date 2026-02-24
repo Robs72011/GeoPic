@@ -3,11 +3,11 @@ package Model.DAO;
 import Model.Soggetto;
 
 public interface SoggettoDAO {
-    void addSoggetto(String nomeSoggetto, String categoria);
+    void insertSoggetto(String nomeSoggetto, String categoria);
 
-    void removeSoggetto(String nomeSoggetto);
+    void deleteSoggetto(String nomeSoggetto);
 
-    void addUtenteSoggetto(String nomeUtente, String categoria, String idUtente);
+    void insertUtenteAsSoggetto(String nomeUtente, String categoria, String idUtente);
 
-    void removeUtenteSoggetto(String nomeUtente);
+    void deleteUtenteAsSoggetto(String nomeUtente);
 }

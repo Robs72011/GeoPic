@@ -12,7 +12,7 @@ public class VideoPostgresDAO implements VideoDAO {
     }
 
     @Override
-    public void createVideo(String idVideo, String titoloVideo, String descrizione, String galleria) {
+    public void insertVideo(String idVideo, String titoloVideo, String descrizione, String galleria) {
         String statement = "INSERT INTO galleria.VIDEO VALUES (?, ?, ?, ?)";
 
         try(PreparedStatement aggiuntaVideo = connection.prepareStatement(statement)){
@@ -30,7 +30,7 @@ public class VideoPostgresDAO implements VideoDAO {
     }
 
     @Override
-    public void removeVideo(String idVideo) {
+    public void deleteVideo(String idVideo) {
         String statement = "DELETE FROM galleria.VIDEO WHERE IDVideo LIKE ?";
 
         try(PreparedStatement rimozioneVideo = connection.prepareStatement(statement)){

@@ -1,7 +1,7 @@
 package Model.DAO;
 
 public interface LuogoDAO {
-    void addLuogo(String coordinate, String toponimo);
+    void insertLuogo(String coordinate, String toponimo);
 
-    void removeLuogo(String coordinate);
+    void deleteLuogo(String coordinate);
 }

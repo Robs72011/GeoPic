@@ -12,7 +12,7 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
     }
 
     @Override
-    public void addGalleria(String idGalleria, String nomeGalleria, boolean condivisione, String proprietario) {
+    public void insertGalleria(String idGalleria, String nomeGalleria, boolean condivisione, String proprietario) {
         String statement = "INSERT INTO galleria.GALLERIA VALUES(?, ?, ?, ?)";
 
         try(PreparedStatement aggiuntaGalleria = connection.prepareStatement(statement)) {
@@ -29,7 +29,7 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
     }
 
     @Override
-    public void removeGalleria(String idGalleria) {
+    public void deleteGalleria(String idGalleria) {
         String statement = "DELETE FROM galleria.GALLERIA WHERE IDGalleria = ?";
 
         try(PreparedStatement rimozioneGalleria = connection.prepareStatement(statement)) {

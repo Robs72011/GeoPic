@@ -14,7 +14,7 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
     }
 
     @Override
-    public void addPartecipante(String idGalleria, String idUtente) {
+    public void insertPartecipante(String idGalleria, String idUtente) {
         String statement = "INSERT INTO galleria.PARTECIPA VALUES(?,?)";
 
         try(PreparedStatement aggiuntaPartecipanteAGalleria = connection.prepareStatement(statement)){
@@ -30,7 +30,7 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
     }
 
     @Override
-    public void removePartecipante(String idGalleria, String idUtente) {
+    public void deletePartecipante(String idGalleria, String idUtente) {
         String statement = "DELETE FROM galleria.PARTECIPA WHERE IDGalleria LIKE ? AND IDUtente LIKE ?";
 
         try(PreparedStatement rimozioneUtenteDaGalleriaCondivisa = connection.prepareStatement(statement)){

@@ -11,7 +11,7 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     @Override
-    public void addUtente(String idUtente, String username, String password, boolean isAdmin, boolean isSoggetto){
+    public void insertUtente(String idUtente, String username, String password, boolean isAdmin, boolean isSoggetto){
         String statement = "INSERT INTO galleria.UTENTE VALUES(?, ?, ?, ?, ?)";
 
         try(PreparedStatement aggiuntaUtente = connection.prepareStatement(statement)) {
@@ -30,7 +30,7 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     @Override
-    public void removeUtente(String idUtente) {
+    public void deleteUtente(String idUtente) {
         String statement = "DELETE FROM .UTENTE WHERE IDUtente LIKE ?";
 
         try(PreparedStatement rimozioneUtente = connection.prepareStatement(statement)){

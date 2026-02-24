@@ -11,7 +11,7 @@ public class ComponePostgresDAO implements ComponeDAO {
         this.connection = connection;
     }
     @Override
-    public void addComposizione(String IDVideo, String IDFoto) {
+    public void insertComposizione(String IDVideo, String IDFoto) {
         String statement = "INSERT INTO galleria.COMPONE VALUES(?,? )";
 
         try(PreparedStatement newComposizione = connection.prepareStatement(statement)){
@@ -27,7 +27,7 @@ public class ComponePostgresDAO implements ComponeDAO {
     }
 
     @Override
-    public void removeComposione(String IDVideo, String IDFoto) {
+    public void deleteComposione(String IDVideo, String IDFoto) {
         String statement = "DELETE FROM galleria.COMPONE WHERE IDVIDEO LIKE ? AND IDFOTO LIKE ?";
 
         try(PreparedStatement deleteComposizioneStatement = connection.prepareStatement(statement)){

@@ -12,7 +12,7 @@ public class LuogoPostgresDAO implements LuogoDAO {
     }
 
     @Override
-    public void addLuogo(String coordinate, String toponimo) {
+    public void insertLuogo(String coordinate, String toponimo) {
         String statement = "INSERT INTO galleria.LUOGO VALUES(?,?)";
 
         try(PreparedStatement aggiuntaLuogo = connection.prepareStatement(statement)){
@@ -28,7 +28,7 @@ public class LuogoPostgresDAO implements LuogoDAO {
     }
 
     @Override
-    public void removeLuogo(String coordinate) {
+    public void insertLuogo(String coordinate) {
         String statement = "DELETE FROM galleria.LUOGO WHERE coordinate = ?";
 
         try(PreparedStatement rimozioneLuogo = connection.prepareStatement(statement)){

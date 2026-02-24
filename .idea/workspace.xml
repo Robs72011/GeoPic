@@ -5,16 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/VideoPanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/VideoPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/AdminHomePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AdminHomePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/AppMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/AppMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/GalleryPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/GalleryPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/PhotoPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/PhotoPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/StartPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/StartPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/UploadFilePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UploadFilePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/View/UserHomePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/View/UserHomePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/ComponeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/ComponeDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/ContieneDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/ContieneDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/FotografiaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/FotografiaDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/GalleriaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/GalleriaDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/LuogoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/LuogoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/MostraDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/MostraDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/PartecipaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/PartecipaDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/SoggettoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/SoggettoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/UtenteDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/UtenteDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/VideoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/DAO/VideoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/ComponePostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/ComponePostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/ContienePostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/ContienePostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/FotografiaPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/FotografiaPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/GalleriaPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/GalleriaPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/LuogoPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/LuogoPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/MostraPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/MostraPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/PartecipaPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/PartecipaPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/SoggettoPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/SoggettoPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/UtentePostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/UtentePostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/VideoPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/ImplementazioniPostgresDAO/VideoPostgresDAO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,8 +89,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -99,6 +112,7 @@
       <workItem from="1771488818273" duration="6548000" />
       <workItem from="1771506808119" duration="9593000" />
       <workItem from="1771605941271" duration="225000" />
+      <workItem from="1771919514230" duration="3168000" />
     </task>
     <servers />
   </component>

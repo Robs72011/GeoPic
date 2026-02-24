@@ -14,7 +14,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
     }
 
     @Override
-    public void addSoggetto(String nomeSoggetto, String categoria) {
+    public void insertSoggetto(String nomeSoggetto, String categoria) {
         String statement = "INSERT INTO galleria.SOGGETTO VALUES(?, ?, ?)";
 
         try(PreparedStatement aggiuntaSoggetto = connection.prepareStatement(statement)){
@@ -31,7 +31,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
     }
 
     @Override
-    public void removeSoggetto(String nomeSoggetto) {
+    public void deleteSoggetto(String nomeSoggetto) {
         String statement = "DELETE FROM galleria.SOGGETTO WHERE NomeSoggetto LIKE ?";
 
         try(PreparedStatement rimozioneSoggetto = connection.prepareStatement(statement)){
@@ -46,7 +46,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
     }
 
     @Override
-    public void addUtenteSoggetto(String nomeUtente, String categoria, String idUtente) {
+    public void insertUtenteAsSoggetto(String nomeUtente, String categoria, String idUtente) {
         String statement = "INSERT INTO galleria.SOGGETTO VALUES(?, ?, ?)";
 
         try(PreparedStatement aggiuntaUtenteComeSoggetto = connection.prepareStatement(statement)){
@@ -62,7 +62,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
     }
 
     @Override
-    public void removeUtenteSoggetto(String nomeUtente) {
+    public void deleteUtenteAsSoggetto(String nomeUtente) {
         String statement = "DELETE FROM galleria.SOGGETTO WHERE  NomeSoggetto LIKE ?";
 
         try(PreparedStatement rimozioneSoggettoConUtente = connection.prepareStatement(statement)){

@@ -13,7 +13,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void addFotografia(String idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione, boolean visibilita, String coordinate, String autore) {
+    public void insertFotografia(String idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione, boolean visibilita, String coordinate, String autore) {
         String statement = "INSERT INTO galleria.FOTOGRAFIA VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         try{
@@ -39,7 +39,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void removeFotografia(String IDFoto) {
+    public void deleteFotografia(String IDFoto) {
         String statement = "DELETE FROM galleria.FOTOGRAFIA WHERE IDFoto = ?";
 
         try{

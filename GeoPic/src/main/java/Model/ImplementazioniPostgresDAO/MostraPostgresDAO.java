@@ -11,7 +11,7 @@ public class MostraPostgresDAO implements MostraDAO {
         this.connection = connection;
     }
     @Override
-    public void addSoggettoAFoto(String nomeSoggetto, String IDFoto) {
+    public void insertSoggettoInFoto(String nomeSoggetto, String IDFoto) {
         String statement = "INSERT INTO galleria.MOSTRA VALUES(?,?)";
 
         try(PreparedStatement aggiuntaSoggettoAFoto = connection.prepareStatement(statement)) {
@@ -27,7 +27,7 @@ public class MostraPostgresDAO implements MostraDAO {
     }
 
     @Override
-    public void removeSoggettoDaFoto(String nomeSoggetto, String IDFoto) {
+    public void deleteSoggettoDaFoto(String nomeSoggetto, String IDFoto) {
         String statement = "INSERT INTO galleria.MOSTRA VALUES(?,?)";
 
         try(PreparedStatement aggiuntaSoggettoAFoto = connection.prepareStatement(statement)) {

@@ -10,7 +10,7 @@ public class ContienePostgresDAO implements ContieneDAO {
         this.connection = connection;
     }
     @Override
-    public void addFotoAGalleria(String IDGalleria, String IDFoto) {
+    public void insertFotoAGalleria(String IDGalleria, String IDFoto) {
         String statement = "INSERT INTO galleria.COMPONE VALUES (?,?)";
 
         try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
@@ -26,7 +26,7 @@ public class ContienePostgresDAO implements ContieneDAO {
     }
 
     @Override
-    public void removeFotoDAGalleria(String IDGalleria, String IDFoto) {
+    public void deleteFotoDAGalleria(String IDGalleria, String IDFoto) {
         String statement = "DELETE FROM galleria.CONTIENE WHERE IDGalleria LIKE ? AND IDFoto LIKE ?";
 
         try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
