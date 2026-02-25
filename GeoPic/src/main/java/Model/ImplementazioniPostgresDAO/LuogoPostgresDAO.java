@@ -3,6 +3,7 @@ package Model.ImplementazioniPostgresDAO;
 import Model.DAO.LuogoDAO;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class LuogoPostgresDAO implements LuogoDAO {
     Connection connection;
@@ -28,7 +29,7 @@ public class LuogoPostgresDAO implements LuogoDAO {
     }
 
     @Override
-    public void insertLuogo(String coordinate) {
+    public void deleteLuogo(String coordinate) {
         String statement = "DELETE FROM galleria.LUOGO WHERE coordinate = ?";
 
         try(PreparedStatement rimozioneLuogo = connection.prepareStatement(statement)){
@@ -40,5 +41,23 @@ public class LuogoPostgresDAO implements LuogoDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
+    }
+
+    public void getAllLuoghi(ArrayList<String> coordinate, ArrayList<String> toponimo){
+        String statement = "SELECT * FROM galleria.LUOGO";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)){
+
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()){
+                coordinate.add(resultSet.getString("coordinate"));
+                toponimo.add(resultSet.getString("toponimo"));
+            }
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+
     }
 }

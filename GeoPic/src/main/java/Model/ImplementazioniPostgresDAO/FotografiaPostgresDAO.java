@@ -87,7 +87,9 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
-    public void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore, ArrayList<String> coordinate, ArrayList<Boolean> visibilita, ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione) {
+    public void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore,
+                                 ArrayList<String> coordinate, ArrayList<Boolean> visibilita,
+                                 ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione) {
         String statement = "SELECT * FROM galleria.FOTOGRAFIA";
 
         try(PreparedStatement query = connection.prepareStatement(statement)) {
@@ -104,6 +106,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
                 } else {
                     coordinate = null;
                 }
+
                 visibilita.add(resultSet.getBoolean("visibilita"));
                 dataDiScatto.add(resultSet.getDate("DataScatto").toLocalDate());
 

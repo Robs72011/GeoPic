@@ -1,5 +1,7 @@
 package Model.DAO;
 
+import java.util.ArrayList;
+
 public interface ComponeDAO {
     //aggiunge una coppia idfoto e idvideo, ovvero aggiunge una foto a un video
     void insertComposizione(String IDVideo, String IDFoto);
@@ -10,4 +12,5 @@ public interface ComponeDAO {
     //aggiorna una coppia idvideo idfoto
     void updateComposizione(String IDVideo, String IDFoto, String NewIDVideo, String NewIDFoto);
 
+    public void getAllComposizioni(ArrayList<String> idVideo, ArrayList<String> idFoto);
 }

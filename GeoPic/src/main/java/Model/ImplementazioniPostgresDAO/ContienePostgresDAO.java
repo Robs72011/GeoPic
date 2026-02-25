@@ -2,6 +2,7 @@ package Model.ImplementazioniPostgresDAO;
 
 import Model.DAO.ContieneDAO;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ContienePostgresDAO implements ContieneDAO {
     private Connection connection;
@@ -27,12 +28,25 @@ public class ContienePostgresDAO implements ContieneDAO {
 
     @Override
     public void deleteFotoDaGalleria(String IDGalleria, String IDFoto) {
-        String statement = "DELETE FROM galleria.CONTIENE WHERE IDGalleria LIKE ? AND IDFoto LIKE ?";
+        String statement = "SELECT * FROM galleria.CONTIENE";
 
         try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
 
             newFotoInGalleria.setString(1, IDGalleria);
             newFotoInGalleria.setString(2, IDFoto);
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
+
+    public void getAllContenute(ArrayList<String>idGalleria, ArrayList<String>idFoto){
+        String statement = "SELECT * FROM galleria.CONTIENE";
+
+        try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
+
+            newFotoInGalleria.setString(1, "IDGalleria");
+            newFotoInGalleria.setString(2, "IDFoto");
 
         }catch(SQLException sqle){
             sqle.printStackTrace();

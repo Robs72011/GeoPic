@@ -64,19 +64,20 @@ public class ComponePostgresDAO implements ComponeDAO {
         }
     }
 
-    public void getAllComposizioni(ArrayList<Integer> IdFoto, ArrayList<Integer> IdVideo){
-        String query = "SELECT * FROM galleria.COMPONE";
+    @Override
+    public void getAllComposizioni(ArrayList<String> idVideo, ArrayList<String> idFoto){
+        String statement = "SELECT * FROM galleria.COMPONE";
 
-        try(PreparedStatement getAllComposizioni = connection.prepareStatement(query)){
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
 
-            ResultSet result = getAllComposizioni.executeQuery();
+            ResultSet resultSet = query.executeQuery();
 
-            while(result.next()){
-                IdFoto.add(result.getInt("IDFOTO"));
-                IdVideo.add(result.getInt("IDVIDEO"));
+            while(resultSet.next()) {
+
+                idVideo.add(resultSet.getString("IDVideo"));
+                idFoto.add(resultSet.getString("IDFoto"));
+
             }
-
-            result.close();
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
