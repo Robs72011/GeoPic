@@ -26,7 +26,7 @@ public class ContienePostgresDAO implements ContieneDAO {
     }
 
     @Override
-    public void deleteFotoDAGalleria(String IDGalleria, String IDFoto) {
+    public void deleteFotoDaGalleria(String IDGalleria, String IDFoto) {
         String statement = "DELETE FROM galleria.CONTIENE WHERE IDGalleria LIKE ? AND IDFoto LIKE ?";
 
         try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){

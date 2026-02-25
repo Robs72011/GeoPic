@@ -4,6 +4,7 @@ import Model.DAO.FotografiaDAO;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class FotografiaPostgresDAO implements FotografiaDAO {
     private final Connection connection;
@@ -13,7 +14,8 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void insertFotografia(String idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione, boolean visibilita, String coordinate, String autore) {
+    public void insertFotografia(String idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione,
+                          boolean visibilita, String coordinate, String autore){
         String statement = "INSERT INTO galleria.FOTOGRAFIA VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         try{
@@ -85,4 +87,35 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
+    public void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore, ArrayList<String> coordinate, ArrayList<Boolean> visibilita, ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione) {
+        String statement = "SELECT * FROM galleria.FOTOGRAFIA";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()) {
+
+                idFoto.add(resultSet.getString("IDFoto"));
+                device.add(resultSet.getString("device"));
+                autore.add(resultSet.getString("autore"));
+                if (resultSet.getString("coordinate") != null) {
+                    coordinate.add(resultSet.getString("coordinate"));
+                } else {
+                    coordinate = null;
+                }
+                visibilita.add(resultSet.getBoolean("visibilita"));
+                dataDiScatto.add(resultSet.getDate("DataScatto").toLocalDate());
+
+                if (resultSet.getString("DataEliminazione") != null) {
+                    dataEliminazione.add(resultSet.getDate("DataEliminazione").toLocalDate());
+                } else {
+                    dataEliminazione = null;
+                }
+
+            }
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
 }

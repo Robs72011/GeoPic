@@ -1,8 +1,10 @@
 package Model.ImplementazioniPostgresDAO;
 
 import Model.DAO.ComponeDAO;
+import jdk.jshell.spi.SPIResolutionException;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ComponePostgresDAO implements ComponeDAO {
     private Connection connection;
@@ -58,6 +60,24 @@ public class ComponePostgresDAO implements ComponeDAO {
 
             connection.close();
         }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
+
+    public void getAllComposizioni(ArrayList<Integer> IdFoto, ArrayList<Integer> IdVideo){
+        String query = "SELECT * FROM galleria.COMPONE";
+
+        try(PreparedStatement getAllComposizioni = connection.prepareStatement(query)){
+
+            ResultSet result = getAllComposizioni.executeQuery();
+
+            while(result.next()){
+                IdFoto.add(result.getInt("IDFOTO"));
+                IdVideo.add(result.getInt("IDVIDEO"));
+            }
+
+            result.close();
+        }catch(SQLException sqle){
             sqle.printStackTrace();
         }
     }
