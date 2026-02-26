@@ -136,4 +136,31 @@ public class Controller {
             return false;
         }
     }
+
+    public boolean loadSoggetto (){
+        soggettiInMemory.clear();
+
+        ArrayList<String> tmpNomeSoggetto = new ArrayList<>();
+        ArrayList<String> tmpCategoria = new ArrayList<>();
+
+
+        try {
+
+            soggettoPostgresDAO.getAllSoggetti(tmpNomeSoggetto, tmpCategoria);
+
+            for (int i=0;i<tmpNomeSoggetto.size(); i++) {
+
+                Soggetto subject = new Soggetto(
+                        tmpNomeSoggetto.get(i),
+                        tmpCategoria.get(i),
+                        null);
+
+                soggettiInMemory.add(subject);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
