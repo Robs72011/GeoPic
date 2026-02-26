@@ -1,6 +1,4 @@
-package Model.DAO;
-
-import Model.Soggetto;
+package DAO;
 
 import java.util.ArrayList;
 

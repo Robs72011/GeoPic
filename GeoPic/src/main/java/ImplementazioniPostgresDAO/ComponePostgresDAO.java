@@ -1,7 +1,6 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.ComponeDAO;
-import jdk.jshell.spi.SPIResolutionException;
+import DAO.ComponeDAO;
 
 import java.sql.*;
 import java.util.ArrayList;

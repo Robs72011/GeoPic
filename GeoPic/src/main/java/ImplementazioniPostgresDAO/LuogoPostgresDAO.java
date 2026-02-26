@@ -1,6 +1,6 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.LuogoDAO;
+import DAO.LuogoDAO;
 
 import java.sql.*;
 import java.util.ArrayList;

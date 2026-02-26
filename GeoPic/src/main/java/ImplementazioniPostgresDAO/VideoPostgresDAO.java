@@ -1,6 +1,6 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.VideoDAO;
+import DAO.VideoDAO;
 
 import java.sql.*;
 import java.util.ArrayList;

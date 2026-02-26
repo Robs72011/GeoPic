@@ -1,13 +1,12 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.PartecipaDAO;
+import DAO.PartecipaDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 public class PartecipaPostgresDAO implements PartecipaDAO {
     Connection connection;

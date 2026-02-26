@@ -1,6 +1,6 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.FotografiaDAO;
+import DAO.FotografiaDAO;
 
 import java.sql.*;
 import java.time.LocalDate;

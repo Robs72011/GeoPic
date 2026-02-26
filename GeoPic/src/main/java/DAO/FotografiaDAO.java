@@ -1,4 +1,4 @@
-package Model.DAO;
+package DAO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
