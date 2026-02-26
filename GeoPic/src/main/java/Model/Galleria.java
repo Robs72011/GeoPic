@@ -16,7 +16,11 @@ public abstract class Galleria{
     public Galleria(String idGalleria, String nomeGalleria, Utente proprietario, ArrayList<Fotografia> fotoContenute) {
         this.idGalleria = idGalleria;
         this.nomeGalleria = nomeGalleria;
-        this.proprietario = proprietario;
+
+        if(proprietario != null)
+            this.proprietario = proprietario;
+        else
+            this.proprietario = null;
 
         if(fotoContenute != null){
             this.fotoContenute = fotoContenute;

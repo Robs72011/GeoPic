@@ -24,13 +24,14 @@ public class Controller {
     private ArrayList<GalleriaCondivisa> gallerieCondiviseInMemory;
     private ArrayList<Luogo> luoghiInMemory;
     private ArrayList<Soggetto> soggettiInMemory;
-    private ArrayList<Utente> utenteInMemory;
+    private ArrayList<Utente> utentiInMemory;
     private ArrayList<Video> videosInMemory;
 
     private Utente loggedInUtente;
 
     public Controller(){
         try{
+
             Connection connessione = ConnessioneDataBasePostgres.getIstanza().getConnesione();
 
             this.componePostgresDAO = new ComponePostgresDAO(connessione);
@@ -49,13 +50,43 @@ public class Controller {
             this.gallerieCondiviseInMemory = new ArrayList<>();
             this.luoghiInMemory = new ArrayList<>();
             this.soggettiInMemory = new ArrayList<>();
-            this.utenteInMemory = new ArrayList<>();
+            this.utentiInMemory = new ArrayList<>();
             this.videosInMemory = new ArrayList<>();
-
 
         }catch(SQLException sqle){
             System.err.println("Impossibile connettersi al DB.");
             sqle.printStackTrace();
+        }
+    }
+
+    public void loadUtenti(){
+
+        utentiInMemory.clear();
+
+        ArrayList<String> tmpIdUtente = new ArrayList<>();
+        ArrayList<String> tmpUsername = new ArrayList<>();
+        ArrayList<String> tmpPassword = new ArrayList<>();
+        ArrayList<Boolean> tmpIsAdmin = new ArrayList<>();
+        ArrayList<Boolean> tmpIsSoggetto = new ArrayList<>();
+
+        try {
+            utentePostgresDAO.getAllUtenti(tmpIdUtente, tmpUsername, tmpPassword, tmpIsAdmin, tmpIsSoggetto);
+
+            for (int i = 0; i < tmpIdUtente.size(); i++) {
+                Utente user = new Utente(
+                        tmpIdUtente.get(i),
+                        tmpUsername.get(i),
+                        tmpPassword.get(i),
+                        tmpIsAdmin.get(i),
+                        tmpIsSoggetto.get(i),
+                        null,
+                        null,
+                        null);
+
+                utentiInMemory.add(user);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
