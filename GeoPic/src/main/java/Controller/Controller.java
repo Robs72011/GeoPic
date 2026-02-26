@@ -59,7 +59,7 @@ public class Controller {
         }
     }
 
-    public void loadUtenti(){
+    public boolean loadUtenti(){
 
         utentiInMemory.clear();
 
@@ -85,8 +85,55 @@ public class Controller {
 
                 utentiInMemory.add(user);
             }
+            return true;
         }catch (Exception e){
             e.printStackTrace();
+
+            return false;
+        }
+
+    }
+
+    public boolean loadGallerie(){
+
+        galleriePrivateInMemory.clear();
+        gallerieCondiviseInMemory.clear();
+
+        ArrayList<String> tmpIdGalleria = new ArrayList<>();
+        ArrayList<String> tmpNomeGalleria = new ArrayList<>();
+        ArrayList<Boolean> tmpCondivisa = new ArrayList<>();
+        ArrayList<String> tmpProprietario = new ArrayList<>();
+
+        try{
+            galleriaPostgresDAO.getAllGallerie(tmpIdGalleria, tmpNomeGalleria, tmpCondivisa, tmpProprietario);
+
+            for(int i = 0; i < tmpIdGalleria.size(); i++){
+                if(tmpCondivisa.get(i) == true){
+                    GalleriaCondivisa galleriaCondivisa = new GalleriaCondivisa(
+                            tmpIdGalleria.get(i),
+                            tmpNomeGalleria.get(i),
+                            null,
+                            null,
+                            null
+                    );
+
+                    gallerieCondiviseInMemory.add(galleriaCondivisa);
+                }else{
+                    GalleriaPrivata galleriaPrivata = new GalleriaPrivata(
+                            tmpIdGalleria.get(i),
+                            tmpNomeGalleria.get(i),
+                            null,
+                            null,
+                            null
+                    );
+
+                    galleriePrivateInMemory.add(galleriaPrivata);
+                }
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
     }
 }
