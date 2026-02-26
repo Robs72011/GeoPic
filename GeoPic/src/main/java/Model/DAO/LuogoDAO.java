@@ -7,5 +7,5 @@ public interface LuogoDAO {
 
     void deleteLuogo(String coordinate);
 
-    public void getAllLuoghi(ArrayList<String> coordinate, ArrayList<String> toponimo);
+    void getAllLuoghi(ArrayList<String> coordinate, ArrayList<String> toponimo);
 }

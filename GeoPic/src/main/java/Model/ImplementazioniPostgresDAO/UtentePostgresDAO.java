@@ -2,6 +2,7 @@ package Model.ImplementazioniPostgresDAO;
 
 import Model.DAO.UtenteDAO;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class UtentePostgresDAO implements UtenteDAO {
     Connection connection;
@@ -44,4 +45,55 @@ public class UtentePostgresDAO implements UtenteDAO {
         }
 
     }
+
+    //Per recuperare tutti gli utenti dal db
+    public void getAllUtenti(ArrayList<String> idUtente, ArrayList<String> username, ArrayList<String> password,
+                             ArrayList<Boolean> isAdmin, ArrayList<Boolean> isSoggetto){
+        String statement = "SELECT * FROM galleria.UTENTE";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)){
+
+            ResultSet rs = query.executeQuery();
+
+            while(rs.next()){
+                idUtente.add(rs.getString("idUtente"));
+                username.add(rs.getString("username"));
+                password.add(rs.getString("password"));
+                isAdmin.add(rs.getBoolean("isAdmin"));
+                isSoggetto.add(rs.getBoolean("isSoggetto"));
+            }
+
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+
+    }
+
+    //Per recuperare un solo utente dal DB, quello loggato
+    //Al metodo vengono passati username e password gia inizializzati dal tentativo di login
+    public void getLoggedInUtente(String idUtente, String username, String password,
+                                  Boolean isAdmin, Boolean isSoggetto){
+        String statement = "SELECT * FROM galleria.UTENTE WHERE usernam LIKE ? AND password LIKE ?";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)){
+
+            query.setString(1, username);
+            query.setString(2, password);
+
+            ResultSet rs = query.executeQuery();
+
+            while(rs.next()){
+                idUtente =  rs.getString("idUtente");
+                isAdmin = rs.getBoolean("isAdmin");
+                isSoggetto = rs.getBoolean("isSoggetto");
+            }
+
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+
+    }
+
 }

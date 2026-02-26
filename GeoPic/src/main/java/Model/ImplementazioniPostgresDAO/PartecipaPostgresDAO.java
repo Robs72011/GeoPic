@@ -4,7 +4,9 @@ import Model.DAO.PartecipaDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 public class PartecipaPostgresDAO implements PartecipaDAO {
@@ -39,6 +41,23 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
             rimozioneUtenteDaGalleriaCondivisa.setString(2, idUtente);
 
             rimozioneUtenteDaGalleriaCondivisa.executeUpdate();
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
+
+    public void getAllPartecipanti(ArrayList<String> idGalleria, ArrayList<String> idUtente){
+        String statement = "SELECT * FROM galleria.PARTECIPA";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()){
+                idGalleria.add(resultSet.getString("IDGalleria"));
+                idUtente.add(resultSet.getString("IDUtente"));
+            }
+
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }

@@ -4,7 +4,9 @@ import Model.DAO.SoggettoDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SoggettoPostgresDAO implements SoggettoDAO {
     Connection connection;
@@ -70,6 +72,23 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
             rimozioneSoggettoConUtente.setString(1, nomeUtente);
 
             rimozioneSoggettoConUtente.executeUpdate();
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
+
+    public void getAllSoggetti(ArrayList<String> nomeSoggetto, ArrayList<String> categoria){
+        String statement = "SELECT * FROM galleria.SOGGETTO";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()){
+                nomeSoggetto.add(resultSet.getString("NomeSoggetto"));
+                categoria.add(resultSet.getString("Categoria"));
+            }
+
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }

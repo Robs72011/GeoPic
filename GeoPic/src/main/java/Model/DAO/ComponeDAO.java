@@ -12,5 +12,5 @@ public interface ComponeDAO {
     //aggiorna una coppia idvideo idfoto
     void updateComposizione(String IDVideo, String IDFoto, String NewIDVideo, String NewIDFoto);
 
-    public void getAllComposizioni(ArrayList<String> idVideo, ArrayList<String> idFoto);
+    void getAllComposizioni(ArrayList<String> idVideo, ArrayList<String> idFoto);
 }

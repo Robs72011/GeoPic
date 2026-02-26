@@ -3,6 +3,7 @@ package Model.ImplementazioniPostgresDAO;
 import Model.DAO.VideoDAO;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class VideoPostgresDAO implements VideoDAO {
     Connection connection;
@@ -42,5 +43,31 @@ public class VideoPostgresDAO implements VideoDAO {
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
+    }
+
+    public void getAllVideo(ArrayList<String> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
+                            ArrayList<String> galleria) {
+
+        String statement = "SELECT * FROM galleria.VIDEO";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)){
+
+            ResultSet rs = query.executeQuery();
+
+            while(rs.next()){
+                idVideo.add(rs.getString("IDVideo"));
+                titoloVideo.add(rs.getString("TitoloVideo"));
+
+                if(rs.getString("descrizione") != null){
+                    descrizione.add(rs.getString("Descrizione"));
+                }else{
+                    descrizione.add(null);
+                }
+            }
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+
     }
 }

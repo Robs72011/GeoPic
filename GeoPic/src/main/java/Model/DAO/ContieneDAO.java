@@ -7,5 +7,5 @@ public interface ContieneDAO {
 
     void deleteFotoDaGalleria(String IDGalleria, String IDFoto);
 
-    public void getAllContenute(ArrayList<String> idGalleria, ArrayList<String>idFoto);
+    void getAllContenute(ArrayList<String> idGalleria, ArrayList<String>idFoto);
 }
