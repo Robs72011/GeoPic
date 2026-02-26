@@ -1,6 +1,6 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.ContieneDAO;
+import DAO.ContieneDAO;
 import java.sql.*;
 import java.util.ArrayList;
 

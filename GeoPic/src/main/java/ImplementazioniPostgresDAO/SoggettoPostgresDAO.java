@@ -1,6 +1,6 @@
-package Model.ImplementazioniPostgresDAO;
+package ImplementazioniPostgresDAO;
 
-import Model.DAO.SoggettoDAO;
+import DAO.SoggettoDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
