@@ -32,7 +32,7 @@ public class ConnessioneDataBasePostgres{
         return connessione;
     }
 
-    public static ConnessioneDataBasePostgres getInstanza() throws SQLException{
+    public static ConnessioneDataBasePostgres getIstanza() throws SQLException{
         if(istanza == null || istanza.getConnesione().isClosed())
             istanza = new ConnessioneDataBasePostgres();
 
