@@ -38,4 +38,24 @@ Alla eliminazione di una foto che e' presente in un video, viene elimnato il vid
 
 usando il try-with-resources (try(PreparedStatement updateDataEliminazione = connection.prepareStatement(statement))), permette di automaticamente liberare la memoria dallo statement, la connessione non viene chiusa nei DAO, ma o nel controller quando la connessione al DB non e' piu' necessaria, oppure al termine del programma, in questo caso alla chiusura.
 
+Per il caricamento in memoria e la modellazione della classi in quest ultima, e' stata adottata una tecnica che effettua la modellazionein due fasi.
+In quanto le nostre classi sono fortemente connesse tra loro per le relazione N:N tra loro, risulta un problema decidere quale classe caricare per prima il cui attributo non dipenda da un altra classe ancora non in memoria. La soluzione e' dividere il caricamento in due fasi, nella prima le classi vengono caricate con tutti gli attributi assestanti che non dipendono da un altra classe. La seconda fase e' fare il linking delle dipendenze tra classi.
 
+
+
+
+
+
+
+
+private Galleria cercaGalleriaPerId(String id) {
+    // Cerco nelle private
+    for (GalleriaPrivata gp : galleriePrivateInMemory) {
+        if (gp.getIdGalleria().equals(id)) return gp;
+    }
+    // Cerco nelle condivise
+    for (GalleriaCondivisa gc : gallerieCondiviseInMemory) {
+        if (gc.getIdGalleria().equals(id)) return gc;
+    }
+    return null; // Se non trovo nulla
+}

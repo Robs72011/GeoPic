@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DB/schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/VideoPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/VideoPostgresDAO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +102,8 @@
       <workItem from="1771919514230" duration="13772000" />
       <workItem from="1771944899686" duration="893000" />
       <workItem from="1772011566990" duration="5083000" />
-      <workItem from="1772092561449" duration="16215000" />
+      <workItem from="1772092561449" duration="16720000" />
+      <workItem from="1772180914931" duration="2624000" />
     </task>
     <servers />
   </component>

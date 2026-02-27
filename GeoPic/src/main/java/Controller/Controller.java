@@ -137,18 +137,17 @@ public class Controller {
         }
     }
 
-    public boolean loadSoggetto (){
+    public boolean loadSoggetti (){
         soggettiInMemory.clear();
 
         ArrayList<String> tmpNomeSoggetto = new ArrayList<>();
         ArrayList<String> tmpCategoria = new ArrayList<>();
 
-
         try {
 
             soggettoPostgresDAO.getAllSoggetti(tmpNomeSoggetto, tmpCategoria);
 
-            for (int i=0;i<tmpNomeSoggetto.size(); i++) {
+            for (int i = 0; i < tmpNomeSoggetto.size(); i++) {
 
                 Soggetto subject = new Soggetto(
                         tmpNomeSoggetto.get(i),
@@ -160,6 +159,64 @@ public class Controller {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean loadLuoghi(){
+        luoghiInMemory.clear();
+
+        ArrayList<String> tmpCoordinate =  new ArrayList<>();
+        ArrayList<String> tmpNomeLuoghi = new ArrayList<>();
+
+        try{
+
+            luogoPostgresDAO.getAllLuoghi(tmpCoordinate, tmpNomeLuoghi);
+
+            for(int i = 0; i < tmpCoordinate.size(); i++){
+                Luogo luogo = new Luogo(
+                        tmpCoordinate.get(i),
+                        tmpNomeLuoghi.get(i),
+                        null);
+
+                luoghiInMemory.add(luogo);
+            }
+
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return false;
+        }
+    }
+
+    public boolean loadVideos(){
+        videosInMemory.clear();
+
+        ArrayList<String> tmpIdVideos = new ArrayList<>();
+        ArrayList<String> tmpDescrizione = new ArrayList<>();
+        ArrayList<String> tmpTitolo = new ArrayList<>();
+        ArrayList<String> tmpGalleria = new ArrayList<>();
+
+        try{
+
+            videoPostgresDAO.getAllVideo(tmpIdVideos, tmpDescrizione, tmpTitolo, tmpGalleria);
+
+            for(int i = 0; i < tmpIdVideos.size(); i++){
+                Video video = new Video(
+                        tmpIdVideos.get(i),
+                        tmpDescrizione.get(i),
+                        tmpTitolo.get(i),
+                        null,
+                        null);
+
+                videosInMemory.add(video);
+            }
+
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+
             return false;
         }
     }

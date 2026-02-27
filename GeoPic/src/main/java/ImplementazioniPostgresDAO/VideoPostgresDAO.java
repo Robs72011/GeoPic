@@ -63,6 +63,8 @@ public class VideoPostgresDAO implements VideoDAO {
                 }else{
                     descrizione.add(null);
                 }
+
+                galleria.add(rs.getString("Galleria"));
             }
 
         }catch(SQLException sqle){
