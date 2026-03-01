@@ -52,20 +52,6 @@ public class Utente {
         }
     }
 
-    /*
-    //costruttore manca fotoScattate, utentePartecipaGalleriaCondivisa e PASSWORD
-    public Utente (String idutente, String username, boolean isAdmin, boolean isSoggetto, ArrayList<Galleria> galleriePossedute){
-        this.idUtente = idutente;
-        this.username = username;
-        this.isAdmin = isAdmin;
-
-        this.isSoggetto = isSoggetto;
-        this.fotoScattate = new ArrayList<>();
-        this.galleriePossedute = galleriePossedute;
-        this.utentePartecipaGalleriaCondivisa = new ArrayList<>();
-    }
-     */
-
     public String getIdUtente() {
         return idUtente;
     }
@@ -93,6 +79,7 @@ public class Utente {
     public boolean isAdmin() {
         return isAdmin;
     }
+
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }

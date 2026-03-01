@@ -220,4 +220,46 @@ public class Controller {
             return false;
         }
     }
+
+
+    public void linkFotografiaAUtente() {
+        ArrayList<String> tmpIdFotografia = new ArrayList<>();
+        ArrayList<String> tmpAutore = new ArrayList<>();
+
+        fotografiaPostgresDAO.getScatta(tmpIdFotografia, tmpAutore);
+
+        for(int i = 0; i < tmpIdFotografia.size(); i++){
+            // String idFoto =  tmpIdFotografia.get(i);
+            // String autore = tmpAutore.get(i);
+
+            Fotografia foto = getFotografiaByID(fotografieInMemory, tmpIdFotografia.get(i));
+            Utente autore = getUtenteByID(utentiInMemory, tmpAutore.get(i));
+
+            if(foto != null && autore != null){
+                foto.setAutore(autore);
+                autore.addFotoScattate(foto);
+            }
+        }
+    }
+
+
+    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, String idFotoToFind) {
+        for(int i = 0; i < fotografie.size(); i++){
+            if(fotografie.get(i).getIdFoto().equals(idFotoToFind)){
+                return fotografie.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public Utente getUtenteByID(ArrayList<Utente> utenti, String idUserToFind) {
+        for(int i = 0; i < utenti.size(); i++){
+            if(utenti.get(i).getIdUtente().equals(idUserToFind)){
+                return utenti.get(i);
+            }
+        }
+
+        return null;
+    }
 }

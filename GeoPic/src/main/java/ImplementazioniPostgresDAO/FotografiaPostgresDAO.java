@@ -76,7 +76,6 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         String statement = "UPDATE galleria.FOTOGRAFIA SET dataEliminazione = ? WHERE IDFoto = ?";
 
         try(PreparedStatement updateDataEliminazione = connection.prepareStatement(statement)){
-            //PreparedStatement updateDataEliminazione = connection.prepareStatement(statement);
 
             updateDataEliminazione.setDate(1, Date.valueOf(newDataEliminazione));
             updateDataEliminazione.setString(2, IDFoto);
@@ -118,6 +117,22 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
 
             }
         }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
+
+    public void getScatta(ArrayList<String> idFoto, ArrayList<String> autore) {
+        String statement = "SELECT IDFOTO, AUTORE FROM galleria.FOTOGRAFIA";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()) {
+                idFoto.add(resultSet.getString("IDFoto"));
+                autore.add(resultSet.getString("AUTORE"));
+            }
+
+        }catch (SQLException sqle){
             sqle.printStackTrace();
         }
     }
