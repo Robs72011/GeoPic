@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA(
 	IDFoto galleria.id_object_dt NOT NULL,
 	Dispositivo galleria.string NOT NULL DEFAULT 'Nameless', --il dispositivo non e' specificato nel caso l'utente non lo inserisce
     Autore galleria.id_user_dt NOT NULL,
-    Coordinate galleria.coo_dt,
+    Coordinate galleria.coo_dt  ,
 	Visibilita	BOOLEAN NOT NULL DEFAULT TRUE,
 	DataScatto DATE NOT NULL,
 	DataEliminazione DATE DEFAULT NULL,

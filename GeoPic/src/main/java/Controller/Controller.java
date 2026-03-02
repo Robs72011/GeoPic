@@ -303,5 +303,27 @@ public class Controller {
         }
     }
 
-    public void 
+    public void linkFotografiaLuogo(){
+        ArrayList<String> tmpIdFotografia = new ArrayList<>();
+        ArrayList<String> tmpLuogo = new ArrayList<>();
+
+        fotografiaPostgresDAO.getRaffigura(tmpIdFotografia, tmpLuogo);
+
+        for (int i=0;i<tmpIdFotografia.size();i++){
+            Fotografia foto = getFotografiaByID(fotografieInMemory, tmpIdFotografia.get(i));
+            Luogo luogo = getLuogoByCoordinate(luoghiInMemory, tmpLuogo.get(i));
+
+            if (foto != null && luogo != null) {
+                foto.setLuogo(luogo);
+                luogo.addLuogoRaffiguratoIn(foto);
+
+            }
+
+        }
+
+
+
+    }
+
+    public void
 }

@@ -121,6 +121,24 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
+    public void getRaffigura(ArrayList<String> idFoto, ArrayList<String> luogo){
+
+        String statement = "SELECT IDFOTO, COORDINATE FROM galleria.FOTOGRAFIA";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()) {
+
+                idFoto.add(resultSet.getString("IDFoto"));
+                luogo.add(resultSet.getString("Coordinate"));
+            }
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+
+    }
+
     public void getScatta(ArrayList<String> idFoto, ArrayList<String> autore) {
         String statement = "SELECT IDFOTO, AUTORE FROM galleria.FOTOGRAFIA";
 

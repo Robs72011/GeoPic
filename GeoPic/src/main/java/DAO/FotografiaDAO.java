@@ -18,4 +18,7 @@ public interface FotografiaDAO {
     void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore,
                           ArrayList<String> coordinate, ArrayList<Boolean> visibilita,
                           ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione);
-}
+
+    public void getRaffigura(ArrayList<String> idFoto, ArrayList<String> luogo);
+
+    }
