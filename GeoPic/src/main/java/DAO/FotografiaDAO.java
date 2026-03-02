@@ -18,4 +18,6 @@ public interface FotografiaDAO {
     void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore,
                           ArrayList<String> coordinate, ArrayList<Boolean> visibilita,
                           ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione);
+
+    public void getScatta(ArrayList<String> idFoto, ArrayList<String> autore);
 }

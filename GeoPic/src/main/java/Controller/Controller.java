@@ -229,6 +229,15 @@ public class Controller {
         }
         return null;
     }
+
+    public Galleria getGalleriaByID(ArrayList<Galleria> gallerie, String idGalleria) {
+        for(Galleria galleria : gallerie){
+            if(galleria.getIdGalleria().equals(idGalleria)){
+                return galleria;
+            }
+        }
+        return null;
+    }
     
     public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
                                                       String galCondIdToFind){
@@ -303,5 +312,28 @@ public class Controller {
         }
     }
 
-    public void 
+    public void setOwnerGalleries(){
+        ArrayList<String> tmpIdGalleria= new ArrayList<>();
+        ArrayList<String> tmpProprietario= new ArrayList<>();
+        ArrayList<Boolean> tmpCondivisione = new ArrayList<>();
+
+        galleriaPostgresDAO.getOwner(tmpIdGalleria, tmpProprietario, tmpCondivisione);
+
+        for(int i = 0; i < tmpIdGalleria.size(); i++){
+            boolean isCondivisa = tmpCondivisione.get(i);
+            Galleria gal;
+            if(isCondivisa){
+                gal = getGalleriaCondivisaByID(gallerieCondiviseInMemory, tmpIdGalleria.get(i));
+            }else {
+                gal = getGalleriaPrivataByID(galleriePrivateInMemory, tmpIdGalleria.get(i));
+            }
+
+            Utente proprietario = getUtenteByID(utentiInMemory, tmpProprietario.get(i));
+
+            if(gal != null && proprietario != null){
+                gal.setProprietario(proprietario);
+                proprietario.addGalleriePossedute(gal);
+            }
+        }
+    }
 }
