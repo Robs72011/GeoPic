@@ -7,8 +7,6 @@
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/FotografiaPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/FotografiaPostgresDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +102,7 @@
       <workItem from="1772092561449" duration="16720000" />
       <workItem from="1772180914931" duration="6891000" />
       <workItem from="1772396758513" duration="1451000" />
+      <workItem from="1772442850295" duration="2255000" />
     </task>
     <servers />
   </component>

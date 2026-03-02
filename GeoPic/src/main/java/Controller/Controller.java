@@ -221,6 +221,70 @@ public class Controller {
         }
     }
 
+    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, String idFotoToFind) {
+        for(Fotografia foto: fotografie){
+            if(foto.getIdFoto().equals(idFotoToFind)){
+                return foto;
+            }
+        }
+        return null;
+    }
+    
+    public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
+                                                      String galCondIdToFind){
+        for(GalleriaCondivisa galleriaCondivisa : gallCondivise){
+            if(galleriaCondivisa.getIdGalleria().equals(galCondIdToFind)){
+                return galleriaCondivisa;
+            }
+        }
+        return null;
+    }
+
+    public GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
+                                                      String galPrivIdToFind){
+        for(GalleriaPrivata galleriaPrivata : gallPrivate){
+            if(galleriaPrivata.getIdGalleria().equals(galPrivIdToFind)){
+                return galleriaPrivata;
+            }
+        }
+        return null;
+    }
+
+    public Luogo getLuogoByCoordinate(ArrayList<Luogo> luoghi, String coordinateToFind) {
+        for(Luogo luogo : luoghi){
+            if(luogo.getCoordinate().equals(coordinateToFind)){
+                return luogo;
+            }
+        }
+        return null;
+    }
+
+    public Soggetto getSoggettoByNomeSoggetto(ArrayList<Soggetto> soggetti, String nomeSoggettoToFind) {
+        for(Soggetto soggetto : soggetti){
+            if(soggetto.getNomeSoggetto().equals(nomeSoggettoToFind)){
+                return soggetto;
+            }
+        }
+        return null;
+    }
+
+    public Utente getUtenteByID(ArrayList<Utente> utenti, String idUserToFind) {
+        for(Utente utente : utenti){
+            if(utente.getIdUtente().equals(idUserToFind)){
+                return utente;
+            }
+        }
+        return null;
+    }
+
+    public Video getVideoByID(ArrayList<Video> videos, String idVideoToFind) {
+        for(Video video : videos){
+            if(video.getIdVideo().equals(idVideoToFind)){
+                return video;
+            }
+        }
+        return null;
+    }
 
     public void linkFotografiaAUtente() {
         ArrayList<String> tmpIdFotografia = new ArrayList<>();
@@ -229,9 +293,6 @@ public class Controller {
         fotografiaPostgresDAO.getScatta(tmpIdFotografia, tmpAutore);
 
         for(int i = 0; i < tmpIdFotografia.size(); i++){
-            // String idFoto =  tmpIdFotografia.get(i);
-            // String autore = tmpAutore.get(i);
-
             Fotografia foto = getFotografiaByID(fotografieInMemory, tmpIdFotografia.get(i));
             Utente autore = getUtenteByID(utentiInMemory, tmpAutore.get(i));
 
@@ -242,24 +303,5 @@ public class Controller {
         }
     }
 
-
-    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, String idFotoToFind) {
-        for(int i = 0; i < fotografie.size(); i++){
-            if(fotografie.get(i).getIdFoto().equals(idFotoToFind)){
-                return fotografie.get(i);
-            }
-        }
-
-        return null;
-    }
-
-    public Utente getUtenteByID(ArrayList<Utente> utenti, String idUserToFind) {
-        for(int i = 0; i < utenti.size(); i++){
-            if(utenti.get(i).getIdUtente().equals(idUserToFind)){
-                return utenti.get(i);
-            }
-        }
-
-        return null;
-    }
+    public void 
 }
