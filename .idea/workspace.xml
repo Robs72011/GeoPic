@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/VideoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/VideoDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/VideoPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/VideoPostgresDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Fotografia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +106,7 @@
       <workItem from="1772092561449" duration="16720000" />
       <workItem from="1772180914931" duration="6891000" />
       <workItem from="1772396758513" duration="1451000" />
-      <workItem from="1772442850295" duration="11158000" />
+      <workItem from="1772442850295" duration="6594000" />
     </task>
     <servers />
   </component>

@@ -379,6 +379,42 @@ public class Controller {
         }
     }
 
+    public void linkFotografiaSoggetto(){
+        ArrayList<String> tmpIdFotografia = new ArrayList<>();
+        ArrayList<String> tmpSoggetto = new ArrayList<>();
+
+        mostraPostgresDAO.getAlSoggettiMostrati(tmpSoggetto, tmpIdFotografia);
+
+        for (int i=0;i<tmpIdFotografia.size();i++){
+            Fotografia foto = getFotografiaByID(fotografieInMemory, tmpIdFotografia.get(i));
+            Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, tmpSoggetto.get(i));
+
+            if (foto != null && soggetto != null){
+                foto.addSoggetto(soggetto);
+                soggetto.addFotoInCuiAppare(foto);
+            }
+        }
+    }
+
+    public void linkUtenteSoggetto(){
+        ArrayList<String> tmpIdUtente =  new ArrayList<>();
+        ArrayList<String> tmpSoggetto = new ArrayList<>();
+
+        soggettoPostgresDAO.getRappresenta(tmpSoggetto, tmpIdUtente);
+
+
+        for (int i=0;i<tmpIdUtente.size();i++) {
+            Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, tmpSoggetto.get(i));
+            Utente utente = getUtenteByID(utentiInMemory, tmpIdUtente.get(i));
+
+
+            if (utente != null && soggetto != null) {
+                utente.setSoggetto(true);
+                soggetto.setUtenteRappresentato(utente);
+            }
+        }
+    }
+
     public void linkOwnerGalleries(){
         ArrayList<String> tmpIdGalleria= new ArrayList<>();
         ArrayList<String> tmpProprietario= new ArrayList<>();

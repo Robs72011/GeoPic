@@ -93,4 +93,22 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
             sqle.printStackTrace();
         }
     }
+
+    public void getRappresenta(ArrayList<String> nomeSoggetto, ArrayList<String> utente){
+        String statement = "SELECT NOMESOGGETTO, IDUTENTE FROM galleria.SOGGETTO";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)){
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()){
+                nomeSoggetto.add(resultSet.getString("NomeSoggetto"));
+                utente.add(resultSet.getString("IDUtente"));
+
+            }
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+
+    }
 }
