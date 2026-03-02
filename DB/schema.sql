@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
     IDGalleria galleria.id_object_dt  NOT NULL,
     NomeGalleria galleria.string  NOT NULL,
     Condivisa BOOLEAN NOT NULL DEFAULT FALSE,
-        Proprietario galleria.id_user_dt  NOT NULL,
+	Proprietario galleria.id_user_dt  NOT NULL,
 
     CONSTRAINT galleria_pk PRIMARY KEY (IDGalleria),
 

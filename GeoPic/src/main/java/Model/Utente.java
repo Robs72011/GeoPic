@@ -120,6 +120,18 @@ public class Utente {
         return aggiunta;
     }
 
+    public boolean addPartecipazioneAGalleria(GalleriaCondivisa galCond){
+        boolean aggiunta = false;
+
+        if(this.galleriePossedute.contains(galCond)){
+            this.galleriePossedute.add(galCond);
+
+            aggiunta = true;
+        }
+
+        return aggiunta;
+    }
+
     public boolean removeFotoScattata(Fotografia f){
         boolean rimozione = false;
 

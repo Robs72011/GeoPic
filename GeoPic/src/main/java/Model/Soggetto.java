@@ -1,5 +1,6 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Soggetto {
@@ -8,8 +9,11 @@ public class Soggetto {
 
     private Utente utenteRappresentato;
 
+    private ArrayList<Fotografia> fotoInCuiAppare;
+
     //costruttore c'è tutto
-    public Soggetto(String nomeSoggetto, String categoria, Utente utenteRappresentato) {
+    public Soggetto(String nomeSoggetto, String categoria, Utente utenteRappresentato,
+                    ArrayList<Fotografia> fotoInCuiAppare) {
         this.nomeSoggetto = nomeSoggetto;
         this.categoria = categoria;
 
@@ -17,6 +21,12 @@ public class Soggetto {
             this.utenteRappresentato = utenteRappresentato;
         }else{
             this.utenteRappresentato = null;
+        }
+
+        if(fotoInCuiAppare != null){
+            this.fotoInCuiAppare = fotoInCuiAppare;
+        }else{
+            this.fotoInCuiAppare = new ArrayList<>();
         }
     }
 
@@ -63,5 +73,17 @@ public class Soggetto {
         Soggetto soggetto = (Soggetto) obj;
 
         return Objects.equals(nomeSoggetto, soggetto.nomeSoggetto);
+    }
+
+    public boolean addFotoInCuiAppare(Fotografia fotografia){
+        boolean aggiunta = false;
+
+        if(!(this.fotoInCuiAppare.contains(fotografia))){
+            this.fotoInCuiAppare.add(fotografia);
+
+            aggiunta = true;
+        }
+
+        return aggiunta;
     }
 }

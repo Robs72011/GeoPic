@@ -72,4 +72,6 @@ public class VideoPostgresDAO implements VideoDAO {
         }
 
     }
+
+    get getSalvatoIn()
 }

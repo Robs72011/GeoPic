@@ -7,18 +7,10 @@
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DB/schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/FotografiaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/FotografiaDAO.java" afterDir="false" />
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/FotografiaPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/FotografiaPostgresDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Luogo.java" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/GalleriaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/GalleriaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/GalleriaPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/GalleriaPostgresDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/VideoPostgresDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/ImplementazioniPostgresDAO/VideoPostgresDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Soggetto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Utente.java" afterDir="false" />
->>>>>>> 7ad4ce0b55be3aacb0e5b1444af1af5014817041
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,8 +77,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.27397.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.27397.103" />
       </set>
     </attachedChunks>
   </component>
@@ -114,23 +106,12 @@
       <workItem from="1772092561449" duration="16720000" />
       <workItem from="1772180914931" duration="6891000" />
       <workItem from="1772396758513" duration="1451000" />
-      <workItem from="1772442850295" duration="4775000" />
+      <workItem from="1772442850295" duration="6594000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

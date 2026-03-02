@@ -152,6 +152,7 @@ public class Controller {
                 Soggetto subject = new Soggetto(
                         tmpNomeSoggetto.get(i),
                         tmpCategoria.get(i),
+                        null,
                         null);
 
                 soggettiInMemory.add(subject);
@@ -329,12 +330,9 @@ public class Controller {
             }
 
         }
-
-
-
     }
 
-    public void setOwnerGalleries(){
+    public void linkOwnerGalleries(){
         ArrayList<String> tmpIdGalleria= new ArrayList<>();
         ArrayList<String> tmpProprietario= new ArrayList<>();
         ArrayList<Boolean> tmpCondivisione = new ArrayList<>();
@@ -343,19 +341,49 @@ public class Controller {
 
         for(int i = 0; i < tmpIdGalleria.size(); i++){
             boolean isCondivisa = tmpCondivisione.get(i);
+            String currentIdGal = tmpIdGalleria.get(i);
+            String currentProprietario = tmpProprietario.get(i);
+
             Galleria gal;
             if(isCondivisa){
-                gal = getGalleriaCondivisaByID(gallerieCondiviseInMemory, tmpIdGalleria.get(i));
+                gal = getGalleriaCondivisaByID(gallerieCondiviseInMemory, currentIdGal);
             }else {
-                gal = getGalleriaPrivataByID(galleriePrivateInMemory, tmpIdGalleria.get(i));
+                gal = getGalleriaPrivataByID(galleriePrivateInMemory, currentIdGal);
             }
 
-            Utente proprietario = getUtenteByID(utentiInMemory, tmpProprietario.get(i));
+            Utente proprietario = getUtenteByID(utentiInMemory, currentProprietario);
 
             if(gal != null && proprietario != null){
                 gal.setProprietario(proprietario);
                 proprietario.addGalleriePossedute(gal);
+            }else {
+                System.err.println("Errore Linking: Galleria o Proprietario non trovati per ID: " + currentIdGal);
             }
         }
+    }
+
+    public void linkPartecipazione(){
+        ArrayList<String> tmpIdGalleria = new ArrayList<>();
+        ArrayList<String> tmpIdPartecipante = new ArrayList<>();
+
+        partecipaPostgresDAO.getAllPartecipanti(tmpIdGalleria, tmpIdPartecipante);
+
+        for(int i = 0; i < tmpIdGalleria.size(); i++){
+            String currentIdGal = tmpIdGalleria.get(i);
+            String currentIdPartecipante = tmpIdPartecipante.get(i);
+
+            Utente utente =  getUtenteByID(utentiInMemory, currentIdPartecipante);
+            GalleriaCondivisa galleria = getGalleriaCondivisaByID(gallerieCondiviseInMemory, currentIdGal);
+
+            if(utente != null && galleria != null){
+                utente.addPartecipazioneAGalleria(galleria);
+                galleria.addPartecipante(utente);
+            }
+        }
+    }
+
+    public void linkVideoGalleries(){
+        ArrayList<String> tmpIdGalleria = new ArrayList<>();
+
     }
 }
