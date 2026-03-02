@@ -21,4 +21,5 @@ public interface FotografiaDAO {
 
     public void getRaffigura(ArrayList<String> idFoto, ArrayList<String> luogo);
 
-    }
+    public void getScatta(ArrayList<String> idFoto, ArrayList<String> autore);
+}

@@ -65,4 +65,21 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
         }
 
     }
+
+    public void getOwner(ArrayList<String> idGalleria, ArrayList<String> proprietario, ArrayList<Boolean> condivisione) {
+        String statement = "SELECT IDGalleria, Proprietario, Condivisa FROM galleria.GALLERIA";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+            ResultSet resultSet = query.executeQuery();
+
+            while(resultSet.next()) {
+                idGalleria.add(resultSet.getString("IDFoto"));
+                proprietario.add(resultSet.getString("AUTORE"));
+                condivisione.add(resultSet.getBoolean("condivisione"));
+            }
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
 }

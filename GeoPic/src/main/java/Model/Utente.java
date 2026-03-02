@@ -108,6 +108,18 @@ public class Utente {
         return aggiunta;
     }
 
+    public boolean addGalleriePossedute(Galleria g){
+        boolean aggiunta = false;
+
+        if(!(this.galleriePossedute.contains(g))){
+            this.galleriePossedute.add(g);
+
+            aggiunta = true;
+        }
+
+        return aggiunta;
+    }
+
     public boolean removeFotoScattata(Fotografia f){
         boolean rimozione = false;
 

@@ -11,4 +11,5 @@ public interface GalleriaDAO {
     public void getAllGallerie(ArrayList<String> idGalleria, ArrayList<String> nomeGalleria,
                                ArrayList<Boolean> condivisa, ArrayList<String> proprietario);
 
-    }
+    public void getOwner(ArrayList<String> idGalleria, ArrayList<String> proprietario);
+}
