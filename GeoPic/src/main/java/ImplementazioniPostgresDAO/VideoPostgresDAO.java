@@ -73,5 +73,18 @@ public class VideoPostgresDAO implements VideoDAO {
 
     }
 
-    get getSalvatoIn()
+    public void getSalvatoIn(ArrayList<String> idVideo, ArrayList<String> idGalleria) {
+        String statement = "SELECT idvideo, galleria FROM galleria.VIDEO";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)){
+            ResultSet rs = query.executeQuery();
+
+            while(rs.next()){
+                idVideo.add(rs.getString("idvideo"));
+                idGalleria.add(rs.getString("galleria"));
+            }
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
 }

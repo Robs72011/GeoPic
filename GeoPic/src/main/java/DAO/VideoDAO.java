@@ -9,4 +9,6 @@ public interface VideoDAO {
 
     void getAllVideo(ArrayList<String> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
                             ArrayList<String> galleria);
+
+    public void getSalvatoIn(ArrayList<String> idVideo, ArrayList<String> idGalleria);
 }

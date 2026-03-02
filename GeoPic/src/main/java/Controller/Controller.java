@@ -4,6 +4,7 @@ import ImplementazioniPostgresDAO.*;
 import Model.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Controller {
@@ -222,6 +223,46 @@ public class Controller {
         }
     }
 
+    public boolean loadFotografie(){
+
+        fotografieInMemory.clear();
+
+        ArrayList<String> tmpIdFoto = new ArrayList<>();
+        ArrayList<String> tmpDevice = new ArrayList<>();
+        ArrayList<String> tmpAutore = new ArrayList<>();
+        ArrayList<String> tmpCoordinate = new ArrayList<>();
+        ArrayList<Boolean> tmpVisibilita = new ArrayList<>();
+        ArrayList<LocalDate> tmpDataDiScatto = new ArrayList<>();
+        ArrayList<LocalDate> tmpDataEliminazione = new ArrayList<>();
+
+
+        try {
+            fotografiaPostgresDAO.getAllFotografie(tmpIdFoto, tmpDevice, tmpAutore,
+                    tmpCoordinate, tmpVisibilita, tmpDataDiScatto, tmpDataEliminazione);
+
+            for (int i = 0; i < tmpIdFoto.size(); i++) {
+                Fotografia foto = new Fotografia(
+                        tmpIdFoto.get(i),
+                        tmpDevice.get(i),
+                        tmpDataDiScatto.get(i),
+                        tmpDataEliminazione.get(i),
+                        tmpVisibilita.get(i),
+                        null,
+                        null,
+                        null,
+                        null);
+
+                fotografieInMemory.add(foto);
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+
+            return false;
+        }
+
+    }
+
     public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, String idFotoToFind) {
         for(Fotografia foto: fotografie){
             if(foto.getIdFoto().equals(idFotoToFind)){
@@ -231,12 +272,18 @@ public class Controller {
         return null;
     }
 
-    public Galleria getGalleriaByID(ArrayList<Galleria> gallerie, String idGalleria) {
-        for(Galleria galleria : gallerie){
-            if(galleria.getIdGalleria().equals(idGalleria)){
-                return galleria;
-            }
+    // se l'id passato è di una galleria privata, ritorna una privata, altrimenti una condivisa
+    public Galleria getGalleriaByID(String idGalleria) {
+        Galleria galleria = getGalleriaPrivataByID(galleriePrivateInMemory, idGalleria);
+        if(galleria != null){
+            return galleria;
         }
+
+        galleria = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGalleria);
+        if(galleria != null){
+            return galleria;
+        }
+
         return null;
     }
     
@@ -382,8 +429,63 @@ public class Controller {
         }
     }
 
-    public void linkVideoGalleries(){
-        ArrayList<String> tmpIdGalleria = new ArrayList<>();
+    public void linkVideoToGalleries(){
+        ArrayList<String> tmpIdVideo = new ArrayList<>();
+        ArrayList<String> tmpGalleria = new ArrayList<>();
 
+        videoPostgresDAO.getSalvatoIn(tmpIdVideo, tmpGalleria);
+
+        for(int i = 0; i < tmpIdVideo.size(); i++){
+            String currentIdVideo = tmpIdVideo.get(i);
+            String currentIdGalleria = tmpGalleria.get(i);
+
+            Video video = getVideoByID(videosInMemory, currentIdVideo);
+            GalleriaPrivata galPriv = getGalleriaPrivataByID(galleriePrivateInMemory, currentIdGalleria);
+
+            if(video != null && galPriv != null){
+                video.setGalleria(galPriv);
+                galPriv.addVideo(video);
+            }
+        }
+    }
+
+    public void linkFotoToGallerie(){
+        ArrayList<String> tmpIdGalleria = new ArrayList<>();
+        ArrayList<String> tmpIdFoto = new ArrayList<>();
+
+        contienePostgresDAO.getAllContenute(tmpIdGalleria, tmpIdFoto);
+
+        for(int i = 0; i < tmpIdGalleria.size(); i++){
+            String currentIdGal = tmpIdGalleria.get(i);
+            String currentIdFoto = tmpIdFoto.get(i);
+
+            Galleria galleria = getGalleriaByID(currentIdGal);
+            Fotografia foto = getFotografiaByID(fotografieInMemory,  currentIdFoto);
+
+            if(galleria != null && foto != null){
+                foto.addGalleriaContenitrice(galleria);
+                galleria.addFotoAGalleria(foto);
+            }
+        }
+    }
+
+    public void linkFotoToVideo(){
+        ArrayList<String> tmpIdVideo = new ArrayList<>();
+        ArrayList<String> tmpIdFoto = new ArrayList<>();
+
+        componePostgresDAO.getAllComposizioni(tmpIdVideo, tmpIdFoto);
+
+        for(int i = 0; i < tmpIdVideo.size(); i++){
+            String currentIdVideo = tmpIdVideo.get(i);
+            String currentIdFoto = tmpIdFoto.get(i);
+
+            Video video = getVideoByID(videosInMemory, currentIdVideo);
+            Fotografia foto = getFotografiaByID(fotografieInMemory,  currentIdFoto);
+
+            if(video != null && foto != null){
+                video.addFotoAVideo(foto);
+                foto.addVideo(video);
+            }
+        }
     }
 }

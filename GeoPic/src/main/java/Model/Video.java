@@ -60,6 +60,10 @@ public class Video {
         return compostoDaFoto;
     }
 
+    public void setGalleria(Galleria galleria) {
+        this.galleria = galleria;
+    }
+
     public boolean addFotoAVideo(Fotografia foto){
         boolean aggiunta = false;
 

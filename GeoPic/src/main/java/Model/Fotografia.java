@@ -27,13 +27,17 @@ public class Fotografia {
     private ArrayList<Soggetto> soggetti;
 
     //costruttore manca luogo e fotoComponeVideo
-    public Fotografia(String idFoto, String dispositivo, LocalDate dataDiScatto, boolean visibility, Utente autore,
+    public Fotografia(String idFoto, String dispositivo, LocalDate dataDiScatto, LocalDate dataDiEliminazione, boolean visibility, Utente autore,
                       Luogo luogo, ArrayList<Galleria> galleriaContenitrice, ArrayList<Soggetto> soggetti){
 
         this.idFoto = idFoto;
         this.dispositivo = dispositivo;
         this.dataDiScatto = dataDiScatto;
-        this.dataDiEliminazione = null;
+        if(dataDiEliminazione == null){
+            this.dataDiEliminazione = null;
+        }else{
+            this.dataDiEliminazione = dataDiEliminazione;
+        }
         this.visibility = visibility;
 
         if(luogo == null){
