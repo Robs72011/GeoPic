@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class UtentePostgresDAO implements UtenteDAO {
+
     Connection connection;
 
     public  UtentePostgresDAO(Connection connection) {

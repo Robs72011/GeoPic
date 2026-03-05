@@ -383,7 +383,7 @@ public class Controller {
         ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
         ArrayList<String> tmpSoggetto = new ArrayList<>();
 
-        mostraPostgresDAO.getAlSoggettiMostrati(tmpSoggetto, tmpIdFotografia);
+        mostraPostgresDAO.getAllSoggettiMostrati(tmpSoggetto, tmpIdFotografia);
 
         for (int i=0;i<tmpIdFotografia.size();i++){
             Fotografia foto = getFotografiaByID(fotografieInMemory, tmpIdFotografia.get(i));
@@ -523,5 +523,28 @@ public class Controller {
                 foto.addVideo(video);
             }
         }
+    }
+
+    public void loadInMemory() {
+        // Flat loading
+        loadUtenti();
+        loadLuoghi();
+        loadSoggetti();
+        loadGallerie(); // Sia private che condivise
+        loadVideos();
+        loadFotografie();
+
+        // Linking
+        linkUtenteSoggetto();
+        linkOwnerGalleries();
+        linkPartecipazione();
+        linkVideoToGalleries();
+        linkFotografiaAUtente();
+        linkFotografiaLuogo();
+        linkFotografiaSoggetto();
+        linkFotoToGallerie();
+        linkFotoToVideo();
+
+        System.out.println("Data Graph caricato con successo!");
     }
 }

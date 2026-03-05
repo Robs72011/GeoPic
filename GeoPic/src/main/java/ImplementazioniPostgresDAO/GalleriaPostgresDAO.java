@@ -65,6 +65,7 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
 
     }
 
+    @Override
     public void getOwner(ArrayList<Integer> idGalleria, ArrayList<Integer> proprietario, ArrayList<Boolean> condivisione) {
         String statement = "SELECT IDGalleria, Proprietario, Condivisa FROM galleria.GALLERIA";
 

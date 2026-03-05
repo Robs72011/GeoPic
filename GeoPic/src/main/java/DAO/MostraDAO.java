@@ -7,5 +7,5 @@ public interface MostraDAO {
 
     void deleteSoggettoDaFoto(String nomeSoggetto,  int IDFoto);
 
-    void getAlSoggettiMostrati(ArrayList<String> nomeSoggetto, ArrayList<Integer> idFoto);
+    void getAllSoggettiMostrati(ArrayList<String> nomeSoggetto, ArrayList<Integer> idFoto);
 }

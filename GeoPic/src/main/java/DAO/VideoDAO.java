@@ -3,7 +3,7 @@ package DAO;
 import java.util.ArrayList;
 
 public interface VideoDAO {
-    void insertVideo(int idVideo, String titoloVideo, String descrizione, String galleria);
+    void insertVideo(String titoloVideo, String descrizione, int galleria);
 
     void deleteVideo(int idVideo);
 
