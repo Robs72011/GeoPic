@@ -5,21 +5,21 @@ import java.util.ArrayList;
 
 public interface FotografiaDAO {
     //Aggiunge una foto con tutte le info
-    void insertFotografia(String idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione,
+    void insertFotografia(int idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione,
                  boolean visibilita, String coordinate, String autore);
 
     //rimuove una foto andando ad aggiungere la data di eliminazione
-    void deleteFotografia(String IDFoto);
+    void deleteFotografia(int IDFoto);
 
-    void updateVisibilita(String IDFoto, boolean visibilita);
+    void updateVisibilita(int IDFoto, boolean visibilita);
 
-    void updateDataEliminazione(String IDFoto, LocalDate dataEliminazione);
+    void updateDataEliminazione(int IDFoto, LocalDate dataEliminazione);
 
-    void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore,
+    void getAllFotografie(ArrayList<Integer> idFoto, ArrayList<String> device, ArrayList<String> autore,
                           ArrayList<String> coordinate, ArrayList<Boolean> visibilita,
                           ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione);
 
-    public void getRaffigura(ArrayList<String> idFoto, ArrayList<String> luogo);
+    public void getRaffigura(ArrayList<Integer> idFoto, ArrayList<String> luogo);
 
     public void getScatta(ArrayList<Integer> idFoto, ArrayList<String> autore);
 }

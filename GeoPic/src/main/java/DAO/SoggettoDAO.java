@@ -7,7 +7,7 @@ public interface SoggettoDAO {
 
     void deleteSoggetto(String nomeSoggetto);
 
-    void insertUtenteAsSoggetto(String nomeUtente, String categoria, String idUtente);
+    void insertUtenteAsSoggetto(String nomeUtente, String categoria, int idUtente);
 
     void deleteUtenteAsSoggetto(String nomeUtente);
 

@@ -3,12 +3,12 @@ package DAO;
 import java.util.ArrayList;
 
 public interface VideoDAO {
-    void insertVideo(String idVideo, String titoloVideo, String descrizione, String galleria);
+    void insertVideo(int idVideo, String titoloVideo, String descrizione, String galleria);
 
-    void deleteVideo(String idVideo);
+    void deleteVideo(int idVideo);
 
-    void getAllVideo(ArrayList<String> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
-                            ArrayList<String> galleria);
+    void getAllVideo(ArrayList<Integer> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
+                            ArrayList<Integer> galleria);
 
-    public void getSalvatoIn(ArrayList<String> idVideo, ArrayList<String> idGalleria);
+    public void getSalvatoIn(ArrayList<Integer> idVideo, ArrayList<Integer> idGalleria);
 }
