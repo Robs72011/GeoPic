@@ -3,10 +3,10 @@ package DAO;
 import java.util.ArrayList;
 
 public interface PartecipaDAO {
-    void insertPartecipante(String idGalleria, String idUtente);
+    void insertPartecipante(int idGalleria, int idUtente);
 
-    void deletePartecipante(String idGalleria, String idUtente);
+    void deletePartecipante(int idGalleria, int idUtente);
 
-    void getAllPartecipanti(ArrayList<String> idGalleria, ArrayList<String> idUtente);
+    void getAllPartecipanti(ArrayList<Integer> idGalleria, ArrayList<Integer> idUtente);
 
 }
