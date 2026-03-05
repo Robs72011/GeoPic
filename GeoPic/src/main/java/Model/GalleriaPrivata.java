@@ -7,7 +7,7 @@ public class GalleriaPrivata extends Galleria{
     //Rappresenta la relazione "Salvato in" tra GalleriaPersonale e Video
     private ArrayList<Video> videos = null;
 
-    public GalleriaPrivata(String idGalleria, String nomeGalleria, Utente proprietario,
+    public GalleriaPrivata(Integer idGalleria, String nomeGalleria, Utente proprietario,
                            ArrayList<Fotografia> fotoContenute, ArrayList<Video> videos){
         super(idGalleria, nomeGalleria, proprietario, fotoContenute);
 

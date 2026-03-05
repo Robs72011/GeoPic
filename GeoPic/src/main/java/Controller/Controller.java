@@ -64,7 +64,7 @@ public class Controller {
 
         utentiInMemory.clear();
 
-        ArrayList<String> tmpIdUtente = new ArrayList<>();
+        ArrayList<Integer> tmpIdUtente = new ArrayList<>();
         ArrayList<String> tmpUsername = new ArrayList<>();
         ArrayList<String> tmpPassword = new ArrayList<>();
         ArrayList<Boolean> tmpIsAdmin = new ArrayList<>();

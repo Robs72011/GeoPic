@@ -6,16 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/ComponeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/ComponeDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/ContieneDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/ContieneDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/FotografiaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/FotografiaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/GalleriaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/GalleriaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/MostraDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/MostraDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/PartecipaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/PartecipaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/SoggettoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/SoggettoDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/UtenteDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/UtenteDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/VideoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/DAO/VideoDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proj.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaPrivata.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaPrivata.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +108,7 @@
       <workItem from="1772396758513" duration="1451000" />
       <workItem from="1772442850295" duration="6594000" />
       <workItem from="1772620012019" duration="1024000" />
-      <workItem from="1772704859391" duration="2335000" />
+      <workItem from="1772704859391" duration="5276000" />
     </task>
     <servers />
   </component>

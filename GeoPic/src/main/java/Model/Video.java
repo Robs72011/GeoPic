@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Video {
 
-    private String idVideo;
+    private Integer idVideo;
     private String descrizione;
     private String titolo;
 
@@ -17,7 +17,7 @@ public class Video {
     private Galleria galleria;
 
     //costruttore
-    public Video(String idVideo, String descrizione, String titolo, ArrayList<Fotografia> compostoDaFoto, Galleria galleria){
+    public Video(Integer idVideo, String descrizione, String titolo, ArrayList<Fotografia> compostoDaFoto, Galleria galleria){
 
         this.idVideo=idVideo;
         this.descrizione=descrizione;
@@ -32,11 +32,11 @@ public class Video {
         this.galleria=galleria;
     }
 
-    public String getIdVideo() {
+    public Integer getIdVideo() {
         return idVideo;
     }
 
-    public void setIdVideo(String idVideo) {
+    public void setIdVideo(Integer idVideo) {
         this.idVideo = idVideo;
     }
 

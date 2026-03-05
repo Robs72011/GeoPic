@@ -8,7 +8,7 @@ public class GalleriaCondivisa extends Galleria{
     //Rappresenta la relazione "Partecipa" tra galleria e utente, indicando chi sono i partecipanti della galleria condivisa
     private ArrayList<Utente> partecipanti = null;
 
-    public GalleriaCondivisa(String idGalleria, String nomeGalleria, Utente proprietario,
+    public GalleriaCondivisa(Integer idGalleria, String nomeGalleria, Utente proprietario,
                              ArrayList<Fotografia> fotoContenute, ArrayList<Utente> partecipanti){
         super(idGalleria, nomeGalleria, proprietario, fotoContenute);
 
