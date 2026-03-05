@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public abstract class Galleria{
 
-    private String idGalleria;
+    private Integer idGalleria;
     private String nomeGalleria; //galleria privata: nome proprietario + "'s Gallery"
 
     //Rappresenta la relazione "possiede" tra galleria e utente
@@ -16,7 +16,7 @@ public abstract class Galleria{
     //Rappresenta la relazione "Contiene" tra galleria e foto, indicando le foto che sono contenute nella galleria
     private ArrayList<Fotografia> fotoContenute = new ArrayList<>();
 
-    public Galleria(String idGalleria, String nomeGalleria, Utente proprietario, ArrayList<Fotografia> fotoContenute) {
+    public Galleria(Integer idGalleria, String nomeGalleria, Utente proprietario, ArrayList<Fotografia> fotoContenute) {
         this.idGalleria = idGalleria;
         this.nomeGalleria = nomeGalleria;
 
@@ -32,11 +32,11 @@ public abstract class Galleria{
         }
     }
 
-    public String getIdGalleria() {
+    public Integer getIdGalleria() {
         return idGalleria;
     }
 
-    public void setIdGalleria(String idGalleria) {
+    public void setIdGalleria(Integer idGalleria) {
         this.idGalleria = idGalleria;
     }
 
