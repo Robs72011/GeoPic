@@ -13,15 +13,14 @@ public class VideoPostgresDAO implements VideoDAO {
     }
 
     @Override
-    public void insertVideo(String idVideo, String titoloVideo, String descrizione, String galleria) {
-        String statement = "INSERT INTO galleria.VIDEO VALUES (?, ?, ?, ?)";
+    public void insertVideo(String titoloVideo, String descrizione, int galleria) {
+        String statement = "INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES (?, ?, ?)";
 
         try(PreparedStatement aggiuntaVideo = connection.prepareStatement(statement)){
 
-            aggiuntaVideo.setString(1, idVideo);
-            aggiuntaVideo.setString(2, titoloVideo);
-            aggiuntaVideo.setString(3, descrizione);
-            aggiuntaVideo.setString(4, galleria);
+            aggiuntaVideo.setString(1, titoloVideo);
+            aggiuntaVideo.setString(2, descrizione);
+            aggiuntaVideo.setInt(3, galleria);
 
             aggiuntaVideo.executeUpdate();
 
@@ -31,12 +30,12 @@ public class VideoPostgresDAO implements VideoDAO {
     }
 
     @Override
-    public void deleteVideo(String idVideo) {
-        String statement = "DELETE FROM galleria.VIDEO WHERE IDVideo LIKE ?";
+    public void deleteVideo(int idVideo) {
+        String statement = "DELETE FROM galleria.VIDEO WHERE IDVideo = ?";
 
         try(PreparedStatement rimozioneVideo = connection.prepareStatement(statement)){
 
-            rimozioneVideo.setString(1, idVideo);
+            rimozioneVideo.setInt(1, idVideo);
 
             rimozioneVideo.executeUpdate();
 
@@ -45,8 +44,8 @@ public class VideoPostgresDAO implements VideoDAO {
         }
     }
 
-    public void getAllVideo(ArrayList<String> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
-                            ArrayList<String> galleria) {
+    public void getAllVideo(ArrayList<Integer> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
+                            ArrayList<Integer> galleria) {
 
         String statement = "SELECT * FROM galleria.VIDEO";
 
@@ -55,7 +54,7 @@ public class VideoPostgresDAO implements VideoDAO {
             ResultSet rs = query.executeQuery();
 
             while(rs.next()){
-                idVideo.add(rs.getString("IDVideo"));
+                idVideo.add(rs.getInt("IDVideo"));
                 titoloVideo.add(rs.getString("TitoloVideo"));
 
                 if(rs.getString("descrizione") != null){
@@ -64,7 +63,7 @@ public class VideoPostgresDAO implements VideoDAO {
                     descrizione.add(null);
                 }
 
-                galleria.add(rs.getString("Galleria"));
+                galleria.add(rs.getInt("Galleria"));
             }
 
         }catch(SQLException sqle){
@@ -73,15 +72,15 @@ public class VideoPostgresDAO implements VideoDAO {
 
     }
 
-    public void getSalvatoIn(ArrayList<String> idVideo, ArrayList<String> idGalleria) {
+    public void getSalvatoIn(ArrayList<Integer> idVideo, ArrayList<Integer> idGalleria) {
         String statement = "SELECT idvideo, galleria FROM galleria.VIDEO";
 
         try(PreparedStatement query = connection.prepareStatement(statement)){
             ResultSet rs = query.executeQuery();
 
             while(rs.next()){
-                idVideo.add(rs.getString("idvideo"));
-                idGalleria.add(rs.getString("galleria"));
+                idVideo.add(rs.getInt("idvideo"));
+                idGalleria.add(rs.getInt("galleria"));
             }
         }catch (SQLException sqle){
             sqle.printStackTrace();

@@ -227,7 +227,7 @@ public class Controller {
 
         fotografieInMemory.clear();
 
-        ArrayList<String> tmpIdFoto = new ArrayList<>();
+        ArrayList<Integer> tmpIdFoto = new ArrayList<>();
         ArrayList<String> tmpDevice = new ArrayList<>();
         ArrayList<String> tmpAutore = new ArrayList<>();
         ArrayList<String> tmpCoordinate = new ArrayList<>();

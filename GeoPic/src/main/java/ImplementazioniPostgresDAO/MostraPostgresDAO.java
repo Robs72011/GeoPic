@@ -12,13 +12,13 @@ public class MostraPostgresDAO implements MostraDAO {
         this.connection = connection;
     }
     @Override
-    public void insertSoggettoInFoto(String nomeSoggetto, String IDFoto) {
+    public void insertSoggettoInFoto(String nomeSoggetto, int IDFoto) {
         String statement = "INSERT INTO galleria.MOSTRA VALUES(?,?)";
 
         try(PreparedStatement aggiuntaSoggettoAFoto = connection.prepareStatement(statement)) {
 
             aggiuntaSoggettoAFoto.setString(1, nomeSoggetto);
-            aggiuntaSoggettoAFoto.setString(2, IDFoto);
+            aggiuntaSoggettoAFoto.setInt(2, IDFoto);
 
             aggiuntaSoggettoAFoto.executeUpdate();
 
@@ -28,13 +28,13 @@ public class MostraPostgresDAO implements MostraDAO {
     }
 
     @Override
-    public void deleteSoggettoDaFoto(String nomeSoggetto, String IDFoto) {
-        String statement = "INSERT INTO galleria.MOSTRA VALUES(?,?)";
+    public void deleteSoggettoDaFoto(String nomeSoggetto, int IDFoto) {
+        String statement = "DELETE FROM galleria.MOSTRA WHERE nomeSoggetto LIKE ? AND IDFoto = ?";
 
         try(PreparedStatement aggiuntaSoggettoAFoto = connection.prepareStatement(statement)) {
 
             aggiuntaSoggettoAFoto.setString(1, nomeSoggetto);
-            aggiuntaSoggettoAFoto.setString(2, IDFoto);
+            aggiuntaSoggettoAFoto.setInt(2, IDFoto);
 
             aggiuntaSoggettoAFoto.executeUpdate();
 
@@ -43,7 +43,7 @@ public class MostraPostgresDAO implements MostraDAO {
         }
     }
 
-    public void getAlSoggettiMostrati(ArrayList<String> nomeSoggetto, ArrayList<String> idFoto){
+    public void getAllSoggettiMostrati(ArrayList<String> nomeSoggetto, ArrayList<Integer> idFoto){
         String statement = "SELECT * FROM galleria.MOSTRA";
 
         try(PreparedStatement query = connection.prepareStatement(statement)){
@@ -52,7 +52,7 @@ public class MostraPostgresDAO implements MostraDAO {
 
             while(rs.next()){
                 nomeSoggetto.add(rs.getString("nomeSoggetto"));
-                idFoto.add(rs.getString("IDFoto"));
+                idFoto.add(rs.getInt("IDFoto"));
             }
 
 

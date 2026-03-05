@@ -13,15 +13,14 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
     }
 
     @Override
-    public void insertGalleria(String idGalleria, String nomeGalleria, boolean condivisione, String proprietario) {
-        String statement = "INSERT INTO galleria.GALLERIA VALUES(?, ?, ?, ?)";
+    public void insertGalleria(String nomeGalleria, boolean condivisione, int proprietario) {
+        String statement = "INSERT INTO galleria.GALLERIA (NomeGalleria, Condivisa, Proprietario) VALUES(?, ?, ?)";
 
         try(PreparedStatement aggiuntaGalleria = connection.prepareStatement(statement)) {
 
-            aggiuntaGalleria.setString(1, idGalleria);
-            aggiuntaGalleria.setString(2, nomeGalleria);
-            aggiuntaGalleria.setBoolean(3, condivisione);
-            aggiuntaGalleria.setString(4, proprietario);
+            aggiuntaGalleria.setString(1, nomeGalleria);
+            aggiuntaGalleria.setBoolean(2, condivisione);
+            aggiuntaGalleria.setInt(3, proprietario);
 
             aggiuntaGalleria.executeUpdate();
         }catch(SQLException sqle){
@@ -30,12 +29,12 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
     }
 
     @Override
-    public void deleteGalleria(String idGalleria) {
+    public void deleteGalleria(int idGalleria) {
         String statement = "DELETE FROM galleria.GALLERIA WHERE IDGalleria = ?";
 
         try(PreparedStatement rimozioneGalleria = connection.prepareStatement(statement)) {
 
-            rimozioneGalleria.setString(1, idGalleria);
+            rimozioneGalleria.setInt(1, idGalleria);
 
             rimozioneGalleria.executeUpdate();
 
@@ -44,8 +43,8 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
         }
     }
 
-    public void getAllGallerie(ArrayList<String> idGalleria, ArrayList<String> nomeGalleria,
-                               ArrayList<Boolean> condivisa, ArrayList<String> proprietario) {
+    public void getAllGallerie(ArrayList<Integer> idGalleria, ArrayList<String> nomeGalleria,
+                               ArrayList<Boolean> condivisa, ArrayList<Integer> proprietario) {
 
         String statement = "SELECT * FROM galleria.GALLERIA";
 
@@ -54,10 +53,10 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
             ResultSet resultSet = query.executeQuery();
 
             while(resultSet.next()){
-                idGalleria.add(resultSet.getString("IDGalleria"));
-                nomeGalleria.add(resultSet.getString("nomeGalleria"));
-                condivisa.add(resultSet.getBoolean("condivisione"));
-                proprietario.add(resultSet.getString("proprietario"));
+                idGalleria.add(resultSet.getInt("IDGalleria"));
+                nomeGalleria.add(resultSet.getString("NomeGalleria"));
+                condivisa.add(resultSet.getBoolean("Condivisa"));
+                proprietario.add(resultSet.getInt("Proprietario"));
             }
 
         }catch (SQLException sqle){
@@ -66,16 +65,16 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
 
     }
 
-    public void getOwner(ArrayList<String> idGalleria, ArrayList<String> proprietario, ArrayList<Boolean> condivisione) {
+    public void getOwner(ArrayList<Integer> idGalleria, ArrayList<Integer> proprietario, ArrayList<Boolean> condivisione) {
         String statement = "SELECT IDGalleria, Proprietario, Condivisa FROM galleria.GALLERIA";
 
         try(PreparedStatement query = connection.prepareStatement(statement)) {
             ResultSet resultSet = query.executeQuery();
 
             while(resultSet.next()) {
-                idGalleria.add(resultSet.getString("IDFoto"));
-                proprietario.add(resultSet.getString("AUTORE"));
-                condivisione.add(resultSet.getBoolean("condivisione"));
+                idGalleria.add(resultSet.getInt("IDGalleria"));
+                proprietario.add(resultSet.getInt("Proprietario"));
+                condivisione.add(resultSet.getBoolean("Condivisa"));
             }
 
         }catch (SQLException sqle){

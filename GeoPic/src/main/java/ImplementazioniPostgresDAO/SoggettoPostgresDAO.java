@@ -2,10 +2,7 @@ package ImplementazioniPostgresDAO;
 
 import DAO.SoggettoDAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class SoggettoPostgresDAO implements SoggettoDAO {
@@ -23,7 +20,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
 
             aggiuntaSoggetto.setString(1, nomeSoggetto);
             aggiuntaSoggetto.setString(2, categoria);
-            aggiuntaSoggetto.setString(3, null);
+            aggiuntaSoggetto.setNull(3, Types.INTEGER);
 
             aggiuntaSoggetto.executeUpdate();
 
@@ -48,14 +45,14 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
     }
 
     @Override
-    public void insertUtenteAsSoggetto(String nomeUtente, String categoria, String idUtente) {
+    public void insertUtenteAsSoggetto(String nomeUtente, String categoria, int idUtente) {
         String statement = "INSERT INTO galleria.SOGGETTO VALUES(?, ?, ?)";
 
         try(PreparedStatement aggiuntaUtenteComeSoggetto = connection.prepareStatement(statement)){
 
             aggiuntaUtenteComeSoggetto.setString(1, nomeUtente);
             aggiuntaUtenteComeSoggetto.setString(2, categoria);
-            aggiuntaUtenteComeSoggetto.setString(3, null);
+            aggiuntaUtenteComeSoggetto.setInt(3, idUtente);
 
             aggiuntaUtenteComeSoggetto.executeUpdate();
         }catch(SQLException sqle){
@@ -65,7 +62,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
 
     @Override
     public void deleteUtenteAsSoggetto(String nomeUtente) {
-        String statement = "DELETE FROM galleria.SOGGETTO WHERE  NomeSoggetto LIKE ?";
+        String statement = "DELETE FROM galleria.SOGGETTO WHERE  NomeSoggetto = ?";
 
         try(PreparedStatement rimozioneSoggettoConUtente = connection.prepareStatement(statement)){
 
@@ -94,7 +91,7 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
         }
     }
 
-    public void getRappresenta(ArrayList<String> nomeSoggetto, ArrayList<String> utente){
+    public void getRappresenta(ArrayList<String> nomeSoggetto, ArrayList<Integer> utente){
         String statement = "SELECT NOMESOGGETTO, IDUTENTE FROM galleria.SOGGETTO";
 
         try(PreparedStatement query = connection.prepareStatement(statement)){
@@ -102,13 +99,16 @@ public class SoggettoPostgresDAO implements SoggettoDAO {
 
             while(resultSet.next()){
                 nomeSoggetto.add(resultSet.getString("NomeSoggetto"));
-                utente.add(resultSet.getString("IDUtente"));
-
+                int u = resultSet.getInt("IDUTENTE");
+                if(resultSet.wasNull()){
+                    utente.add(null);
+                }else{
+                    utente.add(u);
+                }
             }
 
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
-
     }
 }

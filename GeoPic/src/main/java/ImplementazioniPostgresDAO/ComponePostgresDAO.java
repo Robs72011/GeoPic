@@ -12,13 +12,13 @@ public class ComponePostgresDAO implements ComponeDAO {
         this.connection = connection;
     }
     @Override
-    public void insertComposizione(String IDVideo, String IDFoto) {
-        String statement = "INSERT INTO galleria.COMPONE VALUES(?,? )";
+    public void insertComposizione(int IDVideo, int IDFoto) {
+        String statement = "INSERT INTO galleria.COMPONE VALUES(?, ?)";
 
         try(PreparedStatement newComposizione = connection.prepareStatement(statement)){
 
-            newComposizione.setString(1, IDVideo);
-            newComposizione.setString(2, IDFoto);
+            newComposizione.setInt(1, IDVideo);
+            newComposizione.setInt(2, IDFoto);
 
             newComposizione.executeUpdate();
 
@@ -28,13 +28,13 @@ public class ComponePostgresDAO implements ComponeDAO {
     }
 
     @Override
-    public void deleteComposione(String IDVideo, String IDFoto) {
-        String statement = "DELETE FROM galleria.COMPONE WHERE IDVIDEO LIKE ? AND IDFOTO LIKE ?";
+    public void deleteComposione(int IDVideo, int IDFoto) {
+        String statement = "DELETE FROM galleria.COMPONE WHERE IDVIDEO = ? AND IDFOTO = ?";
 
         try(PreparedStatement deleteComposizioneStatement = connection.prepareStatement(statement)){
 
-            deleteComposizioneStatement.setString(1, IDVideo);
-            deleteComposizioneStatement.setString(2, IDFoto);
+            deleteComposizioneStatement.setInt(1, IDVideo);
+            deleteComposizioneStatement.setInt(2, IDFoto);
 
             deleteComposizioneStatement.executeUpdate();
 
@@ -44,27 +44,25 @@ public class ComponePostgresDAO implements ComponeDAO {
     }
 
     @Override
-    public void updateComposizione(String oldIDVideo, String oldIDFoto, String newIDVideo, String newIDFoto) {
+    public void updateComposizione(int oldIDVideo, int oldIDFoto, int newIDVideo, int newIDFoto) {
         String statement = "UPDATE galleria.COMPONE SET IDVideo = ?, IDFoto = ? " +
-                "WHERE IDVideo LIKE ? AND IDFoto  Like ?";
+                "WHERE IDVideo = ? AND IDFoto  = ?";
 
         try(PreparedStatement updateComposizioneStatement = connection.prepareStatement(statement)){
 
-            updateComposizioneStatement.setString(1, newIDVideo);
-            updateComposizioneStatement.setString(2, newIDFoto);
-            updateComposizioneStatement.setString(3, oldIDVideo);
-            updateComposizioneStatement.setString(4, oldIDFoto);
+            updateComposizioneStatement.setInt(2, newIDFoto);
+            updateComposizioneStatement.setInt(1, newIDVideo);
+            updateComposizioneStatement.setInt(3, oldIDVideo);
+            updateComposizioneStatement.setInt(4, oldIDFoto);
 
             updateComposizioneStatement.executeUpdate();
-
-            connection.close();
         }catch (SQLException sqle){
             sqle.printStackTrace();
         }
     }
 
     @Override
-    public void getAllComposizioni(ArrayList<String> idVideo, ArrayList<String> idFoto){
+    public void getAllComposizioni(ArrayList<Integer> idVideo, ArrayList<Integer> idFoto){
         String statement = "SELECT * FROM galleria.COMPONE";
 
         try(PreparedStatement query = connection.prepareStatement(statement)) {
@@ -73,8 +71,8 @@ public class ComponePostgresDAO implements ComponeDAO {
 
             while(resultSet.next()) {
 
-                idVideo.add(resultSet.getString("IDVideo"));
-                idFoto.add(resultSet.getString("IDFoto"));
+                idVideo.add(resultSet.getInt("IDVideo"));
+                idFoto.add(resultSet.getInt("IDFoto"));
 
             }
         }catch(SQLException sqle){

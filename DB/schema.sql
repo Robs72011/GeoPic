@@ -23,7 +23,7 @@ CREATE DOMAIN galleria.string VARCHAR(50);
 ------------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS galleria.UTENTE(
-    IDUtente galleria.id_user_dt NOT NULL,
+    IDUtente SERIAL NOT NULL,
     Username galleria.string NOT NULL,
 	Password galleria.string NOT NULL,
     IsAdmin BOOLEAN NOT NULL DEFAULT FALSE,
@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS galleria.LUOGO(
 );
 
 CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
-    IDGalleria galleria.id_object_dt  NOT NULL,
+    IDGalleria SERIAL NOT NULL,
     NomeGalleria galleria.string  NOT NULL,
     Condivisa BOOLEAN NOT NULL DEFAULT FALSE,
-	Proprietario galleria.id_user_dt  NOT NULL,
+	Proprietario INT NOT NULL,
 
     CONSTRAINT galleria_pk PRIMARY KEY (IDGalleria),
 
@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
 );
 
 CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA( 
-	IDFoto galleria.id_object_dt NOT NULL,
+	IDFoto SERIAL NOT NULL,
 	Dispositivo galleria.string NOT NULL DEFAULT 'Nameless', --il dispositivo non e' specificato nel caso l'utente non lo inserisce
-    Autore galleria.id_user_dt NOT NULL,
+    Autore INT NOT NULL,
     Coordinate galleria.coo_dt  ,
 	Visibilita	BOOLEAN NOT NULL DEFAULT TRUE,
 	DataScatto DATE NOT NULL,
@@ -71,12 +71,11 @@ CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA(
 
 
 CREATE TABLE IF NOT EXISTS galleria.VIDEO(
-    IDVideo galleria.id_object_dt NOT NULL,
+    IDVideo SERIAL NOT NULL,
     TitoloVideo galleria.string NOT NULL,
     Descrizione TEXT,
 
-    Galleria galleria.id_object_dt NOT NULL,
-
+    Galleria INT NOT NULL,
 
     CONSTRAINT video_pk PRIMARY KEY (IDVideo),
 
@@ -87,20 +86,16 @@ CREATE TABLE IF NOT EXISTS galleria.SOGGETTO(
     NomeSoggetto galleria.string NOT NULL,
     Categoria galleria.string NOT NULL,
 
-	IDUtente galleria.id_user_dt UNIQUE DEFAULT NULL,
+	IDUtente INT UNIQUE DEFAULT NULL,
 
     CONSTRAINT soggetto_pk PRIMARY KEY (NomeSoggetto),
 
     CONSTRAINT idutente_fk FOREIGN KEY (IDUtente) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-
-
-
-
 CREATE TABLE IF NOT EXISTS galleria.PARTECIPA(
-    IDGalleria galleria.id_object_dt  NOT NULL,
-    IDUtente galleria.id_user_dt  NOT NULL,
+    IDGalleria INT NOT NULL,
+    IDUtente INT NOT NULL,
 
     CONSTRAINT partecipa_pk PRIMARY KEY (IDGalleria, IDUtente),
 
@@ -109,8 +104,8 @@ CREATE TABLE IF NOT EXISTS galleria.PARTECIPA(
 );
 
 CREATE TABLE IF NOT EXISTS galleria.CONTIENE(
-    IDGalleria galleria.id_object_dt  NOT NULL,
-    IDFoto galleria.id_object_dt  NOT NULL,
+    IDGalleria INT NOT NULL,
+    IDFoto INT NOT NULL,
 
     CONSTRAINT contiene_pk PRIMARY KEY (IDGalleria, IDFoto),
 
@@ -119,8 +114,8 @@ CREATE TABLE IF NOT EXISTS galleria.CONTIENE(
 );
 
 CREATE TABLE IF NOT EXISTS galleria.COMPONE(
-    IDVideo galleria.id_object_dt  NOT NULL,
-    IDFoto galleria.id_object_dt  NOT NULL,
+    IDVideo INT NOT NULL,
+    IDFoto INT NOT NULL,
 
     CONSTRAINT compone_pk PRIMARY KEY (IDVideo, IDFoto),
 
@@ -132,7 +127,7 @@ CREATE TABLE IF NOT EXISTS galleria.COMPONE(
 
 CREATE TABLE IF NOT EXISTS galleria.MOSTRA(
     NomeSoggetto galleria.string NOT NULL,
-	IDFoto galleria.id_object_dt NOT NULL,
+	IDFoto INT NOT NULL,
 
 	CONSTRAINT mostra_pk PRIMARY KEY (NomeSoggetto, IDFoto),
 

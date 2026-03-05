@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Fotografia {
 
-    private String idFoto;
+    private Integer idFoto;
     private String dispositivo;
     private LocalDate dataDiScatto;
     private LocalDate dataDiEliminazione = null;
@@ -27,7 +27,7 @@ public class Fotografia {
     private ArrayList<Soggetto> soggetti;
 
     //costruttore manca luogo e fotoComponeVideo
-    public Fotografia(String idFoto, String dispositivo, LocalDate dataDiScatto, LocalDate dataDiEliminazione, boolean visibility, Utente autore,
+    public Fotografia(Integer idFoto, String dispositivo, LocalDate dataDiScatto, LocalDate dataDiEliminazione, boolean visibility, Utente autore,
                       Luogo luogo, ArrayList<Galleria> galleriaContenitrice, ArrayList<Soggetto> soggetti){
 
         this.idFoto = idFoto;
@@ -61,11 +61,11 @@ public class Fotografia {
         }
     }
 
-    public String getIdFoto() {
+    public Integer getIdFoto() {
         return idFoto;
     }
 
-    public void setIdFoto(String idFoto) {
+    public void setIdFoto(Integer idFoto) {
         this.idFoto = idFoto;
     }
 

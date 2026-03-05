@@ -12,16 +12,15 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     @Override
-    public void insertUtente(String idUtente, String username, String password, boolean isAdmin, boolean isSoggetto){
-        String statement = "INSERT INTO galleria.UTENTE VALUES(?, ?, ?, ?, ?)";
+    public void insertUtente(String username, String password, boolean isAdmin, boolean isSoggetto){
+        String statement = "INSERT INTO galleria.UTENTE (Username, Password, IsAdmin, IsSoggetto) VALUES(?, ?, ?, ?)";
 
         try(PreparedStatement aggiuntaUtente = connection.prepareStatement(statement)) {
 
-            aggiuntaUtente.setString(1, idUtente);
-            aggiuntaUtente.setString(2, username);
-            aggiuntaUtente.setString(3, password);
-            aggiuntaUtente.setBoolean(4, isAdmin);
-            aggiuntaUtente.setBoolean(5, isSoggetto);
+            aggiuntaUtente.setString(1, username);
+            aggiuntaUtente.setString(2, password);
+            aggiuntaUtente.setBoolean(3, isAdmin);
+            aggiuntaUtente.setBoolean(4, isSoggetto);
 
             aggiuntaUtente.executeUpdate();
 
@@ -31,12 +30,12 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     @Override
-    public void deleteUtente(String idUtente) {
-        String statement = "DELETE FROM .UTENTE WHERE IDUtente LIKE ?";
+    public void deleteUtente(int idUtente) {
+        String statement = "DELETE FROM galleria.UTENTE WHERE IDUtente = ?";
 
         try(PreparedStatement rimozioneUtente = connection.prepareStatement(statement)){
 
-            rimozioneUtente.setString(1, idUtente);
+            rimozioneUtente.setInt(1, idUtente);
 
             rimozioneUtente.executeUpdate();
 
@@ -47,7 +46,7 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     //Per recuperare tutti gli utenti dal db
-    public void getAllUtenti(ArrayList<String> idUtente, ArrayList<String> username, ArrayList<String> password,
+    public void getAllUtenti(ArrayList<Integer> idUtente, ArrayList<String> username, ArrayList<String> password,
                              ArrayList<Boolean> isAdmin, ArrayList<Boolean> isSoggetto){
         String statement = "SELECT * FROM galleria.UTENTE";
 
@@ -56,7 +55,7 @@ public class UtentePostgresDAO implements UtenteDAO {
             ResultSet rs = query.executeQuery();
 
             while(rs.next()){
-                idUtente.add(rs.getString("idUtente"));
+                idUtente.add(rs.getInt("idUtente"));
                 username.add(rs.getString("username"));
                 password.add(rs.getString("password"));
                 isAdmin.add(rs.getBoolean("isAdmin"));
@@ -72,9 +71,9 @@ public class UtentePostgresDAO implements UtenteDAO {
 
     //Per recuperare un solo utente dal DB, quello loggato
     //Al metodo vengono passati username e password gia inizializzati dal tentativo di login
-    public void getLoggedInUtente(String idUtente, String username, String password,
+    public void getLoggedInUtente(Integer idUtente, String username, String password,
                                   Boolean isAdmin, Boolean isSoggetto){
-        String statement = "SELECT * FROM galleria.UTENTE WHERE usernam LIKE ? AND password LIKE ?";
+        String statement = "SELECT * FROM galleria.UTENTE WHERE username = ? AND password = ?";
 
         try(PreparedStatement query = connection.prepareStatement(statement)){
 
@@ -84,7 +83,7 @@ public class UtentePostgresDAO implements UtenteDAO {
             ResultSet rs = query.executeQuery();
 
             while(rs.next()){
-                idUtente =  rs.getString("idUtente");
+                idUtente =  rs.getInt("idUtente");
                 isAdmin = rs.getBoolean("isAdmin");
                 isSoggetto = rs.getBoolean("isSoggetto");
             }
@@ -95,5 +94,4 @@ public class UtentePostgresDAO implements UtenteDAO {
         }
 
     }
-
 }

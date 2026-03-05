@@ -14,25 +14,23 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void insertFotografia(String idFoto, String device, LocalDate dataScatto, LocalDate dataEliminazione,
-                          boolean visibilita, String coordinate, String autore){
-        String statement = "INSERT INTO galleria.FOTOGRAFIA VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public void insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
+                          boolean visibilita, String coordinate, int autore){
+        String statement = "INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto, DataEliminazione) VALUES(?, ?, ?, ?, ?, ?)";
 
-        try{
-            PreparedStatement newFoto = connection.prepareStatement(statement);
-            newFoto.setString(1, idFoto);
-            newFoto.setString(2, device);
-            newFoto.setDate(3, Date.valueOf(dataScatto));
+        try(PreparedStatement newFoto = connection.prepareStatement(statement)){
+
+            newFoto.setString(1, device);
+            newFoto.setInt(2, autore);
+            newFoto.setString(3, coordinate);
+            newFoto.setBoolean(4, visibilita);
+            newFoto.setDate(5, Date.valueOf(dataScatto));
 
             if(dataEliminazione == null){
-                newFoto.setDate(4, null);
+                newFoto.setNull(6, Types.DATE);
             }else{
-                newFoto.setDate(4, Date.valueOf(dataEliminazione));
+                newFoto.setDate(6, Date.valueOf(dataEliminazione));
             }
-
-            newFoto.setBoolean(5, visibilita);
-            newFoto.setString(6, coordinate);
-            newFoto.setString(7, autore);
 
             newFoto.executeUpdate();
         }catch(SQLException sqle){
@@ -41,13 +39,13 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void deleteFotografia(String IDFoto) {
+    public void deleteFotografia(int IDFoto) {
         String statement = "DELETE FROM galleria.FOTOGRAFIA WHERE IDFoto = ?";
 
         try{
             PreparedStatement deleteFoto = connection.prepareStatement(statement);
 
-            deleteFoto.setString(1, IDFoto);
+            deleteFoto.setInt(1, IDFoto);
 
             deleteFoto.executeUpdate();
         }catch(SQLException sqle){
@@ -56,14 +54,14 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void updateVisibilita(String IDFoto, boolean visibilita) {
+    public void updateVisibilita(int IDFoto, boolean visibilita) {
         String statement = "UPDATE galleria.FOTOGRAFIA SET Visibilita = ? WHERE IDFoto = ?";
 
         try{
             PreparedStatement updateVisibilita = connection.prepareStatement(statement);
 
             updateVisibilita.setBoolean(1, visibilita);
-            updateVisibilita.setString(2, IDFoto);
+            updateVisibilita.setInt(2, IDFoto);
 
             updateVisibilita.executeUpdate();
         }catch(SQLException sqle){
@@ -72,13 +70,17 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void updateDataEliminazione(String IDFoto, LocalDate newDataEliminazione) {
+    public void updateDataEliminazione(int IDFoto, LocalDate newDataEliminazione) {
         String statement = "UPDATE galleria.FOTOGRAFIA SET dataEliminazione = ? WHERE IDFoto = ?";
 
         try(PreparedStatement updateDataEliminazione = connection.prepareStatement(statement)){
 
-            updateDataEliminazione.setDate(1, Date.valueOf(newDataEliminazione));
-            updateDataEliminazione.setString(2, IDFoto);
+            if(newDataEliminazione == null){
+                updateDataEliminazione.setNull(1, Types.DATE);
+            }else{
+                updateDataEliminazione.setDate(1, Date.valueOf(newDataEliminazione));
+            }
+            updateDataEliminazione.setInt(2, IDFoto);
 
             updateDataEliminazione.executeUpdate();
         }catch(SQLException sqle){
@@ -86,7 +88,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
-    public void getAllFotografie(ArrayList<String> idFoto, ArrayList<String> device, ArrayList<String> autore,
+    public void getAllFotografie(ArrayList<Integer> idFoto, ArrayList<String> device, ArrayList<Integer> autore,
                                  ArrayList<String> coordinate, ArrayList<Boolean> visibilita,
                                  ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione) {
         String statement = "SELECT * FROM galleria.FOTOGRAFIA";
@@ -97,22 +99,22 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
 
             while(resultSet.next()) {
 
-                idFoto.add(resultSet.getString("IDFoto"));
-                device.add(resultSet.getString("device"));
-                autore.add(resultSet.getString("autore"));
-                if (resultSet.getString("coordinate") != null) {
-                    coordinate.add(resultSet.getString("coordinate"));
+                idFoto.add(resultSet.getInt("IDFoto"));
+                device.add(resultSet.getString("Dispositivo"));
+                autore.add(resultSet.getInt("Autore"));
+                if (resultSet.getString("Coordinate") != null) {
+                    coordinate.add(resultSet.getString("Coordinate"));
                 } else {
-                    coordinate = null;
+                    coordinate.add(null);
                 }
 
-                visibilita.add(resultSet.getBoolean("visibilita"));
+                visibilita.add(resultSet.getBoolean("Visibilita"));
                 dataDiScatto.add(resultSet.getDate("DataScatto").toLocalDate());
 
-                if (resultSet.getString("DataEliminazione") != null) {
+                if (resultSet.getDate("DataEliminazione") != null) {
                     dataEliminazione.add(resultSet.getDate("DataEliminazione").toLocalDate());
                 } else {
-                    dataEliminazione = null;
+                    dataEliminazione.add(null);
                 }
 
             }
@@ -121,7 +123,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
-    public void getRaffigura(ArrayList<String> idFoto, ArrayList<String> luogo){
+    public void getRaffigura(ArrayList<Integer> idFoto, ArrayList<String> luogo){
 
         String statement = "SELECT IDFOTO, COORDINATE FROM galleria.FOTOGRAFIA";
 
@@ -130,7 +132,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
 
             while(resultSet.next()) {
 
-                idFoto.add(resultSet.getString("IDFoto"));
+                idFoto.add(resultSet.getInt("IDFoto"));
                 luogo.add(resultSet.getString("Coordinate"));
             }
         }catch (SQLException sqle){
@@ -139,15 +141,15 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
 
     }
 
-    public void getScatta(ArrayList<String> idFoto, ArrayList<String> autore) {
+    public void getScatta(ArrayList<Integer> idFoto, ArrayList<Integer> autore) {
         String statement = "SELECT IDFOTO, AUTORE FROM galleria.FOTOGRAFIA";
 
         try(PreparedStatement query = connection.prepareStatement(statement)) {
             ResultSet resultSet = query.executeQuery();
 
             while(resultSet.next()) {
-                idFoto.add(resultSet.getString("IDFoto"));
-                autore.add(resultSet.getString("AUTORE"));
+                idFoto.add(resultSet.getInt("IDFoto"));
+                autore.add(resultSet.getInt("AUTORE"));
             }
 
         }catch (SQLException sqle){

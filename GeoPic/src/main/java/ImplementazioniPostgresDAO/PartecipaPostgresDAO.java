@@ -15,13 +15,13 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
     }
 
     @Override
-    public void insertPartecipante(String idGalleria, String idUtente) {
+    public void insertPartecipante(int idGalleria, int idUtente) {
         String statement = "INSERT INTO galleria.PARTECIPA VALUES(?,?)";
 
         try(PreparedStatement aggiuntaPartecipanteAGalleria = connection.prepareStatement(statement)){
 
-            aggiuntaPartecipanteAGalleria.setString(1, idGalleria);
-            aggiuntaPartecipanteAGalleria.setString(2, idUtente);
+            aggiuntaPartecipanteAGalleria.setInt(1, idGalleria);
+            aggiuntaPartecipanteAGalleria.setInt(2, idUtente);
 
             aggiuntaPartecipanteAGalleria.executeUpdate();
 
@@ -31,13 +31,13 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
     }
 
     @Override
-    public void deletePartecipante(String idGalleria, String idUtente) {
-        String statement = "DELETE FROM galleria.PARTECIPA WHERE IDGalleria LIKE ? AND IDUtente LIKE ?";
+    public void deletePartecipante(int idGalleria, int idUtente) {
+        String statement = "DELETE FROM galleria.PARTECIPA WHERE IDGalleria = ? AND IDUtente = ?";
 
         try(PreparedStatement rimozioneUtenteDaGalleriaCondivisa = connection.prepareStatement(statement)){
 
-            rimozioneUtenteDaGalleriaCondivisa.setString(1, idGalleria);
-            rimozioneUtenteDaGalleriaCondivisa.setString(2, idUtente);
+            rimozioneUtenteDaGalleriaCondivisa.setInt(1, idGalleria);
+            rimozioneUtenteDaGalleriaCondivisa.setInt(2, idUtente);
 
             rimozioneUtenteDaGalleriaCondivisa.executeUpdate();
         }catch(SQLException sqle){
@@ -45,7 +45,7 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
         }
     }
 
-    public void getAllPartecipanti(ArrayList<String> idGalleria, ArrayList<String> idUtente){
+    public void getAllPartecipanti(ArrayList<Integer> idGalleria, ArrayList<Integer> idUtente){
         String statement = "SELECT * FROM galleria.PARTECIPA";
 
         try(PreparedStatement query = connection.prepareStatement(statement)) {
@@ -53,8 +53,8 @@ public class PartecipaPostgresDAO implements PartecipaDAO {
             ResultSet resultSet = query.executeQuery();
 
             while(resultSet.next()){
-                idGalleria.add(resultSet.getString("IDGalleria"));
-                idUtente.add(resultSet.getString("IDUtente"));
+                idGalleria.add(resultSet.getInt("IDGalleria"));
+                idUtente.add(resultSet.getInt("IDUtente"));
             }
 
         }catch(SQLException sqle){

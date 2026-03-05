@@ -10,44 +10,48 @@ public class ContienePostgresDAO implements ContieneDAO {
     public ContienePostgresDAO(Connection connection) {
         this.connection = connection;
     }
+
     @Override
-    public void insertFotoAGalleria(String IDGalleria, String IDFoto) {
-        String statement = "INSERT INTO galleria.COMPONE VALUES (?,?)";
+    public void insertFotoAGalleria(int IDGalleria, int IDFoto) {
+        String statement = "INSERT INTO galleria.CONTIENE VALUES (?,?)";
 
         try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
 
-            newFotoInGalleria.setString(1, IDGalleria);
-            newFotoInGalleria.setString(2, IDFoto);
+            newFotoInGalleria.setInt(1, IDGalleria);
+            newFotoInGalleria.setInt(2, IDFoto);
 
             newFotoInGalleria.executeUpdate();
-
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
     }
 
     @Override
-    public void deleteFotoDaGalleria(String IDGalleria, String IDFoto) {
-        String statement = "SELECT * FROM galleria.CONTIENE";
+    public void deleteFotoDaGalleria(int IDGalleria, int IDFoto) {
+        String statement = "DELETE FROM galleria.CONTIENE WHERE IDGALLERIA = ? AND IDFOTO = ?";
 
-        try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
+        try(PreparedStatement deleteFotoInGalleria = connection.prepareStatement(statement)){
 
-            newFotoInGalleria.setString(1, IDGalleria);
-            newFotoInGalleria.setString(2, IDFoto);
+            deleteFotoInGalleria.setInt(1, IDGalleria);
+            deleteFotoInGalleria.setInt(2, IDFoto);
 
+            deleteFotoInGalleria.executeUpdate();
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
     }
 
-    public void getAllContenute(ArrayList<String>idGalleria, ArrayList<String>idFoto){
+    public void getAllContenute(ArrayList<Integer> idGalleria, ArrayList<Integer>idFoto){
         String statement = "SELECT * FROM galleria.CONTIENE";
 
-        try(PreparedStatement newFotoInGalleria = connection.prepareStatement(statement)){
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
 
-            newFotoInGalleria.setString(1, "IDGalleria");
-            newFotoInGalleria.setString(2, "IDFoto");
+            ResultSet result = query.executeQuery();
 
+            while (result.next()) {
+                idGalleria.add(result.getInt("IDGALLERIA"));
+                idFoto.add(result.getInt("IDFOTO"));
+            }
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
