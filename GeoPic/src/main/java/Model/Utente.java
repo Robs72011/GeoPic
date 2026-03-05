@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Utente {
 
-    private String idUtente;
+    private Integer idUtente;
     private String username;
     private String password;
     private boolean isAdmin;
@@ -23,7 +23,7 @@ public class Utente {
     private ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa;
 
     //costruttore manca fotoScattate e utentePartecipaGalleriaCondivisa
-    public Utente (String idutente, String username, String password, boolean isAdmin, boolean isSoggetto,
+    public Utente (Integer idutente, String username, String password, boolean isAdmin, boolean isSoggetto,
                    ArrayList<Fotografia> fotoScattate, ArrayList<Galleria> galleriePossedute,
                    ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa){
         this.idUtente = idutente;
@@ -52,11 +52,11 @@ public class Utente {
         }
     }
 
-    public String getIdUtente() {
+    public Integer getIdUtente() {
         return idUtente;
     }
 
-    public void setIdUtente(String idUtente) {
+    public void setIdUtente(Integer idUtente) {
         this.idUtente = idUtente;
     }
 

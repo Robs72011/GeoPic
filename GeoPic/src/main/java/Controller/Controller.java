@@ -64,7 +64,7 @@ public class Controller {
 
         utentiInMemory.clear();
 
-        ArrayList<String> tmpIdUtente = new ArrayList<>();
+        ArrayList<Integer> tmpIdUtente = new ArrayList<>();
         ArrayList<String> tmpUsername = new ArrayList<>();
         ArrayList<String> tmpPassword = new ArrayList<>();
         ArrayList<Boolean> tmpIsAdmin = new ArrayList<>();
@@ -100,10 +100,10 @@ public class Controller {
         galleriePrivateInMemory.clear();
         gallerieCondiviseInMemory.clear();
 
-        ArrayList<String> tmpIdGalleria = new ArrayList<>();
+        ArrayList<Integer> tmpIdGalleria = new ArrayList<>();
         ArrayList<String> tmpNomeGalleria = new ArrayList<>();
         ArrayList<Boolean> tmpCondivisa = new ArrayList<>();
-        ArrayList<String> tmpProprietario = new ArrayList<>();
+        ArrayList<Integer> tmpProprietario = new ArrayList<>();
 
         try{
             galleriaPostgresDAO.getAllGallerie(tmpIdGalleria, tmpNomeGalleria, tmpCondivisa, tmpProprietario);
@@ -195,10 +195,10 @@ public class Controller {
     public boolean loadVideos(){
         videosInMemory.clear();
 
-        ArrayList<String> tmpIdVideos = new ArrayList<>();
+        ArrayList<Integer> tmpIdVideos = new ArrayList<>();
         ArrayList<String> tmpDescrizione = new ArrayList<>();
         ArrayList<String> tmpTitolo = new ArrayList<>();
-        ArrayList<String> tmpGalleria = new ArrayList<>();
+        ArrayList<Integer> tmpGalleria = new ArrayList<>();
 
         try{
 
@@ -229,7 +229,7 @@ public class Controller {
 
         ArrayList<Integer> tmpIdFoto = new ArrayList<>();
         ArrayList<String> tmpDevice = new ArrayList<>();
-        ArrayList<String> tmpAutore = new ArrayList<>();
+        ArrayList<Integer> tmpAutore = new ArrayList<>();
         ArrayList<String> tmpCoordinate = new ArrayList<>();
         ArrayList<Boolean> tmpVisibilita = new ArrayList<>();
         ArrayList<LocalDate> tmpDataDiScatto = new ArrayList<>();
@@ -263,7 +263,7 @@ public class Controller {
 
     }
 
-    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, String idFotoToFind) {
+    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, Integer idFotoToFind) {
         for(Fotografia foto: fotografie){
             if(foto.getIdFoto().equals(idFotoToFind)){
                 return foto;
@@ -273,7 +273,7 @@ public class Controller {
     }
 
     // se l'id passato è di una galleria privata, ritorna una privata, altrimenti una condivisa
-    public Galleria getGalleriaByID(String idGalleria) {
+    public Galleria getGalleriaByID(Integer idGalleria) {
         Galleria galleria = getGalleriaPrivataByID(galleriePrivateInMemory, idGalleria);
         if(galleria != null){
             return galleria;
@@ -288,7 +288,7 @@ public class Controller {
     }
     
     public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
-                                                      String galCondIdToFind){
+                                                      Integer galCondIdToFind){
         for(GalleriaCondivisa galleriaCondivisa : gallCondivise){
             if(galleriaCondivisa.getIdGalleria().equals(galCondIdToFind)){
                 return galleriaCondivisa;
@@ -298,7 +298,7 @@ public class Controller {
     }
 
     public GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
-                                                      String galPrivIdToFind){
+                                                  Integer galPrivIdToFind){
         for(GalleriaPrivata galleriaPrivata : gallPrivate){
             if(galleriaPrivata.getIdGalleria().equals(galPrivIdToFind)){
                 return galleriaPrivata;
@@ -325,7 +325,7 @@ public class Controller {
         return null;
     }
 
-    public Utente getUtenteByID(ArrayList<Utente> utenti, String idUserToFind) {
+    public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
         for(Utente utente : utenti){
             if(utente.getIdUtente().equals(idUserToFind)){
                 return utente;
@@ -334,7 +334,7 @@ public class Controller {
         return null;
     }
 
-    public Video getVideoByID(ArrayList<Video> videos, String idVideoToFind) {
+    public Video getVideoByID(ArrayList<Video> videos, Integer idVideoToFind) {
         for(Video video : videos){
             if(video.getIdVideo().equals(idVideoToFind)){
                 return video;
@@ -344,8 +344,8 @@ public class Controller {
     }
 
     public void linkFotografiaAUtente() {
-        ArrayList<String> tmpIdFotografia = new ArrayList<>();
-        ArrayList<String> tmpAutore = new ArrayList<>();
+        ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
+        ArrayList<Integer> tmpAutore = new ArrayList<>();
 
         fotografiaPostgresDAO.getScatta(tmpIdFotografia, tmpAutore);
 
@@ -361,7 +361,7 @@ public class Controller {
     }
 
     public void linkFotografiaLuogo(){
-        ArrayList<String> tmpIdFotografia = new ArrayList<>();
+        ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
         ArrayList<String> tmpLuogo = new ArrayList<>();
 
         fotografiaPostgresDAO.getRaffigura(tmpIdFotografia, tmpLuogo);
@@ -380,7 +380,7 @@ public class Controller {
     }
 
     public void linkFotografiaSoggetto(){
-        ArrayList<String> tmpIdFotografia = new ArrayList<>();
+        ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
         ArrayList<String> tmpSoggetto = new ArrayList<>();
 
         mostraPostgresDAO.getAlSoggettiMostrati(tmpSoggetto, tmpIdFotografia);
@@ -397,7 +397,7 @@ public class Controller {
     }
 
     public void linkUtenteSoggetto(){
-        ArrayList<String> tmpIdUtente =  new ArrayList<>();
+        ArrayList<Integer> tmpIdUtente =  new ArrayList<>();
         ArrayList<String> tmpSoggetto = new ArrayList<>();
 
         soggettoPostgresDAO.getRappresenta(tmpSoggetto, tmpIdUtente);
@@ -416,16 +416,16 @@ public class Controller {
     }
 
     public void linkOwnerGalleries(){
-        ArrayList<String> tmpIdGalleria= new ArrayList<>();
-        ArrayList<String> tmpProprietario= new ArrayList<>();
+        ArrayList<Integer> tmpIdGalleria= new ArrayList<>();
+        ArrayList<Integer> tmpProprietario= new ArrayList<>();
         ArrayList<Boolean> tmpCondivisione = new ArrayList<>();
 
         galleriaPostgresDAO.getOwner(tmpIdGalleria, tmpProprietario, tmpCondivisione);
 
         for(int i = 0; i < tmpIdGalleria.size(); i++){
             boolean isCondivisa = tmpCondivisione.get(i);
-            String currentIdGal = tmpIdGalleria.get(i);
-            String currentProprietario = tmpProprietario.get(i);
+            Integer currentIdGal = tmpIdGalleria.get(i);
+            Integer currentProprietario = tmpProprietario.get(i);
 
             Galleria gal;
             if(isCondivisa){
@@ -446,14 +446,14 @@ public class Controller {
     }
 
     public void linkPartecipazione(){
-        ArrayList<String> tmpIdGalleria = new ArrayList<>();
-        ArrayList<String> tmpIdPartecipante = new ArrayList<>();
+        ArrayList<Integer> tmpIdGalleria = new ArrayList<>();
+        ArrayList<Integer> tmpIdPartecipante = new ArrayList<>();
 
         partecipaPostgresDAO.getAllPartecipanti(tmpIdGalleria, tmpIdPartecipante);
 
         for(int i = 0; i < tmpIdGalleria.size(); i++){
-            String currentIdGal = tmpIdGalleria.get(i);
-            String currentIdPartecipante = tmpIdPartecipante.get(i);
+            Integer currentIdGal = tmpIdGalleria.get(i);
+            Integer currentIdPartecipante = tmpIdPartecipante.get(i);
 
             Utente utente =  getUtenteByID(utentiInMemory, currentIdPartecipante);
             GalleriaCondivisa galleria = getGalleriaCondivisaByID(gallerieCondiviseInMemory, currentIdGal);
@@ -466,14 +466,14 @@ public class Controller {
     }
 
     public void linkVideoToGalleries(){
-        ArrayList<String> tmpIdVideo = new ArrayList<>();
-        ArrayList<String> tmpGalleria = new ArrayList<>();
+        ArrayList<Integer> tmpIdVideo = new ArrayList<>();
+        ArrayList<Integer> tmpGalleria = new ArrayList<>();
 
         videoPostgresDAO.getSalvatoIn(tmpIdVideo, tmpGalleria);
 
         for(int i = 0; i < tmpIdVideo.size(); i++){
-            String currentIdVideo = tmpIdVideo.get(i);
-            String currentIdGalleria = tmpGalleria.get(i);
+            Integer currentIdVideo = tmpIdVideo.get(i);
+            Integer currentIdGalleria = tmpGalleria.get(i);
 
             Video video = getVideoByID(videosInMemory, currentIdVideo);
             GalleriaPrivata galPriv = getGalleriaPrivataByID(galleriePrivateInMemory, currentIdGalleria);
@@ -486,14 +486,14 @@ public class Controller {
     }
 
     public void linkFotoToGallerie(){
-        ArrayList<String> tmpIdGalleria = new ArrayList<>();
-        ArrayList<String> tmpIdFoto = new ArrayList<>();
+        ArrayList<Integer> tmpIdGalleria = new ArrayList<>();
+        ArrayList<Integer> tmpIdFoto = new ArrayList<>();
 
         contienePostgresDAO.getAllContenute(tmpIdGalleria, tmpIdFoto);
 
         for(int i = 0; i < tmpIdGalleria.size(); i++){
-            String currentIdGal = tmpIdGalleria.get(i);
-            String currentIdFoto = tmpIdFoto.get(i);
+            Integer currentIdGal = tmpIdGalleria.get(i);
+            Integer currentIdFoto = tmpIdFoto.get(i);
 
             Galleria galleria = getGalleriaByID(currentIdGal);
             Fotografia foto = getFotografiaByID(fotografieInMemory,  currentIdFoto);
@@ -506,14 +506,14 @@ public class Controller {
     }
 
     public void linkFotoToVideo(){
-        ArrayList<String> tmpIdVideo = new ArrayList<>();
-        ArrayList<String> tmpIdFoto = new ArrayList<>();
+        ArrayList<Integer> tmpIdVideo = new ArrayList<>();
+        ArrayList<Integer> tmpIdFoto = new ArrayList<>();
 
         componePostgresDAO.getAllComposizioni(tmpIdVideo, tmpIdFoto);
 
         for(int i = 0; i < tmpIdVideo.size(); i++){
-            String currentIdVideo = tmpIdVideo.get(i);
-            String currentIdFoto = tmpIdFoto.get(i);
+            Integer currentIdVideo = tmpIdVideo.get(i);
+            Integer currentIdFoto = tmpIdFoto.get(i);
 
             Video video = getVideoByID(videosInMemory, currentIdVideo);
             Fotografia foto = getFotografiaByID(fotografieInMemory,  currentIdFoto);
