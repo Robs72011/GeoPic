@@ -52,23 +52,25 @@ CREATE TABLE IF NOT EXISTS galleria.GALLERIA(
     CONSTRAINT proprietario_fk FOREIGN KEY (Proprietario) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA( 
-	IDFoto SERIAL NOT NULL,
-	Dispositivo galleria.string NOT NULL DEFAULT 'Nameless', --il dispositivo non e' specificato nel caso l'utente non lo inserisce
-    Autore INT NOT NULL,
-    Coordinate galleria.coo_dt  ,
-	Visibilita	BOOLEAN NOT NULL DEFAULT TRUE,
-	DataScatto DATE NOT NULL,
-	DataEliminazione DATE DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA(
+    IDFoto SERIAL NOT NULL,
+    Dispositivo galleria.string,
+    DataScatto DATE NOT NULL,
+    DataEliminazione DATE,
+    Visibilita BOOLEAN NOT NULL DEFAULT TRUE,
+    Autore INT, -- Tolto NOT NULL per gestire la regola dell'eccezione
+    Coordinate galleria.coo_dt,
 
     CONSTRAINT foto_pk PRIMARY KEY (IDFoto),
-
-    CONSTRAINT autore_fk FOREIGN KEY (Autore) REFERENCES galleria.UTENTE(IDUtente) ON UPDATE CASCADE ON DELETE CASCADE,
-
-    CONSTRAINT coordinate_fk FOREIGN KEY (Coordinate) REFERENCES galleria.LUOGO(Coordinate) ON UPDATE CASCADE ON DELETE NO ACTION
-    );
-
-
+    
+    CONSTRAINT autore_fk FOREIGN KEY (Autore) 
+        REFERENCES galleria.UTENTE(IDUtente) 
+        ON UPDATE CASCADE ON DELETE NO ACTION, 
+        
+    CONSTRAINT luogo_fk FOREIGN KEY (Coordinate) 
+        REFERENCES galleria.LUOGO(Coordinate) 
+        ON UPDATE CASCADE ON DELETE SET NULL
+);
 
 CREATE TABLE IF NOT EXISTS galleria.VIDEO(
     IDVideo SERIAL NOT NULL,
@@ -121,6 +123,7 @@ CREATE TABLE IF NOT EXISTS galleria.COMPONE(
 
     CONSTRAINT video_fk FOREIGN KEY (IDVideo) REFERENCES galleria.VIDEO(IDVideo)
     ON UPDATE CASCADE ON DELETE CASCADE,
+
     CONSTRAINT foto_fk FOREIGN KEY (IDFoto) REFERENCES galleria.FOTOGRAFIA(IDFoto)
     ON UPDATE CASCADE ON DELETE NO ACTION
 );

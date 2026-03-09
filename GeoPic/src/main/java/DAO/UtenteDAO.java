@@ -3,7 +3,7 @@ package DAO;
 import java.util.ArrayList;
 
 public interface UtenteDAO {
-    void insertUtente(String username, String password, boolean isAdmin, boolean isSoggetto);
+    boolean insertUtente(String username, String password, boolean isAdmin, boolean isSoggetto);
 
     void deleteUtente(int idUtente);
 

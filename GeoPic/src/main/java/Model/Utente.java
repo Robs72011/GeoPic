@@ -64,8 +64,13 @@ public class Utente {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public boolean setUsername(String username) {
+        if(username == null || username.trim().isEmpty())
+            return false;
+        else {
+            this.username = username;
+            return true;
+        }
     }
 
     public String getPassword() {

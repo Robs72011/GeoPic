@@ -13,7 +13,7 @@ public class UtentePostgresDAO implements UtenteDAO {
     }
 
     @Override
-    public void insertUtente(String username, String password, boolean isAdmin, boolean isSoggetto){
+    public boolean insertUtente(String username, String password, boolean isAdmin, boolean isSoggetto){
         String statement = "INSERT INTO galleria.UTENTE (Username, Password, IsAdmin, IsSoggetto) VALUES(?, ?, ?, ?)";
 
         try(PreparedStatement aggiuntaUtente = connection.prepareStatement(statement)) {
@@ -25,8 +25,16 @@ public class UtentePostgresDAO implements UtenteDAO {
 
             aggiuntaUtente.executeUpdate();
 
+            return true;
         }catch(SQLException sqle){
+            //23505 e' il codice di errore per la violazione di un attributo unique
+            if (sqle.getSQLState().equals("23505"))
+                System.err.println("Errore: lo username '" + username + "' è già esistente.");
+            else
+                sqle.printStackTrace();
+
             sqle.printStackTrace();
+            return false;
         }
     }
 
