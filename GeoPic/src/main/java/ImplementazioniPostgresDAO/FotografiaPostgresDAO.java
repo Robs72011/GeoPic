@@ -17,7 +17,7 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     public Integer insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
                                     boolean visibilita, String coordinate, int autore) {
         // Nota: Ho corretto l'ordine dei parametri nella query per matchare i tuoi setString/setInt
-        String statement = "INSERT INTO galleria.FOTOGRAFIA (Dispositivo, IDAutore, Coordinate, Visibilita, DataScatto, DataEliminazione) VALUES(?, ?, ?, ?, ?, ?)";
+        String statement = "INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto, DataEliminazione) VALUES(?, ?, ?, ?, ?, ?)";
 
         // 1. Aggiungiamo Statement.RETURN_GENERATED_KEYS
         try (PreparedStatement newFoto = connection.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {

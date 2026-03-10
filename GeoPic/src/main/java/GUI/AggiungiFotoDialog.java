@@ -40,13 +40,7 @@ public class AggiungiFotoDialog extends JDialog {
         txtDispositivo = new JTextField();
         formPanel.add(txtDispositivo);
 
-        // 2. Data Scatto
-        formPanel.add(new JLabel("Data scatto (YYYY-MM-DD):"));
-        txtDataScatto = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
-        txtDataScatto.setColumns(10);
-        formPanel.add(txtDataScatto);
-
-        // 3. Luogo: Coordinate e Toponimo
+        // 2. Luogo: Coordinate e Toponimo
         formPanel.add(new JLabel("Latitudine (es. +41.90):"));
         txtLatitudine = new JTextField();
         formPanel.add(txtLatitudine);
@@ -59,13 +53,13 @@ public class AggiungiFotoDialog extends JDialog {
         txtToponimo = new JTextField();
         formPanel.add(txtToponimo);
 
-        // 4. Visibilità
+        // 3. Visibilità
         formPanel.add(new JLabel("Pubblica (Visibilità):"));
         chkVisibilita = new JCheckBox();
         chkVisibilita.setSelected(true);
         formPanel.add(chkVisibilita);
 
-        // 5. Soggetto
+        // 4. Soggetto
         formPanel.add(new JLabel("Categoria Soggetto:"));
         String[] categorie = {"Nessuno", "Persona", "Animale", "Oggetto", "Paesaggio", "Utente"};
         cbCategoriaSoggetto = new JComboBox<>(categorie);
@@ -104,7 +98,7 @@ public class AggiungiFotoDialog extends JDialog {
 
         // Pulsanti in basso
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnSalva = new JButton("Salva nel DB");
+        JButton btnSalva = new JButton("Salva");
         JButton btnAnnulla = new JButton("Annulla");
 
         btnAnnulla.addActionListener(e -> dispose());
@@ -126,9 +120,35 @@ public class AggiungiFotoDialog extends JDialog {
     }
 
     private void salvaFoto() {
-        // TODO: Aggiungere logica di salvataggio passandola al controller 
-        // e richiamando i DAO necessari
-        JOptionPane.showMessageDialog(this, "Acquisizione completata! Manca l'implementazione del salvataggio effettivo nel Controller/DAO.", "Info", JOptionPane.INFORMATION_MESSAGE);
-        dispose();
+        String dispositivo = txtDispositivo.getText();
+        boolean visibilita = chkVisibilita.isSelected();
+        
+        // Formatta coordinate come richiesto (+41.90,+012.49)
+        String lat = txtLatitudine.getText().trim();
+        String lon = txtLongitudine.getText().trim();
+        String coordinate = (lat.isEmpty() || lon.isEmpty()) ? null : lat + "," + lon;
+
+        String toponimo = txtToponimo.getText().trim();
+        if (toponimo.isEmpty()) {
+            toponimo = null;
+        }
+
+        // Gestione soggetti (l'array richiesto dal controller)
+        String[] soggetti = null;
+        String categoria = (String) cbCategoriaSoggetto.getSelectedItem();
+
+        if ("Utente".equals(categoria)) {
+            soggetti = new String[] { (String) cbUtenti.getSelectedItem() };
+        } else if (!"Nessuno".equals(categoria) && !txtNomeSoggetto.getText().trim().isEmpty()) {
+            soggetti = new String[] { txtNomeSoggetto.getText().trim() };
+        }
+
+        try {
+            controller.creazioneNuovaFoto(dispositivo, visibilita, coordinate, toponimo, soggetti);
+            JOptionPane.showMessageDialog(this, "Foto aggiunta con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Errore nel salvataggio: " + e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

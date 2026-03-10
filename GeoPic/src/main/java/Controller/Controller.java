@@ -609,7 +609,19 @@ public class Controller {
         return new ArrayList<>();
     }
 
-    public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String[] soggetti){
+    public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti){
+        if (coordinate != null) {
+            Luogo esistente = getLuogoByCoordinate(luoghiInMemory, coordinate);
+            if (esistente == null) {
+                try {
+                    luogoPostgresDAO.insertLuogo(coordinate, toponimo);
+                    luoghiInMemory.add(new Luogo(coordinate, toponimo, new ArrayList<>()));
+                } catch (Exception e) {
+                    System.err.println("Errore inserimento luogo: " + e.getMessage());
+                }
+            }
+        }
+
         Integer idNewFoto = fotografiaPostgresDAO.insertFotografia(dispositivo, LocalDate.now(), null, visibilita, coordinate, loggedInUtente.getIdUtente());
 
         if(idNewFoto == null){

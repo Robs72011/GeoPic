@@ -24,14 +24,14 @@ INSERT INTO galleria.GALLERIA (IDGalleria, NomeGalleria, Condivisa, Proprietario
 ('0000000005', 'Gita a Napoli', TRUE, '00002'); -- Proprietario: 00002
 
 -- 4. FOTOGRAFIE
-INSERT INTO galleria.FOTOGRAFIA (IDFoto, Dispositivo, Autore, Coordinate, Visibilita, DataScatto) VALUES
-('0000000001', 'iPhone 15', '00001', '+41.90,+012.45', TRUE, '2024-01-01'), -- Autore Admin
-('0000000002', 'Samsung S23', '00002', '+45.43,+012.33', TRUE, '2024-01-02'), -- Autore Luca
-('0000000003', 'Nikon Z6', '00003', NULL, TRUE, '2024-01-03'),               -- Autore Maria
-('0000000004', 'iPhone 15', '00001', '+41.89,+012.49', TRUE, '2024-02-15'), -- Autore Admin, Colosseo
-('0000000005', 'GoPro Hero 11', '00002', '+40.85,+014.26', TRUE, '2024-03-10'), -- Autore Luca, Napoli
-('0000000006', 'Nikon Z6', '00003', '+43.76,+011.25', TRUE, '2024-04-20'), -- Autore Maria, Firenze
-('0000000007', 'Canon EOS', '00001', '+40.85,+014.26', TRUE, '2024-03-11'); -- Autore Admin, Napoli
+INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto) VALUES
+('iPhone 15', '00001', '+41.90,+012.45', TRUE, '2024-01-01'), -- Autore Admin
+('Samsung S23', '00002', '+45.43,+012.33', TRUE, '2024-01-02'), -- Autore Luca
+('Nikon Z6', '00003', NULL, TRUE, '2024-01-03'),               -- Autore Maria
+('iPhone 15', '00001', '+41.89,+012.49', TRUE, '2024-02-15'), -- Autore Admin, Colosseo
+('GoPro Hero 11', '00002', '+40.85,+014.26', TRUE, '2024-03-10'), -- Autore Luca, Napoli
+('Nikon Z6', '00003', '+43.76,+011.25', TRUE, '2024-04-20'), -- Autore Maria, Firenze
+('Canon EOS', '00001', '+40.85,+014.26', TRUE, '2024-03-11'); -- Autore Admin, Napoli
 
 -- 5. VIDEO (Solo in galleria personale dell'utente)
 INSERT INTO galleria.VIDEO (IDVideo, TitoloVideo, Descrizione, Galleria) VALUES
