@@ -610,19 +610,15 @@ public class Controller {
     }
 
     public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti){
-        if (coordinate != null) {
-            Luogo esistente = getLuogoByCoordinate(luoghiInMemory, coordinate);
-            if (esistente == null) {
-                try {
-                    luogoPostgresDAO.insertLuogo(coordinate, toponimo);
-                    luoghiInMemory.add(new Luogo(coordinate, toponimo, new ArrayList<>()));
-                } catch (Exception e) {
-                    System.err.println("Errore inserimento luogo: " + e.getMessage());
-                }
-            }
+        Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
+        if(luogo == null) {
+            luogoPostgresDAO.insertLuogo(coordinate, toponimo);
+            luogo = new Luogo(coordinate, toponimo, new ArrayList<Fotografia>());
+            luoghiInMemory.add(luogo);
         }
 
-        Integer idNewFoto = fotografiaPostgresDAO.insertFotografia(dispositivo, LocalDate.now(), null, visibilita, coordinate, loggedInUtente.getIdUtente());
+        Integer idNewFoto = fotografiaPostgresDAO.insertFotografia(dispositivo, LocalDate.now(), null,
+                visibilita, coordinate, loggedInUtente.getIdUtente());
 
         if(idNewFoto == null){
             System.err.println("Errore nel salvataggio della fotografia sul Database.");
@@ -638,8 +634,11 @@ public class Controller {
         }
 
         ArrayList<Galleria> galleriaContenitrici = new ArrayList<>();
-        if(tmpGalPriv != null)
+        if(tmpGalPriv != null) {
             galleriaContenitrici.add(tmpGalPriv);
+
+            contienePostgresDAO.insertFotoAGalleria(tmpGalPriv.getIdGalleria(), idNewFoto);
+        }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
 
@@ -649,7 +648,7 @@ public class Controller {
                                             null,
                                             visibilita,
                                             loggedInUtente,
-                                            getLuogoByCoordinate(luoghiInMemory, coordinate),
+                                            luogo,
                                             galleriaContenitrici,
                                             soggettiRaffigurati);
 
@@ -658,5 +657,31 @@ public class Controller {
 
         if(tmpGalPriv != null)
             tmpGalPriv.addFotoAGalleria(newFoto);
+
+        luogo.addLuogoRaffiguratoIn(newFoto);
+    }
+
+    public void creazioneNuovaGalleriaCondivisa(String nomeGalleria, String[] partecipantiString){
+        Integer newGalleriaCondID = galleriaPostgresDAO.insertGalleria(nomeGalleria, true, loggedInUtente.getIdUtente());
+
+        //scrivere la logica per convertire l'array di stringhe in oggetti utenti per definire i partecipanti
+        // alla galleria
+
+        ArrayList<Utente> partecipanti = new ArrayList<>();
+
+        GalleriaCondivisa newGallCond = new GalleriaCondivisa(newGalleriaCondID,
+                                                            nomeGalleria,
+                                                            loggedInUtente,
+                                                            new ArrayList<Fotografia>(),
+                                                            partecipanti);
+
+        for(Utente utente : partecipanti){
+            utente.addPartecipazioneAGalleria(newGallCond);
+            partecipaPostgresDAO.insertPartecipante(newGalleriaCondID, utente.getIdUtente());
+        }
+
+        loggedInUtente.addGalleriePossedute(newGallCond);
+        gallerieCondiviseInMemory.add(newGallCond);
+
     }
 }

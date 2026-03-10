@@ -13,19 +13,28 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
     }
 
     @Override
-    public void insertGalleria(String nomeGalleria, boolean condivisione, int proprietario) {
+    public Integer insertGalleria(String nomeGalleria, boolean condivisione, int proprietario) {
         String statement = "INSERT INTO galleria.GALLERIA (NomeGalleria, Condivisa, Proprietario) VALUES(?, ?, ?)";
 
-        try(PreparedStatement aggiuntaGalleria = connection.prepareStatement(statement)) {
+        // 1. Aggiungiamo il flag Statement.RETURN_GENERATED_KEYS
+        try (PreparedStatement aggiuntaGalleria = connection.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
 
             aggiuntaGalleria.setString(1, nomeGalleria);
             aggiuntaGalleria.setBoolean(2, condivisione);
             aggiuntaGalleria.setInt(3, proprietario);
 
             aggiuntaGalleria.executeUpdate();
-        }catch(SQLException sqle){
+
+            // 2. Recuperiamo l'ID generato dal database
+            try (ResultSet rs = aggiuntaGalleria.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // Restituisce l'ID appena creato
+                }
+            }
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
+        return null; // Ritorna null se l'inserimento fallisce
     }
 
     @Override
