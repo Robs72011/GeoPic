@@ -29,8 +29,8 @@ public class GalleryPanel extends JPanel {
         Model.Utente utenteCorrente = controller.getLoggedInUtente();
         String username = utenteCorrente != null ? utenteCorrente.getUsername() : "Sconosciuto";
         String idUtente = utenteCorrente != null ? String.valueOf(utenteCorrente.getIdUtente()) : "N/D";
-        
-        topPanel.add(creaHeader(username, idUtente), BorderLayout.NORTH);
+
+        topPanel.add(creaHeader(username, idUtente, controller), BorderLayout.NORTH);
 
         if (slideshowList != null && !slideshowList.isEmpty()) {
             SlideshowCarouselPanel carousel = new SlideshowCarouselPanel(slideshowList, onSlideshowClick);
@@ -45,9 +45,10 @@ public class GalleryPanel extends JPanel {
      * Crea un pannello che visualizza i dati dell'utente come:
      * @param username Nome utente
      * @param id Id utente
+     * @param controller il controller di root
      * @return {@link JPanel} Pannello Header
      */
-    private JPanel creaHeader(String username, String id) {
+    private JPanel creaHeader(String username, String id, Controller.Controller controller) {
         // Pannello principale che contiene le info utente e il pannello comandi
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 30, 15));
@@ -74,7 +75,11 @@ public class GalleryPanel extends JPanel {
         // Utility method al volo per creare bottoni uniformi
         JButton addPhotoButton = new JButton("Aggiungi Foto");
         addPhotoButton.setFocusPainted(false);
-        addPhotoButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Aggiungi Foto' da implementare!", "Aggiungi", JOptionPane.INFORMATION_MESSAGE));
+        addPhotoButton.addActionListener(e -> {
+            Window parentWindow = SwingUtilities.getWindowAncestor(this);
+            AggiungiFotoDialog dialog = new AggiungiFotoDialog((Frame) parentWindow, controller);
+            dialog.setVisible(true);
+        });
 
         JButton btnFotoStessoLuogo = new JButton("Foto per Luogo");
         btnFotoStessoLuogo.setFocusPainted(false);

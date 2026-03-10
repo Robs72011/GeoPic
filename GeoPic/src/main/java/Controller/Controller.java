@@ -328,6 +328,7 @@ public class Controller {
     public Utente getLoggedInUtente() {
         return loggedInUtente;
     }
+    public ArrayList<Utente> getUtentiInMemory() {return utentiInMemory;}
 
     public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
         for (Utente utente : utenti) {
