@@ -6,13 +6,32 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Implementazione PostgreSQL per l'interfaccia {@link FotografiaDAO}.
+ * Gestisce la persistenza, l'aggiornamento e il recupero delle entità {@link Model.Fotografia},
+ * inclusa la gestione della visibilità e dei metadati temporali.
+ */
 public class FotografiaPostgresDAO implements FotografiaDAO {
     private final Connection connection;
 
+    /**
+     * Costruisce l'implementazione DAO con la connessione fornita.
+     * @param connection La connessione attiva al database.
+     */
     public FotografiaPostgresDAO(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Inserisce una nuova fotografia nel database e ne restituisce l'ID generato.
+     * @param device Il dispositivo di cattura.
+     * @param dataScatto La data in cui è stata scattata la foto.
+     * @param dataEliminazione La data programmata per l'eliminazione (può essere null).
+     * @param visibilita Stato di visibilità della foto.
+     * @param coordinate Coordinate geografiche del luogo.
+     * @param autore ID dell'autore della foto.
+     * @return L'ID univoco della fotografia appena creata, o null in caso di fallimento.
+     */
     @Override
     public Integer insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
                                     boolean visibilita, String coordinate, int autore) {
@@ -48,6 +67,10 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         return null; // Ritorna null se l'inserimento fallisce
     }
 
+    /**
+     * Elimina una fotografia dal database in base al suo identificativo.
+     * @param IDFoto L'ID della fotografia da rimuovere.
+     */
     @Override
     public void deleteFotografia(int IDFoto) {
         String statement = "DELETE FROM galleria.FOTOGRAFIA WHERE IDFoto = ?";
@@ -63,6 +86,11 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
+    /**
+     * Aggiorna lo stato di visibilità di una fotografia.
+     * @param IDFoto L'ID della fotografia da aggiornare.
+     * @param visibilita Il nuovo stato di visibilità.
+     */
     @Override
     public void updateVisibilita(int IDFoto, boolean visibilita) {
         String statement = "UPDATE galleria.FOTOGRAFIA SET Visibilita = ? WHERE IDFoto = ?";
@@ -79,6 +107,11 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
+    /**
+     * Aggiorna la data di eliminazione programmata per una fotografia.
+     * @param IDFoto L'ID della fotografia da aggiornare.
+     * @param newDataEliminazione La nuova data di eliminazione.
+     */
     @Override
     public void updateDataEliminazione(int IDFoto, LocalDate newDataEliminazione) {
         String statement = "UPDATE galleria.FOTOGRAFIA SET dataEliminazione = ? WHERE IDFoto = ?";
@@ -98,6 +131,9 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
+    /**
+     * Recupera l'elenco completo delle fotografie, popolando le liste passate come riferimento.
+     */
     public void getAllFotografie(ArrayList<Integer> idFoto, ArrayList<String> device, ArrayList<Integer> autore,
                                  ArrayList<String> coordinate, ArrayList<Boolean> visibilita,
                                  ArrayList<LocalDate> dataDiScatto, ArrayList<LocalDate> dataEliminazione) {
@@ -133,6 +169,9 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
         }
     }
 
+    /**
+     * Recupera l'associazione tra fotografie e il luogo di scatto (relazione 'Raffigura').
+     */
     public void getRaffigura(ArrayList<Integer> idFoto, ArrayList<String> luogo){
 
         String statement = "SELECT IDFOTO, COORDINATE FROM galleria.FOTOGRAFIA";
@@ -151,6 +190,9 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
 
     }
 
+    /**
+     * Recupera l'associazione tra fotografie e il relativo autore (relazione 'Scatta').
+     */
     public void getScatta(ArrayList<Integer> idFoto, ArrayList<Integer> autore) {
         String statement = "SELECT IDFOTO, AUTORE FROM galleria.FOTOGRAFIA";
 

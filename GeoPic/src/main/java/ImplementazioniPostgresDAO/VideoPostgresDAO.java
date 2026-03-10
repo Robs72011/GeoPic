@@ -5,13 +5,28 @@ import DAO.VideoDAO;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione PostgreSQL per l'interfaccia {@link VideoDAO}.
+ * Gestisce le operazioni di persistenza, rimozione e recupero dei dati
+ * relativi ai video caricati nel sistema.
+ */
 public class VideoPostgresDAO implements VideoDAO {
     Connection connection;
 
+    /**
+     * Costruisce l'implementazione DAO con la connessione fornita.
+     * @param connection La connessione attiva al database.
+     */
     public VideoPostgresDAO(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Inserisce un nuovo video nel database.
+     * @param titoloVideo Il titolo assegnato al video.
+     * @param descrizione La descrizione testuale del contenuto.
+     * @param galleria L'ID della galleria di appartenenza.
+     */
     @Override
     public void insertVideo(String titoloVideo, String descrizione, int galleria) {
         String statement = "INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES (?, ?, ?)";
@@ -29,6 +44,10 @@ public class VideoPostgresDAO implements VideoDAO {
         }
     }
 
+    /**
+     * Elimina un video dal database in base al suo identificativo.
+     * @param idVideo L'ID del video da rimuovere.
+     */
     @Override
     public void deleteVideo(int idVideo) {
         String statement = "DELETE FROM galleria.VIDEO WHERE IDVideo = ?";
@@ -44,6 +63,10 @@ public class VideoPostgresDAO implements VideoDAO {
         }
     }
 
+    /**
+     * Recupera l'elenco di tutti i video presenti, popolando le liste fornite.
+     */
+    @Override
     public void getAllVideo(ArrayList<Integer> idVideo, ArrayList<String> titoloVideo, ArrayList<String> descrizione,
                             ArrayList<Integer> galleria) {
 
@@ -72,6 +95,12 @@ public class VideoPostgresDAO implements VideoDAO {
 
     }
 
+    /**
+     * Recupera le associazioni tra video e gallerie ("Salvato in").
+     * @param idVideo Lista in cui saranno inseriti gli ID dei video.
+     * @param idGalleria Lista in cui saranno inseriti gli ID delle gallerie.
+     */
+    @Override
     public void getSalvatoIn(ArrayList<Integer> idVideo, ArrayList<Integer> idGalleria) {
         String statement = "SELECT idvideo, galleria FROM galleria.VIDEO";
 

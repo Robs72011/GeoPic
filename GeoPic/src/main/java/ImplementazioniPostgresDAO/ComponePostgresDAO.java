@@ -5,12 +5,22 @@ import DAO.ComponeDAO;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione PostgreSQL per l'interfaccia {@link ComponeDAO}.
+ * Gestisce le operazioni di persistenza per la relazione tra Video e Fotografia.
+ */
 public class ComponePostgresDAO implements ComponeDAO {
     private Connection connection;
 
     public ComponePostgresDAO(Connection connection) {
         this.connection = connection;
     }
+
+    /**
+     * Inserisce una nuova associazione nel database.
+     * @param IDVideo Identificativo del video.
+     * @param IDFoto Identificativo della foto.
+     */
     @Override
     public void insertComposizione(int IDVideo, int IDFoto) {
         String statement = "INSERT INTO galleria.COMPONE VALUES(?, ?)";
@@ -27,6 +37,11 @@ public class ComponePostgresDAO implements ComponeDAO {
         }
     }
 
+    /**
+     * Elimina l'associazione tra un video e una foto.
+     * @param IDVideo Identificativo del video.
+     * @param IDFoto Identificativo della foto.
+     */
     @Override
     public void deleteComposione(int IDVideo, int IDFoto) {
         String statement = "DELETE FROM galleria.COMPONE WHERE IDVIDEO = ? AND IDFOTO = ?";
@@ -43,6 +58,13 @@ public class ComponePostgresDAO implements ComponeDAO {
         }
     }
 
+    /**
+     * Aggiorna una coppia IDVideo-IDFoto con nuovi valori.
+     * @param oldIDVideo ID del video originale.
+     * @param oldIDFoto ID della foto originale.
+     * @param newIDVideo Nuovo ID del video.
+     * @param newIDFoto Nuovo ID della foto.
+     */
     @Override
     public void updateComposizione(int oldIDVideo, int oldIDFoto, int newIDVideo, int newIDFoto) {
         String statement = "UPDATE galleria.COMPONE SET IDVideo = ?, IDFoto = ? " +
@@ -61,6 +83,11 @@ public class ComponePostgresDAO implements ComponeDAO {
         }
     }
 
+    /**
+     * Recupera tutte le associazioni dal database.
+     * @param idVideo Lista popolata con gli ID dei video.
+     * @param idFoto Lista popolata con gli ID delle foto.
+     */
     @Override
     public void getAllComposizioni(ArrayList<Integer> idVideo, ArrayList<Integer> idFoto){
         String statement = "SELECT * FROM galleria.COMPONE";
