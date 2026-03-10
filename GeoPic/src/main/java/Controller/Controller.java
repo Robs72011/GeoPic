@@ -7,6 +7,12 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Controller principale dell'applicazione.
+ * Gestisce il caricamento iniziale dei dati dal database, la costruzione del grafo di oggetti
+ * in memoria e fornisce i metodi di servizio per l'autenticazione e la manipolazione
+ * delle entità (Fotografia, Galleria, Utente, ecc.).
+ */
 public class Controller {
 
     private ComponePostgresDAO componePostgresDAO;
@@ -30,6 +36,10 @@ public class Controller {
 
     private Utente loggedInUtente;
 
+    /**
+     * Inizializza il controller stabilendo la connessione al database
+     * e istanziando i vari DAO.
+     */
     public Controller() {
         try {
 
@@ -60,6 +70,13 @@ public class Controller {
         }
     }
 
+    // --- Metodi di Caricamento ---
+
+    /**
+     * Svuota la lista degli utenti in memoria e popola la stessa con i dati
+     * recuperati dal database tramite {@link UtentePostgresDAO}.
+     * @return true se il caricamento ha successo, false altrimenti.
+     */
     public boolean loadUtenti() {
 
         utentiInMemory.clear();
@@ -95,6 +112,11 @@ public class Controller {
 
     }
 
+    /**
+     * Svuota le liste delle gallerie in memoria e popola le strutture
+     * {@code galleriePrivateInMemory} e {@code gallerieCondiviseInMemory} interrogando il {@link GalleriaPostgresDAO}.
+     * @return true se il caricamento ha successo.
+     */
     public boolean loadGallerie() {
 
         galleriePrivateInMemory.clear();
@@ -138,6 +160,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Aggiorna la collezione in memoria dei soggetti censiti.
+     * @return true se l'operazione di popolamento da {@link SoggettoPostgresDAO} è riuscita.
+     */
     public boolean loadSoggetti() {
         soggettiInMemory.clear();
 
@@ -165,6 +191,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Aggiorna la collezione in memoria dei luoghi geografici associando le coordinate al toponimo.
+     * @return true se il caricamento da {@link LuogoPostgresDAO} ha successo.
+     */
     public boolean loadLuoghi() {
         luoghiInMemory.clear();
 
@@ -192,6 +222,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Recupera l'elenco dei video archiviati e aggiorna la collezione locale {@code videosInMemory}.
+     * @return true se il caricamento da {@link VideoPostgresDAO} è riuscito.
+     */
     public boolean loadVideos() {
         videosInMemory.clear();
 
@@ -223,6 +257,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Sincronizza lo stato in memoria delle fotografie con il database.
+     * @return true se la sincronizzazione da {@link FotografiaPostgresDAO} è completata.
+     */
     public boolean loadFotografie() {
 
         fotografieInMemory.clear();
@@ -263,6 +301,12 @@ public class Controller {
 
     }
 
+    /**
+     * Cerca una fotografia nella lista fornita in base al suo ID univoco.
+     * @param fotografie La lista di riferimento in cui cercare.
+     * @param idFotoToFind L'ID da ricercare.
+     * @return L'oggetto {@link Fotografia} corrispondente, o null se non trovato.
+     */
     public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, Integer idFotoToFind) {
         for (Fotografia foto : fotografie) {
             if (foto.getIdFoto().equals(idFotoToFind)) {
@@ -272,7 +316,11 @@ public class Controller {
         return null;
     }
 
-    // se l'id passato è di una galleria privata, ritorna una privata, altrimenti una condivisa
+    /**
+     * Recupera un'istanza di {@link Galleria} (sia privata che condivisa) dato il suo ID.
+     * @param idGalleria L'ID della galleria da recuperare.
+     * @return L'oggetto Galleria trovato o null.
+     */
     public Galleria getGalleriaByID(Integer idGalleria) {
         Galleria galleria = getGalleriaPrivataByID(galleriePrivateInMemory, idGalleria);
         if (galleria != null) {
@@ -287,6 +335,9 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Cerca una galleria condivisa nella lista fornita.
+     */
     public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
                                                       Integer galCondIdToFind) {
         for (GalleriaCondivisa galleriaCondivisa : gallCondivise) {
@@ -297,6 +348,9 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Cerca una galleria privata nella lista fornita.
+     */
     public GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
                                                   Integer galPrivIdToFind) {
         for (GalleriaPrivata galleriaPrivata : gallPrivate) {
@@ -307,6 +361,9 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Recupera l'oggetto {@link Luogo} corrispondente alle coordinate specificate.
+     */
     public Luogo getLuogoByCoordinate(ArrayList<Luogo> luoghi, String coordinateToFind) {
         for (Luogo luogo : luoghi) {
             if (luogo.getCoordinate().equals(coordinateToFind)) {
@@ -316,6 +373,9 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Recupera l'oggetto {@link Soggetto} tramite il suo nome identificativo.
+     */
     public Soggetto getSoggettoByNomeSoggetto(ArrayList<Soggetto> soggetti, String nomeSoggettoToFind) {
         for (Soggetto soggetto : soggetti) {
             if (soggetto.getNomeSoggetto().equals(nomeSoggettoToFind)) {
@@ -325,11 +385,21 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Restituisce l'utente attualmente autenticato nella sessione.
+     */
     public Utente getLoggedInUtente() {
         return loggedInUtente;
     }
+
+    /**
+     * Restituisce la lista degli utenti caricati in memoria.
+     */
     public ArrayList<Utente> getUtentiInMemory() {return utentiInMemory;}
 
+    /**
+     * Recupera un oggetto {@link Utente} tramite il suo identificativo univoco.
+     */
     public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
         for (Utente utente : utenti) {
             if (utente.getIdUtente().equals(idUserToFind)) {
@@ -339,6 +409,9 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Recupera un oggetto {@link Video} tramite il suo identificativo univoco.
+     */
     public Video getVideoByID(ArrayList<Video> videos, Integer idVideoToFind) {
         for (Video video : videos) {
             if (video.getIdVideo().equals(idVideoToFind)) {
@@ -348,6 +421,9 @@ public class Controller {
         return null;
     }
 
+    /**
+     * Crea il linking in memoria tra fotografie e i relativi autori (utenti).
+     */
     public void linkFotografiaAUtente() {
         ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
         ArrayList<Integer> tmpAutore = new ArrayList<>();
@@ -365,6 +441,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Crea il linking in memoria tra fotografie e i relativi luoghi di scatto.
+     */
     public void linkFotografiaLuogo() {
         ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
         ArrayList<String> tmpLuogo = new ArrayList<>();
@@ -384,6 +463,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Crea il linking tra fotografie e i soggetti raffigurati in esse.
+     */
     public void linkFotografiaSoggetto() {
         ArrayList<Integer> tmpIdFotografia = new ArrayList<>();
         ArrayList<String> tmpSoggetto = new ArrayList<>();
@@ -401,6 +483,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Associa in memoria un utente al soggetto che lo rappresenta.
+     */
     public void linkUtenteSoggetto() {
         ArrayList<Integer> tmpIdUtente = new ArrayList<>();
         ArrayList<String> tmpSoggetto = new ArrayList<>();
@@ -420,6 +505,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Associa in memoria le gallerie ai rispettivi proprietari.
+     */
     public void linkOwnerGalleries() {
         ArrayList<Integer> tmpIdGalleria = new ArrayList<>();
         ArrayList<Integer> tmpProprietario = new ArrayList<>();
@@ -450,6 +538,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Gestisce la relazione di partecipazione degli utenti alle gallerie condivise.
+     */
     public void linkPartecipazione() {
         ArrayList<Integer> tmpIdGalleria = new ArrayList<>();
         ArrayList<Integer> tmpIdPartecipante = new ArrayList<>();
@@ -470,6 +561,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Collega in memoria i video alle gallerie in cui sono salvati.
+     */
     public void linkVideoToGalleries() {
         ArrayList<Integer> tmpIdVideo = new ArrayList<>();
         ArrayList<Integer> tmpGalleria = new ArrayList<>();
@@ -490,6 +584,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Popola in memoria la relazione tra gallerie e le fotografie in esse contenute.
+     */
     public void linkFotoToGallerie() {
         ArrayList<Integer> tmpIdGalleria = new ArrayList<>();
         ArrayList<Integer> tmpIdFoto = new ArrayList<>();
@@ -510,6 +607,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Crea il legame tra composizioni di video e le fotografie che li compongono.
+     */
     public void linkFotoToVideo() {
         ArrayList<Integer> tmpIdVideo = new ArrayList<>();
         ArrayList<Integer> tmpIdFoto = new ArrayList<>();
@@ -530,6 +630,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Esegue il caricamento completo di tutte le entità e risolve tutte le
+     * dipendenze (linking) tra di esse, completando il Data Graph.
+     */
     public void loadInMemory() {
         // Flat loading
         loadUtenti();
@@ -553,7 +657,10 @@ public class Controller {
         System.out.println("Data Graph caricato con successo!");
     }
 
-    //La funzione ritorna 1, se l'utente esiste ed e' loggato correttamente, 2 se e' admin, -1 se non esiste
+    /**
+     * Verifica le credenziali dell'utente.
+     * @return 2 (Admin), 1 (Utente standard), -1 (Credenziali errate).
+     */
     public int authentication(String username, String password) {
         Integer tmpUserID = 0;
 
@@ -609,6 +716,10 @@ public class Controller {
         return new ArrayList<>();
     }
 
+    /**
+     * Gestisce la logica di business per la creazione di una nuova foto,
+     * persistendo il dato nel DB e aggiornando il grafo in memoria.
+     */
     public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti){
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
@@ -661,6 +772,10 @@ public class Controller {
         luogo.addLuogoRaffiguratoIn(newFoto);
     }
 
+    /**
+     * Gestisce la logica di business per la creazione di una nuova galleria condivisa,
+     * persistendo le relazioni di proprietà e partecipazione.
+     */
     public void creazioneNuovaGalleriaCondivisa(String nomeGalleria, String[] partecipantiString){
         Integer newGalleriaCondID = galleriaPostgresDAO.insertGalleria(nomeGalleria, true, loggedInUtente.getIdUtente());
 
