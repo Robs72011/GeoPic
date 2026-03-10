@@ -7,14 +7,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Pannello avanzato per la visualizzazione e la riproduzione di slideshow video.
+ * Estende {@link ImageSelector} aggiungendo componenti per la visualizzazione
+ * della descrizione associata al video e una "thumbnail strip" (colonna laterale)
+ * che elenca le fotografie che compongono lo slideshow.
+ */
 public class SlideshowSelector extends ImageSelector {
     private final JTextArea descriptionArea;
     private JScrollPane thumbnailStrip;
+
     /**
-     * Pannello per la visualizzazione di uno slideshow.
-     * Estende {@link ImageSelector} aggiungendo una strip di miniature e la descrizione.
-     *
-     * @param onBackClick callback per tornare alla schermata precedente
+     * Costruisce il pannello dello slideshow.
+     * @param onBackClick Callback invocata al clic sul pulsante "Indietro" per
+     * gestire il ritorno alla vista principale.
+     * @param controller Il {@link Controller} di sistema per l'accesso ai dati.
      */
     public SlideshowSelector(Runnable onBackClick, Controller controller) {
         super(onBackClick, controller);
@@ -32,6 +39,11 @@ public class SlideshowSelector extends ImageSelector {
         add(southContextPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Aggiorna il pannello con i dati del video selezionato, inclusi i contenuti
+     * multimediali, la descrizione e la colonna delle miniature.
+     * @param slideshow L'oggetto {@link Video} da visualizzare.
+     */
     public void setSlideshow(Video slideshow) {
         if (slideshow == null) return;
 
@@ -57,9 +69,9 @@ public class SlideshowSelector extends ImageSelector {
     }
 
     /**
-     * Crea un pannello JTextArea contentente la descrizione
-     * @param descrizione il testo della descrizione
-     * @return il pannello contenente la descrizione
+     * Crea un'area di testo non modificabile per visualizzare la descrizione del video.
+     * @param descrizione Il testo da visualizzare.
+     * @return {@link JTextArea} configurata.
      */
     private JTextArea createDescriptionArea(String descrizione) {
         JTextArea textArea = new JTextArea(descrizione);
@@ -73,9 +85,9 @@ public class SlideshowSelector extends ImageSelector {
     }
 
     /**
-     * Crea un pannello scrollabile per la descrizione
-     * @param Component prende un componente JTextArea e la fa diventare scrollabile.
-     * @return un JScrollPane contenente la descrizione
+     * Crea un contenitore scrollabile per il componente di descrizione.
+     * @param Component Il {@link JTextArea} da rendere scrollabile.
+     * @return {@link JScrollPane} configurato.
      */
     private JScrollPane createDescriptionScrollPanel(JTextArea Component) {
         JScrollPane descriptionScrollPane = new JScrollPane(Component);
@@ -87,10 +99,10 @@ public class SlideshowSelector extends ImageSelector {
     }
 
     /**
-     * Crea una strip verticale con i dati delle foto dello slideshow.
-     *
-     * @param fotografie array di fotografie
-     * @return JScrollPane scrollabile contenente le label
+     * Genera una striscia laterale (thumbnail strip) con l'elenco delle fotografie
+     * che compongono lo slideshow.
+     * @param fotografie Lista delle {@link Model.Fotografia} contenute nel video.
+     * @return {@link JScrollPane} verticale contenente i metadati delle foto.
      */
     private JScrollPane createThumbnailStrip(List<Model.Fotografia> fotografie) {
         JPanel thumbPanel = new JPanel();

@@ -2,6 +2,12 @@ package GUI;
 
 import Controller.Controller;
 
+/**
+ * Gestore dell'autenticazione per la componente {@link LoginPanel}.
+ * Questa classe funge da delegato per mantenere lo stato temporaneo delle credenziali
+ * (utente e password) e coordinare la comunicazione tra l'interfaccia di login
+ * e il {@link Controller} per la validazione sul database.
+ */
 public class LoginPanelHandler {
     private final Controller controller;
     private String utente;
@@ -9,20 +15,30 @@ public class LoginPanelHandler {
     private int risultato_login = -1;
 
 
+    /**
+     * Costruisce l'handler di autenticazione.
+     * @param controller Il riferimento al {@link Controller} che contiene
+     * la logica di accesso al database.
+     */
     public LoginPanelHandler(Controller controller){
         this.controller = controller;
     }
 
+    /**
+     * Imposta le credenziali di login (temporanee) per il tentativo di autenticazione.
+     * @param utente Il nome utente inserito.
+     * @param password La password inserita.
+     */
     public void setlogincredits(String utente, String password){
         this.utente = utente;
         this.password = password;
     }
 
     /**
-     * Controlla il login tramite il Controller (che va al DB).
-     * @return true se l'utente è autenticato (utente normale o admin)
+     * Esegue il processo di autenticazione invocando il {@link Controller}.
+     * @return 2 se l'utente è un amministratore, 1 se è un utente standard,
+     * -1 se l'autenticazione fallisce.
      */
-
     public int auth(){
         risultato_login = controller.authentication(utente, password);
         return risultato_login;

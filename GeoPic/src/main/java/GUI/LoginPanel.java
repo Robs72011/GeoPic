@@ -5,10 +5,19 @@ import Controller.Controller;
 import javax.swing.*;
 import static javax.swing.JOptionPane.*;
 
+/**
+ * Pannello grafico utilizzato per la fase di autenticazione dell'utente.
+ * Offre un form con campi per nome utente e password e gestisce il ciclo di vita
+ * del dialogo di login fino all'ottenimento di credenziali valide o alla chiusura dell'applicazione.
+ */
 public class LoginPanel extends JPanel{
     private final JTextField campoUtente = new JTextField(15);
     private final JPasswordField campoPassword= new JPasswordField(15);
 
+    /**
+     * Costruisce il pannello di login disponendo verticalmente le etichette
+     * e i campi di input tramite {@link BoxLayout}.
+     */
      LoginPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(new JLabel("Utente:"));
@@ -18,15 +27,29 @@ public class LoginPanel extends JPanel{
         add(campoPassword);
     }
 
+    /** @return Il nome utente inserito nel campo di testo. */
     public String getUtente() {
         return campoUtente.getText();
     }
+
+    /** @return La password inserita convertita in {@code String}. */
     public String getPassword() {
         return new String(campoPassword.getPassword());
     }
+
+    /** @param utente Imposta il testo del campo utente. */
     public void setUtente(String utente) {campoUtente.setText(utente);}
+
+    /** @param password Imposta il testo del campo password. */
     public void setPassword(String password) {campoPassword.setText(password);}
 
+    /**
+     * Avvia il processo di login mostrando un {@link JOptionPane} modale.
+     * Utilizza un ciclo {@code while} per mantenere il dialogo aperto finché l'utente
+     * non effettua un accesso valido o chiude forzatamente l'applicazione.
+     * @param controller Il riferimento al {@link Controller} per verificare le credenziali.
+     * @return 2 se admin, 1 se utente standard, altrimenti gestisce il ciclo di riprova.
+     */
     public int Login(Controller controller) {
         String[] options = {"Login", "Cancella"};
         LoginPanelHandler loginhandler = new LoginPanelHandler(controller);

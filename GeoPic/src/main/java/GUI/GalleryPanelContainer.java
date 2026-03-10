@@ -8,6 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Gestisce la navigazione tra le diverse viste della galleria tramite un {@link CardLayout}.
+ * Questa classe agisce come un contenitore principale che alterna i pannelli:
+ * {@link GalleryPanel}, la dashboard principale.
+ * {@link ImageSelector}, per la visualizzazione in dettaglio delle foto.
+ * {@link SlideshowSelector}, per la riproduzione di contenuti video.
+ */
 public class GalleryPanelContainer extends JPanel {
     //costanti per definire i pannelli nel cardlayout
     private static final String GRID = "grid";
@@ -17,8 +24,10 @@ public class GalleryPanelContainer extends JPanel {
     private final CardLayout cardLayout;
 
     /**
-     * Gestisce il passaggio di schermata da {@link GalleryPanel}(Dashboard Galleria) a
-     * {@link ImageSelector}(Visione Contenuto in dettaglio)
+     * Inizializza il contenitore configurando i vari pannelli e definendo la logica
+     * di transizione tra di essi tramite callback.
+     * @param controller Il {@link Controller} utilizzato per il recupero delle
+     * risorse multimediali dell'utente loggato.
      */
     public GalleryPanelContainer(Controller controller) {
         cardLayout = new CardLayout();

@@ -5,8 +5,12 @@ import Controller.Controller;
 import javax.swing.*;
 import java.awt.*;
 
-
-
+/**
+ * Finestra principale dell'applicazione che gestisce la navigazione tra le macro-aree
+ * tramite un {@link JTabbedPane}.
+ * La classe organizza l'interfaccia utente in schede distinte, permettendo all'utente
+ * di passare rapidamente tra la propria galleria personale e le gallerie condivise.
+ */
 public class TabbedPaneFrame extends JFrame {
     //Costanti per le grandezze del frame
     public static final int FRAME_WIDTH = 1050;
@@ -15,10 +19,11 @@ public class TabbedPaneFrame extends JFrame {
     public static final int FRAME_MIN_HEIGHT = 400;
 
     /**
-     * Crea la finestra principale della GUI che contiene al suo interno un JTabbedPane.
-     * Si tratta di un componente che permette di gestire le schermate (JPanel) trattandole come delle schede.
-     * Nello specifico, una scheda dedicata per gestire la galleria personale({@link GalleryPanelContainer}),
-     * un'altra per gestire le gallerie condivise.
+     * Costruisce la finestra principale dell'applicazione.
+     * Inizializza il layout, imposta le dimensioni minime e aggiunge le schede
+     * {@link GalleryPanelContainer} per la gestione dei contenuti multimediali.
+     * @param controller Il {@link Controller} di riferimento utilizzato dalle
+     * viste figlie per le operazioni di recupero dati.
      */
     public TabbedPaneFrame(Controller controller) {
         setTitle("GeoPic");

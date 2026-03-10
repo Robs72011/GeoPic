@@ -14,13 +14,14 @@ public class GalleryPanel extends JPanel {
     private static final int IMAGE_SIZE = 160;
 
     /**
-     * Questo è il pannello principale della galleria,
-     * contiene tutti gli elementi grafici inerenti alla dashboard iniziale.
-     * @param fotografie Lista di fotografie da db
-     * @param onImageClick Indice ritornato dalla callback action al clic sull'immagine per aprire la visuale in dettaglio.
-     * @see GalleryPanelContainer
+     * Costruisce il pannello principale della galleria, organizzando header,
+     * carosello degli slideshow e la griglia delle immagini.
+     * @param fotografie Lista delle entità {@link Fotografia} da visualizzare.
+     * @param onImageClick Callback che riceve l'indice della foto cliccata per gestire la navigazione.
+     * @param slideshowList Lista delle entità {@link Video} (slideshow) disponibili.
+     * @param onSlideshowClick Callback che gestisce il clic su un elemento del carosello.
+     * @param controller Il {@link Controller.Controller} di riferimento per le operazioni utente.
      */
-
     public GalleryPanel(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller) {
         setLayout(new BorderLayout());
 
@@ -42,11 +43,13 @@ public class GalleryPanel extends JPanel {
     }
 
     /**
-     * Crea un pannello che visualizza i dati dell'utente come:
-     * @param username Nome utente
-     * @param id Id utente
-     * @param controller il controller di root
-     * @return {@link JPanel} Pannello Header
+     * Crea il pannello informativo dell'utente e il pannello comandi laterale.
+     * Il pannello include etichette con le info dell'utente e pulsanti per l'interazione
+     * con le funzionalità di ricerca e inserimento dati.
+     * @param username Nome utente del proprietario della galleria.
+     * @param id Identificativo univoco dell'utente.
+     * @param controller Riferimento al controller per attivare i dialoghi.
+     * @return {@link JPanel} configurato con layout BorderLayout.
      */
     private JPanel creaHeader(String username, String id, Controller.Controller controller) {
         // Pannello principale che contiene le info utente e il pannello comandi
@@ -108,12 +111,12 @@ public class GalleryPanel extends JPanel {
     }
 
     /**
-     * Crea la griglia di fotografie e associa ad ogni singola fotografia un indice.
-     * @param fotografie Array di fotografie
-     * @param onImageClick Indice da ritornare al costruttore di GalleryPanel definito in
-     * {@link GalleryPanelContainer#GalleryPanelContainer}.
-     * @see WrapLayout Layout per la gestire la griglia in maniera responsive.
-     * @return {@link JPanel}Pannello griglia di immagini con scoll verticale.
+     * Costruisce un pannello a scorrimento contenente la griglia delle fotografie.
+     * Utilizza {@link WrapLayout} per garantire che il layout sia responsivo
+     * rispetto alla dimensione della finestra.
+     * @param fotografie Lista delle fotografie da disporre nella griglia.
+     * @param onImageClick Interfaccia funzionale per gestire l'evento di selezione immagine.
+     * @return {@link JScrollPane} che contiene il pannello {@code imagePanel} con barra di scorrimento.
      */
     private JScrollPane creaGalleriaImmagini(List<Fotografia> fotografie, IntConsumer onImageClick) {
         JPanel imagePanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 5, 5));
@@ -133,9 +136,10 @@ public class GalleryPanel extends JPanel {
     }
 
     /**
-     * Crea i bottoni (dati) da mettere all'interno della griglia.
-     * @param Foto Foto passata da {@link GalleryPanel#creaGalleriaImmagini}
-     * @return {@link JButton} bottone con foto.
+     * Crea un componente bottone che rappresenta graficamente una singola fotografia.
+     * Include una breve descrizione testuale (ID e dispositivo) visualizzata tramite HTML.
+     * @param Foto Oggetto {@link Fotografia} da rappresentare.
+     * @return {@link JButton} formattato per la visualizzazione nella griglia.
      */
     private JButton creaImmagine(Fotografia Foto) {
         JButton button = new JButton("<html><div style='text-align: center;'><b>ID Foto: " + Foto.getIdFoto() + "</b><br/>" + "Dispositivo:<br/>" + Foto.getDispositivo() + "</div></html>");

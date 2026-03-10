@@ -7,6 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Pannello dedicato alla visualizzazione dettagliata delle informazioni relative a una {@link Fotografia}.
+ * Questa classe permette di navigare tra le fotografie di una lista, visualizzandone i metadati
+ * (come ID, dispositivo, data e luogo) formattati in HTML. Supporta inoltre operazioni
+ * di gestione, come la possibilità di rendere privata una foto selezionata.
+ */
 public class ImageSelector extends JPanel {
     protected List<Fotografia> fotografie = List.of();
     protected int indiceCorrente = 0;
@@ -16,10 +22,10 @@ public class ImageSelector extends JPanel {
 
 
     /**
-     * Pannello per la visualizzazione di immagini. Con gestione dinamica della visualizzazione del contenuto, utile
-     * se si vuole accedere con diversi utenti e aggiornare le immagini disponibili.
-     *
-     * @param onBackClick azione da eseguire al clic su "Indietro"
+     * Costruisce il pannello di visualizzazione dettagliata.
+     * @param onBackClick Runnable eseguito al clic del tasto "Indietro", solitamente utilizzato
+     * per gestire la transizione tra le card del {@link GalleryPanelContainer}.
+     * @param controller Il {@link Controller} utilizzato per le operazioni di business logic.
      */
     public ImageSelector(Runnable onBackClick, Controller controller) {
         this.controller = controller;
@@ -35,25 +41,19 @@ public class ImageSelector extends JPanel {
     }
 
     /**
-     * Imposta il contenuto da visualizzare.
-     *
-     * @param foto la lista di oggetti Fotografia.
+     * Aggiorna la lista delle fotografie disponibili e resetta l'indice di visualizzazione.
+     * @param foto La lista di oggetti {@link Fotografia} da mostrare.
      */
-
     public void setContent(List<Fotografia> foto) {
         this.fotografie = foto != null ? foto : List.of();
         // MODIFICA: Cambiato il nome del metodo per chiarezza
         mostraMetadati(0);
     }
 
-
     /**
-     * Crea un pannello bottoni per scorrere gli elementi.
-     *
-     * @param onBackClick l'evento da ritornare a {@link GalleryPanelContainer}
-     *                    per uscire dalla visone in dettaglio
-     * @return pannello bottoni
-     * @see GalleryPanel
+     * Crea e configura il pannello contenente i pulsanti di navigazione e gestione della risorsa.
+     * @param onBackClick L'evento di ritorno alla vista precedente.
+     * @return {@link JPanel} contenente i bottoni di controllo.
      */
     private JPanel creaPannelloBottoni(Runnable onBackClick) {
         JButton btnIndietro = new JButton("⤬ Indietro");
@@ -88,8 +88,9 @@ public class ImageSelector extends JPanel {
     }
 
     /**
-     * Mostra i metadati della fotografia all'indice specificato.
-     * @param index l'indice della fotografia nella lista.
+     * Aggiorna il contenuto della {@code metadataLabel} visualizzando i dettagli
+     * della fotografia situata all'indice specificato.
+     * @param index L'indice della fotografia nella lista {@code fotografie}.
      */
     public void mostraMetadati(int index) {
         if (fotografie == null || fotografie.isEmpty()) {

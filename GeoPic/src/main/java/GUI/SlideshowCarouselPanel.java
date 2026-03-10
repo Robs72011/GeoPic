@@ -9,17 +9,21 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Pannello che implementa un carosello scorrevole orizzontalmente per la visualizzazione di slideshow video.
+ * Ogni slideshow è rappresentato come una "card" grafica cliccabile che, all'interazione dell'utente,
+ * attiva una {@link Consumer} callback definita per la gestione del passaggio alla vista dedicata.
+ */
 public class SlideshowCarouselPanel extends JPanel {
 
     private static final int CARD_WIDTH = 240;
     private static final int CARD_HEIGHT = 135; // Aspect ratio 16:9
 
     /**
-     * Crea una SlideshowCarouselPanel che mostra una serie di slideshow cards in un pannello scrollabile orizzontalmente.
-     * Ogni card rappresenta uno slideshow e permette un interazione tramite click event.
-     *
-     * @param slideshows La lista degli slideshow da mostrare.
-     * @param onClick una callback che viene chiamata quando viene cliccato una card {@link GalleryPanelContainer}.
+     * Crea un pannello carosello contenente le card per ogni slideshow presente nella lista.
+     * @param slideshows La lista degli oggetti {@link Video} da visualizzare.
+     * @param onClick Una callback che riceve il video selezionato per gestirne la riproduzione
+     * o la visualizzazione dettagliata nel {@link GalleryPanelContainer}.
      */
     public SlideshowCarouselPanel(List<Video> slideshows, Consumer<Video> onClick) {
         setLayout(new BorderLayout());
@@ -42,12 +46,12 @@ public class SlideshowCarouselPanel extends JPanel {
     }
 
     /**
-     * Crea una card component che rappresenta una slideshow. La card mostra il nome dello slideshow e
-     * un'anteprima e associa ad ogni card una callback action.
-     *
-     * @param slideshow video associato alla card
-     * @param onClick a {@link Consumer} callback attivata quando la card viene cliccata
-     * @return a {@link JPanel} ritorna la card dello slideshow.
+     * Crea e configura un singolo componente grafico (card) per uno slideshow.
+     * La card include il titolo del video, l'ID identificativo e un {@link MouseAdapter}
+     * per gestire il clic dell'utente.
+     * @param slideshow Il video associato alla card.
+     * @param onClick La callback da eseguire al clic.
+     * @return {@link JPanel} configurato come card interattiva.
      */
     private JPanel creaCard(Video slideshow, Consumer<Video> onClick) {
         JPanel background = new JPanel();

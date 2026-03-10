@@ -8,6 +8,11 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * Dialogo modale per l'inserimento di una nuova fotografia nel sistema.
+ * Fornisce un form con campi per il dispositivo, le coordinate geografiche,
+ * la visibilità e la gestione dei soggetti associati alla foto.
+ */
 public class AggiungiFotoDialog extends JDialog {
 
     private Controller controller;
@@ -24,6 +29,11 @@ public class AggiungiFotoDialog extends JDialog {
     private JComboBox<String> cbUtenti;
     private JTextField txtNomeSoggetto;
 
+    /**
+     * Costruisce il dialogo di inserimento foto.
+     * @param owner Il frame padre che ha richiesto l'apertura.
+     * @param controller Il riferimento al controller per le operazioni di business logic e persistenza.
+     */
     public AggiungiFotoDialog(Frame owner, Controller controller) {
         super(owner, "Aggiungi Nuova Foto", true);
         this.controller = controller;
@@ -110,6 +120,9 @@ public class AggiungiFotoDialog extends JDialog {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Popola la combobox degli utenti attingendo dalla lista in memoria del controller.
+     */
     private void popolaComboUtenti() {
         ArrayList<Utente> utenti = controller.getUtentiInMemory();
         if (utenti != null) {
@@ -119,6 +132,11 @@ public class AggiungiFotoDialog extends JDialog {
         }
     }
 
+    /**
+     * Raccoglie i dati inseriti nei campi di testo, valida le informazioni
+     * e invoca il metodo {@link Controller#creazioneNuovaFoto} per salvare la fotografia.
+     * Mostra un messaggio di conferma o di errore all'utente.
+     */
     private void salvaFoto() {
         String dispositivo = txtDispositivo.getText();
         boolean visibilita = chkVisibilita.isSelected();
