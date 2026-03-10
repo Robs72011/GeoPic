@@ -6,16 +6,32 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Classe astratta che definisce la struttura base di una Galleria nel sistema.
+ * Una galleria è un contenitore di oggetti {@link Fotografia} ed è associata a un {@link Utente} proprietario.
+ */
 public abstract class Galleria{
 
+    /** Identificativo univoco della galleria. */
     private Integer idGalleria;
-    private String nomeGalleria; //galleria privata: nome proprietario + "'s Gallery"
 
-    //Rappresenta la relazione "possiede" tra galleria e utente
+    /** Nome della galleria. Solitamente segue il pattern: nome proprietario + "'s Gallery". */
+    private String nomeGalleria;
+
+    /** L'utente che possiede la galleria (Associazione "Possiede"). */
     private Utente proprietario;
-    //Rappresenta la relazione "Contiene" tra galleria e foto, indicando le foto che sono contenute nella galleria
+
+    /** Elenco delle fotografie contenute nella galleria (Associazione "Contiene"). */
     private ArrayList<Fotografia> fotoContenute = new ArrayList<>();
 
+    /**
+     * Costruttore per la classe astratta Galleria.
+     * Inizializza l'identificativo, il nome, il proprietario e la lista delle foto.
+     * @param idGalleria Identificativo univoco della galleria.
+     * @param nomeGalleria Nome descrittivo della galleria.
+     * @param proprietario L'oggetto {@link Utente} titolare della galleria.
+     * @param fotoContenute Lista iniziale di fotografie (se {@code null}, viene inizializzata una lista vuota).
+     */
     public Galleria(Integer idGalleria, String nomeGalleria, Utente proprietario, ArrayList<Fotografia> fotoContenute) {
         this.idGalleria = idGalleria;
         this.nomeGalleria = nomeGalleria;
@@ -32,34 +48,46 @@ public abstract class Galleria{
         }
     }
 
+    /** @return L'identificativo univoco della galleria. */
     public Integer getIdGalleria() {
         return idGalleria;
     }
 
+    /** @param idGalleria L'ID da assegnare alla galleria. */
     public void setIdGalleria(Integer idGalleria) {
         this.idGalleria = idGalleria;
     }
 
+    /** @return Il nome della galleria. */
     public String getNomeGalleria() {
         return nomeGalleria;
     }
 
+    /** @param nomeGalleria Il nome da assegnare alla galleria. */
     public void setNomeGalleria(String nomeGalleria) {
         this.nomeGalleria = nomeGalleria;
     }
 
+    /** @return L'utente proprietario della galleria. */
     public Utente getProprietario() {
         return proprietario;
     }
 
+    /** @param proprietario L'utente da impostare come proprietario. */
     public void setProprietario(Utente proprietario) {
         this.proprietario = proprietario;
     }
 
+    /** @return La lista delle fotografie presenti in questa galleria. */
     public ArrayList<Fotografia> getFotoContenute() {
         return fotoContenute;
     }
 
+    /**
+     * Aggiunge una fotografia alla galleria se non è già presente.
+     * @param foto L'oggetto {@link Fotografia} da inserire.
+     * @return {@code true} se la foto è stata aggiunta, {@code false} se era già presente nella galleria.
+     */
     public boolean addFotoAGalleria(Fotografia foto){
         boolean aggiunta = false;
 
@@ -72,6 +100,11 @@ public abstract class Galleria{
         return aggiunta;
     }
 
+    /**
+     * Rimuove una fotografia dalla galleria, se esistente.
+     * @param foto L'oggetto {@link Fotografia} da rimuovere.
+     * @return {@code true} se la rimozione è avvenuta con successo, {@code false} altrimenti.
+     */
     public boolean removeFotoDAGalleria(Fotografia foto){
         boolean rimozione = false;
 
@@ -84,6 +117,12 @@ public abstract class Galleria{
         return rimozione;
     }
 
+    /**
+     * Verifica l'uguaglianza tra questa galleria e un altro oggetto.
+     * Il confronto si basa esclusivamente sull'{@code idGalleria}.
+     * @param obj L'oggetto da confrontare.
+     * @return {@code true} se gli oggetti condividono lo stesso ID, {@code false} altrimenti.
+     */
     @Override
     public boolean equals(final Object obj){
         if(obj == this) return true;
