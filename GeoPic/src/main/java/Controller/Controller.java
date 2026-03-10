@@ -607,4 +607,39 @@ public class Controller {
         }
         return new ArrayList<>();
     }
+
+    public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String[] soggetti){
+        Integer idNewFoto = fotografiaPostgresDAO.insertFotografia(dispositivo, LocalDate.now(), null, visibilita, coordinate, loggedInUtente.getIdUtente());
+
+        GalleriaPrivata tmpGalPriv = null;
+        ArrayList<Galleria> aaa = loggedInUtente.getGalleriePossedute();
+        for (Galleria galleria : aaa) {
+            if(galleria instanceof GalleriaPrivata){
+                tmpGalPriv = (GalleriaPrivata) galleria;
+                break;
+            }
+        }
+
+        ArrayList<Galleria> galleriaContenitrici = new ArrayList<>();
+        if(tmpGalPriv != null)
+            galleriaContenitrici.add(tmpGalPriv);
+
+        ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
+
+        Fotografia newFoto = new Fotografia(idNewFoto,
+                dispositivo,
+                LocalDate.now(),
+                null,
+                visibilita,
+                loggedInUtente,
+                getLuogoByCoordinate(luoghiInMemory, coordinate),
+                galleriaContenitrici,
+                soggettiRaffigurati);
+
+        fotografieInMemory.add(newFoto);
+
+        loggedInUtente.getFotoScattate().add(newFoto);
+
+        tmpGalPriv.addFotoAGalleria(newFoto);
+    }
 }

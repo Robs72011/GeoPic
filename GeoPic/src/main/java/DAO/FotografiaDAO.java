@@ -5,8 +5,9 @@ import java.util.ArrayList;
 
 public interface FotografiaDAO {
     //Aggiunge una foto con tutte le info
-    void insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
-                 boolean visibilita, String coordinate, int autore);
+    Integer insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
+                             boolean visibilita, String coordinate, int autore);
+
 
     //rimuove una foto andando ad aggiungere la data di eliminazione
     void deleteFotografia(int IDFoto);

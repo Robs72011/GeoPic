@@ -125,6 +125,10 @@ public class Utente {
         return aggiunta;
     }
 
+    public  ArrayList<Galleria> getGalleriePossedute() {
+        return galleriePossedute;
+    }
+
     public boolean addPartecipazioneAGalleria(GalleriaCondivisa galCond){
         boolean aggiunta = false;
 
