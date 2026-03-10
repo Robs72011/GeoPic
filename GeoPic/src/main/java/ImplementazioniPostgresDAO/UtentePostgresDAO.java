@@ -80,27 +80,26 @@ public class UtentePostgresDAO implements UtenteDAO {
 
     //Per recuperare un solo utente dal DB, quello loggato
     //Al metodo vengono passati username e password gia inizializzati dal tentativo di login
-    public void getLoggedInUtente(Integer idUtente, String username, String password,
-                                  Boolean isAdmin, Boolean isSoggetto){
-        String statement = "SELECT * FROM galleria.UTENTE WHERE username = ? AND password = ?";
+    public Integer getLoggedInUtente(String username){
+        String statement = "SELECT IDUtente FROM galleria.UTENTE WHERE username = ?";
 
         try(PreparedStatement query = connection.prepareStatement(statement)){
 
             query.setString(1, username);
-            query.setString(2, password);
+
+            Integer idUtente = null;
 
             ResultSet rs = query.executeQuery();
 
             while(rs.next()){
                 idUtente =  rs.getInt("idUtente");
-                isAdmin = rs.getBoolean("isAdmin");
-                isSoggetto = rs.getBoolean("isSoggetto");
             }
 
-
+            return idUtente;
         }catch (SQLException sqle){
             sqle.printStackTrace();
-        }
 
+            return null;
+        }
     }
 }
