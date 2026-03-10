@@ -20,9 +20,16 @@ public class SlideshowSelector extends ImageSelector {
         super(onBackClick, controller);
 
         descriptionArea = createDescriptionArea("");
+        
+        // Creiamo un pannello "sud" diviso in due: a sinistra/centro i bottoni (footer), a destra la descrizione
+        JPanel southContextPanel = new JPanel(new BorderLayout());
+        southContextPanel.add(footer, BorderLayout.CENTER);
+        
         JScrollPane descriptionScrollPane = createDescriptionScrollPanel(descriptionArea);
-        footer.add(descriptionScrollPane);
-        add(footer, BorderLayout.SOUTH);
+        descriptionScrollPane.setBorder(BorderFactory.createTitledBorder("Descrizione Slideshow"));
+        southContextPanel.add(descriptionScrollPane, BorderLayout.EAST);
+        
+        add(southContextPanel, BorderLayout.SOUTH);
     }
 
     public void setSlideshow(Video slideshow) {
@@ -57,6 +64,7 @@ public class SlideshowSelector extends ImageSelector {
         textArea.setEditable(false); // Impedisce la modifica del testo
         textArea.setLineWrap(true); // Abilita il wrapping del testo
         textArea.setWrapStyleWord(true); // Impedisce che il testo venga spezzato a metà parola
+        
         return textArea;
     }
 

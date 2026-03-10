@@ -54,7 +54,8 @@ public class GalleryPanelContainer extends JPanel {
                 slideshow -> {
                     cardLayout.show(this, SLIDESHOW);
                     slideshowSelector.setSlideshow(slideshow);
-                }
+                },
+                controller
         );
 
         add(galleryPanel, GRID);

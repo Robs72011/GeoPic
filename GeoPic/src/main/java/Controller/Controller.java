@@ -325,6 +325,10 @@ public class Controller {
         return null;
     }
 
+    public Utente getLoggedInUtente() {
+        return loggedInUtente;
+    }
+
     public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
         for (Utente utente : utenti) {
             if (utente.getIdUtente().equals(idUserToFind)) {

@@ -21,11 +21,16 @@ public class GalleryPanel extends JPanel {
      * @see GalleryPanelContainer
      */
 
-    public GalleryPanel(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick) {
+    public GalleryPanel(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller) {
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(creaHeader("ADMIN", "0000000", "17/04/2025"), BorderLayout.NORTH);
+        
+        Model.Utente utenteCorrente = controller.getLoggedInUtente();
+        String username = utenteCorrente != null ? utenteCorrente.getUsername() : "Sconosciuto";
+        String idUtente = utenteCorrente != null ? String.valueOf(utenteCorrente.getIdUtente()) : "N/D";
+        
+        topPanel.add(creaHeader(username, idUtente), BorderLayout.NORTH);
 
         if (slideshowList != null && !slideshowList.isEmpty()) {
             SlideshowCarouselPanel carousel = new SlideshowCarouselPanel(slideshowList, onSlideshowClick);
@@ -40,10 +45,9 @@ public class GalleryPanel extends JPanel {
      * Crea un pannello che visualizza i dati dell'utente come:
      * @param username Nome utente
      * @param id Id utente
-     * @param dataCreazione Data creazione Account
      * @return {@link JPanel} Pannello Header
      */
-    private JPanel creaHeader(String username, String id, String dataCreazione) {
+    private JPanel creaHeader(String username, String id) {
         JPanel headerPanel = new JPanel(new GridLayout(3, 1));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 30, 15));
         headerPanel.setBackground(new Color(230, 230, 250));
@@ -53,7 +57,6 @@ public class GalleryPanel extends JPanel {
 
         headerPanel.add(userLabel);
         headerPanel.add(new JLabel("ID: " + id));
-        headerPanel.add(new JLabel("Data creazione: " + dataCreazione));
 
         return headerPanel;
     }

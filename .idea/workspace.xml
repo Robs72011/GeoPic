@@ -4,107 +4,82 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="Prima parte di modifica della gui, integrato l'utilizzo del Controller nella gui. Modificati ImageSelector e SlideshowSelector per mostrare i dati del Model Foto e Video rispettivamente al posto delle immagini. Mancano delle modifiche in GalleryPanel.java e La parte relativa all'accesso come admin. Aggiunte nel controller le funzionalità di getFotoGalleriaPersonale() e getVideoGalleriaPersonale()">
+    <list default="true" id="7606a334-9460-44b9-a331-344eb748a3c6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DB/popolazione.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DB/popolasione.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/dictionaries/project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanelContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanelContainer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/ImageSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/ImageSelector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanelHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanelHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/Slideshow.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowCarouselPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowCarouselPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowSelector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/TabbedPaneFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/TabbedPaneFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DatabaseLocalColorSettings">
-    <colors>
-      <entry key="b8d6fc72-2d34-4aa7-a435-68a4b80b2254" value="Blue" />
-    </colors>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Gabrytrac&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Gabrytrac"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Robs72011/GeoPic&quot;,
-    &quot;accountId&quot;: &quot;437db200-6865-4ec4-af89-03a1c2570779&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Robs72011/GeoPic",
+    "accountId": "437db200-6865-4ec4-af89-03a1c2570779"
   }
-}</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6
-}</component>
-  <component name="ProjectId" id="39qil4h9AlKJJd2Z0e0MR8nADDb" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="3Aktv3HehfJPab6eWpSeWwqKEDm" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.AppMain.executor&quot;: &quot;Run&quot;,
-    &quot;Application.HomeUtente.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;341&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gabry/IdeaProjects/GeoPic/GeoPic/src/main/java/GUI&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.tabs&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/Gabry/IdeaProjects/GeoPic",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Gabry\IdeaProjects\GeoPic\GeoPic\src\main\java\GUI" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="" />
-    </key>
-  </component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -113,46 +88,15 @@
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="" />
-      <created>1771430148185</created>
+      <changelist id="7606a334-9460-44b9-a331-344eb748a3c6" name="Changes" comment="" />
+      <created>1773148622373</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1771430148185</updated>
-      <workItem from="1771430149557" duration="8028000" />
-      <workItem from="1771444202613" duration="82000" />
-      <workItem from="1771444291443" duration="1434000" />
-      <workItem from="1771445736399" duration="198000" />
-      <workItem from="1771445952061" duration="6891000" />
-      <workItem from="1771488479684" duration="34000" />
-      <workItem from="1771488520435" duration="292000" />
-      <workItem from="1771488818273" duration="6548000" />
-      <workItem from="1771506808119" duration="9593000" />
-      <workItem from="1771605941271" duration="225000" />
-      <workItem from="1771919514230" duration="13772000" />
-      <workItem from="1771944899686" duration="893000" />
-      <workItem from="1772011566990" duration="5083000" />
-      <workItem from="1772092561449" duration="16720000" />
-      <workItem from="1772180914931" duration="6891000" />
-      <workItem from="1772396758513" duration="1451000" />
-      <workItem from="1772442850295" duration="6594000" />
-      <workItem from="1772620012019" duration="1024000" />
-      <workItem from="1772704859391" duration="5276000" />
-      <workItem from="1773073994993" duration="2459000" />
-      <workItem from="1773084577627" duration="2871000" />
-      <workItem from="1773133728280" duration="11297000" />
+      <updated>1773148622373</updated>
+      <workItem from="1773148623565" duration="4283000" />
     </task>
-    <task id="LOCAL-00001" summary="Aggiunta i file della gui">
-      <option name="closed" value="true" />
-      <created>1773074384035</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1773074384035</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,14 +112,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Aggiunta i file della gui" />
-    <MESSAGE value="Prima parte di modifica della gui, integrato l'utilizzo del Controller nella gui. Modificati ImageSelector e SlideshowSelector per mostrare i dati del Model Foto e Video rispettivamente al posto delle immagini. Mancano delle modifiche in GalleryPanel.java e La parte relativa all'accesso come admin. Aggiunte nel controller le funzionalità di getFotoGalleriaPersonale() e getVideoGalleriaPersonale()" />
-    <option name="LAST_COMMIT_MESSAGE" value="Prima parte di modifica della gui, integrato l'utilizzo del Controller nella gui. Modificati ImageSelector e SlideshowSelector per mostrare i dati del Model Foto e Video rispettivamente al posto delle immagini. Mancano delle modifiche in GalleryPanel.java e La parte relativa all'accesso come admin. Aggiunte nel controller le funzionalità di getFotoGalleriaPersonale() e getVideoGalleriaPersonale()" />
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>
