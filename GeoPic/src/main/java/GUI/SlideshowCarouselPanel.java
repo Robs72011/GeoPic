@@ -1,10 +1,11 @@
 package GUI;
 
+import Model.Video;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -20,13 +21,13 @@ public class SlideshowCarouselPanel extends JPanel {
      * @param slideshows La lista degli slideshow da mostrare.
      * @param onClick una callback che viene chiamata quando viene cliccato una card {@link GalleryPanelContainer}.
      */
-    public SlideshowCarouselPanel(List<Slideshow> slideshows, Consumer<Slideshow> onClick) {
+    public SlideshowCarouselPanel(List<Video> slideshows, Consumer<Video> onClick) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 15));
 
         JPanel container = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
 
-        for (Slideshow slideshow : slideshows) {
+        for (Video slideshow : slideshows) {
             JPanel card = creaCard(slideshow, onClick);
             container.add(card);
         }
@@ -42,30 +43,27 @@ public class SlideshowCarouselPanel extends JPanel {
 
     /**
      * Crea una card component che rappresenta una slideshow. La card mostra il nome dello slideshow e
-     * un'anteprima (se disponibile) e associa ad ogni card una callback action.
+     * un'anteprima e associa ad ogni card una callback action.
      *
-     * @param slideshow lo {@link Slideshow} object contentente dettagli riguardo nome, immagini e descrizione da
-     *                  mostrare poi nella visione in dettaglio {@link SlideshowSelector#mostraImmagine(int)}
-     * @param onClick a {@link Consumer} callback attivata quando la card viene cliccata, con lo
-     *                 {@link Slideshow} associato come parametro.
+     * @param slideshow video associato alla card
+     * @param onClick a {@link Consumer} callback attivata quando la card viene cliccata
      * @return a {@link JPanel} ritorna la card dello slideshow.
      */
-    private JPanel creaCard(Slideshow slideshow, Consumer<Slideshow> onClick) {
-        File copertina = slideshow.getImageFiles().isEmpty() ? null : slideshow.getImageFiles().getFirst();
-        ImageIcon icon = copertina != null ? new ImageIcon(copertina.getAbsolutePath()) : null;
-        Image img = icon != null
-                ? icon.getImage().getScaledInstance(CARD_WIDTH, CARD_HEIGHT, Image.SCALE_SMOOTH)
-                : null;
-
-        JLabel background = new JLabel(icon != null ? new ImageIcon(img) : null);
+    private JPanel creaCard(Video slideshow, Consumer<Video> onClick) {
+        JPanel background = new JPanel();
         background.setLayout(new BorderLayout());
+        background.setBackground(new Color(220, 220, 220));
 
-        String labelText = slideshow.getName(); // O slideshow.getAutore(), ecc.
+        JLabel titleLabel = new JLabel("<html><div style='text-align: center;'><b>" + slideshow.getTitolo() + "</b></div></html>", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        background.add(titleLabel, BorderLayout.CENTER);
+
+        String labelText = "Video ID: " + slideshow.getIdVideo();
         JLabel label = new JLabel(labelText, SwingConstants.CENTER);
         label.setForeground(Color.WHITE);
-        label.setFont(new Font("Arial", Font.BOLD, 16));
+        label.setFont(new Font("Arial", Font.BOLD, 14));
         label.setOpaque(true);
-        label.setBackground(new Color(0, 0, 0, 120)); // semi-trasparente
+        label.setBackground(new Color(100, 100, 100));
 
         background.add(label, BorderLayout.SOUTH);
 

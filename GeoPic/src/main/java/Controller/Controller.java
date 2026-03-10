@@ -569,4 +569,38 @@ public class Controller {
 
         return -1;
     }
+
+    /**
+     * Recupera le fotografie dalla galleria personale dell'utente loggato.
+     * @return una lista di oggetti Fotografia. Se l'utente non è loggato o non ha una galleria, ritorna una lista vuota.
+     */
+    public ArrayList<Fotografia> getFotoGalleriaPersonale() {
+        if (loggedInUtente == null) {
+            return new ArrayList<>();
+        }
+        for (GalleriaPrivata galleria : galleriePrivateInMemory) {
+            if (galleria.getProprietario() != null && galleria.getProprietario().getIdUtente().equals(loggedInUtente.getIdUtente())) {
+                // Assumendo che la galleria contenga direttamente la lista di foto dopo il linking
+                return galleria.getFotoContenute();
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * Recupera i video dalla galleria personale dell'utente loggato.
+     * @return una lista di oggetti Video. Se l'utente non è loggato o non ha una galleria, ritorna una lista vuota.
+     */
+    public ArrayList<Video> getVideoGalleriaPersonale() {
+        if (loggedInUtente == null) {
+            return new ArrayList<>();
+        }
+        for (GalleriaPrivata galleria : galleriePrivateInMemory) {
+            if (galleria.getProprietario() != null && galleria.getProprietario().getIdUtente().equals(loggedInUtente.getIdUtente())) {
+                // Assumendo che la galleria contenga direttamente la lista di video dopo il linking
+                return galleria.getVideos();
+            }
+        }
+        return new ArrayList<>();
+    }
 }

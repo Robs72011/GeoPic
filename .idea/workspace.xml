@@ -4,18 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="">
+    <list default="true" id="029d9948-3ad7-4868-8b75-7461f45a967d" name="Changes" comment="Prima parte di modifica della gui, integrato l'utilizzo del Controller nella gui. Modificati ImageSelector e SlideshowSelector per mostrare i dati del Model Foto e Video rispettivamente al posto delle immagini. Mancano delle modifiche in GalleryPanel.java e La parte relativa all'accesso come admin. Aggiunte nel controller le funzionalità di getFotoGalleriaPersonale() e getVideoGalleriaPersonale()">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Controller/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Galleria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaCondivisa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaPrivata.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/GalleriaPrivata.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/Model/Video.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanelContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/GalleryPanelContainer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/ImageSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/ImageSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanelHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/LoginPanelHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/Slideshow.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowCarouselPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowCarouselPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/SlideshowSelector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/TabbedPaneFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/GeoPic/src/main/java/GUI/TabbedPaneFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseLocalColorSettings">
+    <colors>
+      <entry key="b8d6fc72-2d34-4aa7-a435-68a4b80b2254" value="Blue" />
+    </colors>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -26,6 +38,21 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Gabrytrac&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Robs72011/GeoPic&quot;,
+    &quot;accountId&quot;: &quot;437db200-6865-4ec4-af89-03a1c2570779&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -42,6 +69,7 @@
   &quot;keyToString&quot;: {
     &quot;Application.AppMain.executor&quot;: &quot;Run&quot;,
     &quot;Application.HomeUtente.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
@@ -53,7 +81,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rob/Documents/uni/oo/teams2022-23/Borsa_V5&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Gabry/IdeaProjects/GeoPic/GeoPic/src/main/java/GUI&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -70,6 +98,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Gabry\IdeaProjects\GeoPic\GeoPic\src\main\java\GUI" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
@@ -77,8 +108,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
       </set>
     </attachedChunks>
   </component>
@@ -109,11 +140,39 @@
       <workItem from="1772442850295" duration="6594000" />
       <workItem from="1772620012019" duration="1024000" />
       <workItem from="1772704859391" duration="5276000" />
+      <workItem from="1773073994993" duration="2459000" />
+      <workItem from="1773084577627" duration="2871000" />
+      <workItem from="1773133728280" duration="11297000" />
     </task>
+    <task id="LOCAL-00001" summary="Aggiunta i file della gui">
+      <option name="closed" value="true" />
+      <created>1773074384035</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1773074384035</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Aggiunta i file della gui" />
+    <MESSAGE value="Prima parte di modifica della gui, integrato l'utilizzo del Controller nella gui. Modificati ImageSelector e SlideshowSelector per mostrare i dati del Model Foto e Video rispettivamente al posto delle immagini. Mancano delle modifiche in GalleryPanel.java e La parte relativa all'accesso come admin. Aggiunte nel controller le funzionalità di getFotoGalleriaPersonale() e getVideoGalleriaPersonale()" />
+    <option name="LAST_COMMIT_MESSAGE" value="Prima parte di modifica della gui, integrato l'utilizzo del Controller nella gui. Modificati ImageSelector e SlideshowSelector per mostrare i dati del Model Foto e Video rispettivamente al posto delle immagini. Mancano delle modifiche in GalleryPanel.java e La parte relativa all'accesso come admin. Aggiunte nel controller le funzionalità di getFotoGalleriaPersonale() e getVideoGalleriaPersonale()" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

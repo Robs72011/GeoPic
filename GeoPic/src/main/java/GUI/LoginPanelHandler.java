@@ -1,20 +1,30 @@
 package GUI;
 
+import Controller.Controller;
+
 public class LoginPanelHandler {
+    private final Controller controller;
     private String utente;
     private String password;
+    private int risultato_login = -1;
 
 
-    public void getlogincredits(String utente, String password){
+    public LoginPanelHandler(Controller controller){
+        this.controller = controller;
+    }
+
+    public void setlogincredits(String utente, String password){
         this.utente = utente;
         this.password = password;
     }
 
-    public boolean check_login(){
-        if(utente.equals("admin") && password.equals("admin")){ //qua ci va l'interfaccia con il db per reperire i dati per il login
-            System.out.println("Login Success");
-            return true;
-        }
-        else return false;
+    /**
+     * Controlla il login tramite il Controller (che va al DB).
+     * @return true se l'utente è autenticato (utente normale o admin)
+     */
+
+    public int auth(){
+        risultato_login = controller.authentication(utente, password);
+        return risultato_login;
     }
 }

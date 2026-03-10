@@ -1,50 +1,57 @@
 package GUI;
 
+import Controller.Controller;
+import Model.Fotografia;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 public class ImageSelector extends JPanel {
-    protected List<File> immagini = List.of();
+    protected List<Fotografia> fotografie = List.of();
     protected int indiceCorrente = 0;
-    protected final JLabel imageLabel = new JLabel("", SwingConstants.CENTER);
-    protected JPanel footer = new JPanel();
+    protected final JLabel metadataLabel = new JLabel("", SwingConstants.CENTER);
+    protected final JPanel footer;
+    private final Controller controller;
 
-    private static final int MAX_IMG_WIDTH = 1920;
-    private static final int MAX_IMG_HEIGHT = 1080;
 
     /**
      * Pannello per la visualizzazione di immagini. Con gestione dinamica della visualizzazione del contenuto, utile
      * se si vuole accedere con diversi utenti e aggiornare le immagini disponibili.
+     *
      * @param onBackClick azione da eseguire al clic su "Indietro"
      */
-    public ImageSelector(Runnable onBackClick) {
+    public ImageSelector(Runnable onBackClick, Controller controller) {
+        this.controller = controller;
         this.setLayout(new BorderLayout());
-        this.add(imageLabel, BorderLayout.CENTER);
+        this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+        metadataLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        this.add(new JScrollPane(metadataLabel), BorderLayout.CENTER);
 
         // Pannello footer
-        footer.setLayout(new BoxLayout(footer, BoxLayout.Y_AXIS));
-
-        // Pannello per i metadati fissi di esempio
-        footer.add(new MetadataPanel("001", "Canon EOS 80D", "Mario Rossi", "2024-08-12", "Roma"));
-
-        // Bottoni
-        footer.add(creaPannelloBottoni(onBackClick));
-        this.add(footer, BorderLayout.SOUTH);
-    }
-
-    public void setContent(List<File> immagini) {
-       this.immagini = immagini != null ? immagini : List.of();
-       mostraImmagine(0);
+        this.footer = creaPannelloBottoni(onBackClick);
+        this.add(this.footer, BorderLayout.SOUTH);
     }
 
     /**
-     * Crea un pannello bottoni per scorrere le immagini nella visione in dettaglio
+     * Imposta il contenuto da visualizzare.
+     *
+     * @param foto la lista di oggetti Fotografia.
+     */
+
+    public void setContent(List<Fotografia> foto) {
+        this.fotografie = foto != null ? foto : List.of();
+        // MODIFICA: Cambiato il nome del metodo per chiarezza
+        mostraMetadati(0);
+    }
+
+
+    /**
+     * Crea un pannello bottoni per scorrere gli elementi.
+     *
      * @param onBackClick l'evento da ritornare a {@link GalleryPanelContainer}
-     * per uscire dalla visone in dettaglio
+     *                    per uscire dalla visone in dettaglio
      * @return pannello bottoni
      * @see GalleryPanel
      */
@@ -52,11 +59,12 @@ public class ImageSelector extends JPanel {
         JButton btnIndietro = new JButton("⤬ Indietro");
         JButton btnPrecedente = new JButton("<< Precedente");
         JButton btnSuccessivo = new JButton("Successivo >>");
-        JButton btnPrivatizza = new JButton("\uD83D\uDD12");
+        JButton btnPrivatizza = new JButton("\uD83D\uDD12 Rendi Privata");
 
-        btnPrecedente.addActionListener(_ -> mostraImmagine((indiceCorrente - 1 + immagini.size()) % immagini.size()));
-        btnSuccessivo.addActionListener(_ -> mostraImmagine((indiceCorrente + 1) % immagini.size()));
+        btnPrecedente.addActionListener(_ -> mostraMetadati((indiceCorrente - 1 + fotografie.size()) % fotografie.size()));
+        btnSuccessivo.addActionListener(_ -> mostraMetadati((indiceCorrente + 1) % fotografie.size()));
         btnIndietro.addActionListener(_ -> onBackClick.run());
+
         btnPrivatizza.addActionListener(_ -> {
             int scelta = JOptionPane.showConfirmDialog(
                     null,
@@ -64,7 +72,11 @@ public class ImageSelector extends JPanel {
                     "Conferma",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
-            if (scelta == JOptionPane.YES_OPTION) {}
+            if (scelta == JOptionPane.YES_OPTION) {
+                // Qui andrà la logica per chiamare un metodo del controller, ad esempio:
+                // controller.setFotografiaPrivata(fotoCorrente.getId());
+                JOptionPane.showMessageDialog(this, "Operazione da implementare.");
+            }
         });
 
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -75,29 +87,42 @@ public class ImageSelector extends JPanel {
         return buttonsPanel;
     }
 
-    public void mostraImmagine(int index) {
-        if (immagini == null || immagini.isEmpty()) return;
+    /**
+     * Mostra i metadati della fotografia all'indice specificato.
+     * @param index l'indice della fotografia nella lista.
+     */
+    public void mostraMetadati(int index) {
+        if (fotografie == null || fotografie.isEmpty()) {
+            metadataLabel.setText("Nessuna fotografia da mostrare.");
+            return;
+        }
 
         indiceCorrente = index;
+        Fotografia foto = fotografie.get(indiceCorrente);
 
-        try {
-            BufferedImage original = ImageIO.read(immagini.get(indiceCorrente));
+        // MODIFICA: Costruzione di una stringa HTML per visualizzare i metadati.
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><body style='text-align: left; padding: 20px;'>");
+        sb.append("<h1>Dettagli Fotografia</h1>");
+        sb.append("<p><b>ID Foto:</b> ").append(foto.getIdFoto()).append("</p>");
+        sb.append("<p><b>Dispositivo:</b> ").append(foto.getDispositivo()).append("</p>");
+        sb.append("<p><b>Data Scatto:</b> ").append(foto.getDataDiScatto()).append("</p>");
+        sb.append("<hr>");
 
-            int width = original.getWidth();
-            int height = original.getHeight();
-
-            if (width > MAX_IMG_WIDTH || height > MAX_IMG_HEIGHT) {
-                int newWidth = width / 2;
-                int newHeight = height / 2;
-                Image scaled = original.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                imageLabel.setIcon(new ImageIcon(scaled));
-            } else {
-                imageLabel.setIcon(new ImageIcon(original));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            imageLabel.setText("Errore nel caricamento dell'immagine.");
+        if (foto.getLuogo() != null) {
+            sb.append("<h2>Dettagli Luogo</h2>");
+            sb.append("<p><b>Nome Luogo:</b> ").append(foto.getLuogo().getNomeMnemonico()).append("</p>");
+            sb.append("<p><b>Coordinate:</b> ").append(foto.getLuogo().getCoordinate()).append("</p>");
+        } else {
+            sb.append("<p>Nessun luogo associato.</p>");
         }
+        sb.append("<hr>");
+        // Aggiungere altro (es. soggetti)
+
+        sb.append("</body></html>");
+
+        metadataLabel.setText(sb.toString());
     }
 }
+
+

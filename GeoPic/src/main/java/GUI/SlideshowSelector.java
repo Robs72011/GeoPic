@@ -1,8 +1,10 @@
 package GUI;
 
+import Controller.Controller;
+import Model.Video;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.List;
 
 public class SlideshowSelector extends ImageSelector {
@@ -14,8 +16,8 @@ public class SlideshowSelector extends ImageSelector {
      *
      * @param onBackClick callback per tornare alla schermata precedente
      */
-    public SlideshowSelector(Runnable onBackClick) {
-        super(onBackClick);
+    public SlideshowSelector(Runnable onBackClick, Controller controller) {
+        super(onBackClick, controller);
 
         descriptionArea = createDescriptionArea("");
         JScrollPane descriptionScrollPane = createDescriptionScrollPanel(descriptionArea);
@@ -23,11 +25,11 @@ public class SlideshowSelector extends ImageSelector {
         add(footer, BorderLayout.SOUTH);
     }
 
-    public void setSlideshow(Slideshow slideshow) {
+    public void setSlideshow(Video slideshow) {
         if (slideshow == null) return;
 
-        // Imposta immagini nello slideshow (metodo ereditato da ImageSelector)
-        setContent(slideshow.getImageFiles());
+        // Imposta foto nello slideshow (metodo ereditato da ImageSelector)
+        setContent(slideshow.getCompostoDaFoto());
 
         // Aggiorna descrizione
         descriptionArea.setText(slideshow.getDescrizione());
@@ -36,7 +38,7 @@ public class SlideshowSelector extends ImageSelector {
         if (thumbnailStrip != null) {
             remove(thumbnailStrip);
         }
-        thumbnailStrip = createThumbnailStrip(slideshow.getImageFiles());
+        thumbnailStrip = createThumbnailStrip(slideshow.getCompostoDaFoto());
         add(thumbnailStrip, BorderLayout.EAST);
 
         revalidate();
@@ -73,24 +75,22 @@ public class SlideshowSelector extends ImageSelector {
     }
 
     /**
-     * Crea una strip verticale con le miniature delle immagini dello slideshow.
+     * Crea una strip verticale con i dati delle foto dello slideshow.
      *
-     * @param immagini array di file immagine
-     * @return JScrollPane scrollabile contenente le miniature
+     * @param fotografie array di fotografie
+     * @return JScrollPane scrollabile contenente le label
      */
-    private JScrollPane createThumbnailStrip(List<File> immagini) {
-        JPanel thumbPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        thumbPanel.setPreferredSize(new Dimension(120, 0));
+    private JScrollPane createThumbnailStrip(List<Model.Fotografia> fotografie) {
+        JPanel thumbPanel = new JPanel();
+        thumbPanel.setLayout(new BoxLayout(thumbPanel, BoxLayout.Y_AXIS));
+        thumbPanel.setPreferredSize(new Dimension(150, 0));
         thumbPanel.setBackground(Color.LIGHT_GRAY);
 
-        for (File imgFile : immagini) {
-            try {
-                ImageIcon icon = new ImageIcon(imgFile.getAbsolutePath());
-                Image scaled = icon.getImage().getScaledInstance(80, 60, Image.SCALE_SMOOTH);
-                JLabel thumbLabel = new JLabel(new ImageIcon(scaled));
+        if (fotografie != null) {
+            for (Model.Fotografia foto : fotografie) {
+                JLabel thumbLabel = new JLabel("<html><b>Foto ID:</b> " + foto.getIdFoto() + " <br><i>" + foto.getDataDiScatto() + "</i></html>");
+                thumbLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 thumbPanel.add(thumbLabel);
-            } catch (Exception e) {
-                thumbPanel.add(new JLabel("X"));
             }
         }
 

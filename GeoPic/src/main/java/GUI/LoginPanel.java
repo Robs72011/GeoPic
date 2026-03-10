@@ -1,12 +1,13 @@
 package GUI;
 
-import javax.swing.*;
+import Controller.Controller;
 
+import javax.swing.*;
 import static javax.swing.JOptionPane.*;
 
 public class LoginPanel extends JPanel{
     private final JTextField campoUtente = new JTextField(15);
-    private final JPasswordField campoPassword= new JPasswordField(15);;
+    private final JPasswordField campoPassword= new JPasswordField(15);
 
      LoginPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -17,12 +18,20 @@ public class LoginPanel extends JPanel{
         add(campoPassword);
     }
 
-    public void mostra() {
-        String[] options = {"Login", "Cancella"};
-        LoginPanelHandler loginhandler = new LoginPanelHandler();
-        boolean accessoConsentito = false;
+    public String getUtente() {
+        return campoUtente.getText();
+    }
+    public String getPassword() {
+        return new String(campoPassword.getPassword());
+    }
+    public void setUtente(String utente) {campoUtente.setText(utente);}
+    public void setPassword(String password) {campoPassword.setText(password);}
 
-        while (!accessoConsentito) {
+    public int Login(Controller controller) {
+        String[] options = {"Login", "Cancella"};
+        LoginPanelHandler loginhandler = new LoginPanelHandler(controller);
+
+        while (true) {
             //DIALOG DI LOGIN
             int scelta = JOptionPane.showOptionDialog(
                     null,
@@ -34,15 +43,16 @@ public class LoginPanel extends JPanel{
                     options,
                     options[0]
             );
-            String utente = getUtente();
-            loginhandler.getlogincredits(utente, getPassword());
+
+            loginhandler.setlogincredits(getUtente(), getPassword());
 
             switch (scelta) {
                 //VALUTAZIONE LOGIN
                 case 0 -> {
-                    if (loginhandler.check_login()) {
-                        showMessageDialog(null, "Accesso effettuato con: " + utente, "Accesso Effettuato", INFORMATION_MESSAGE);
-                        accessoConsentito = true;
+                    int auth_return = loginhandler.auth();
+                    if (auth_return == 1 || auth_return == 2) {
+                        showMessageDialog(null, "Accesso effettuato con: " + getUtente(), "Accesso Effettuato", INFORMATION_MESSAGE);
+                        return auth_return;
                     } else {
                         showMessageDialog(null, "Utente e/o password errati.", "Errore", WARNING_MESSAGE);
                     }
@@ -50,21 +60,13 @@ public class LoginPanel extends JPanel{
 
                 //CANCELLA
                 case 1 -> {
-                    campoUtente.setText("");
-                    campoPassword.setText("");
+                    setUtente("");
+                    setPassword("");
                 }
 
                 //CHIUSURA FINESTRA
                 default -> System.exit(0);
             }
         }
-    }
-
-    public String getUtente() {
-        return campoUtente.getText();
-    }
-
-    public String getPassword() {
-        return new String(campoPassword.getPassword());
     }
 }

@@ -1,8 +1,11 @@
 package GUI;
 
+import Controller.Controller;
+import Model.Fotografia;
+import Model.Video;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.util.List;
 
 public class GalleryPanelContainer extends JPanel {
@@ -17,32 +20,37 @@ public class GalleryPanelContainer extends JPanel {
      * Gestisce il passaggio di schermata da {@link GalleryPanel}(Dashboard Galleria) a
      * {@link ImageSelector}(Visione Contenuto in dettaglio)
      */
-    public GalleryPanelContainer(List<File> immagini, List<Slideshow> slideshows) {
+    public GalleryPanelContainer(Controller controller) {
         cardLayout = new CardLayout();
         setLayout(cardLayout);
 
-        //logica di caricamento immagini da sostituire successivamente
-        if (immagini == null || immagini.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nessuna immagine trovata nella cartella.");
-            return;
+        //logica di caricamento immagini da
+        List<Fotografia> foto = controller.getFotoGalleriaPersonale();
+        List<Video> video = controller.getVideoGalleriaPersonale();
+
+        if (foto == null || video == null) {
+            JOptionPane.showMessageDialog(null,
+                    "Nessuna fotografia o video trovato nella galleria personale",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
         // Pannello per visualizzare le immagini ingrandite
-        ImageSelector imageSelector = new ImageSelector(() -> cardLayout.show(this, GRID));
-        imageSelector.setContent(immagini); //set dinamico del contenuto da mostrare
+        ImageSelector imageSelector = new ImageSelector(() -> cardLayout.show(this, GRID), controller);
+        imageSelector.setContent(foto); //set dinamico del contenuto da mostrare
 
 
         // Pannello per visualizzare le slideshow
-        SlideshowSelector slideshowSelector = new SlideshowSelector(() -> cardLayout.show(this, GRID));
+        SlideshowSelector slideshowSelector = new SlideshowSelector(() -> cardLayout.show(this, GRID), controller);
 
         // Pannello galleria con listener per immagini e slideshow
         GalleryPanel galleryPanel = new GalleryPanel(
-                immagini,
+                foto,
                 clickedIndex -> {
                     cardLayout.show(this, DETAIL);
-                    imageSelector.mostraImmagine(clickedIndex);
+                    imageSelector.mostraMetadati(clickedIndex);
                 },
-                slideshows,
+                video,
                 slideshow -> {
                     cardLayout.show(this, SLIDESHOW);
                     slideshowSelector.setSlideshow(slideshow);
