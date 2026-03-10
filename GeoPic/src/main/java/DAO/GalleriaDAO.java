@@ -3,7 +3,7 @@ package DAO;
 import java.util.ArrayList;
 
 public interface GalleriaDAO {
-    void insertGalleria(String nomeGalleria, boolean condivisione, int proprietario);
+    Integer insertGalleria(String nomeGalleria, boolean condivisione, int proprietario);
 
     void deleteGalleria(int idGalleria);
 
