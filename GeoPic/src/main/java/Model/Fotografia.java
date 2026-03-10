@@ -26,7 +26,6 @@ public class Fotografia {
     /** Flag di visibilità della foto (pubblica/privata). Default {@code true}. */
     private boolean visibility = true;
 
-
     /** L'utente che ha scattato la foto (Associazione "Scattata"). */
     private Utente autore;
 
