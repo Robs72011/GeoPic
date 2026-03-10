@@ -14,11 +14,13 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
     }
 
     @Override
-    public void insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
-                          boolean visibilita, String coordinate, int autore){
-        String statement = "INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto, DataEliminazione) VALUES(?, ?, ?, ?, ?, ?)";
+    public Integer insertFotografia(String device, LocalDate dataScatto, LocalDate dataEliminazione,
+                                    boolean visibilita, String coordinate, int autore) {
+        // Nota: Ho corretto l'ordine dei parametri nella query per matchare i tuoi setString/setInt
+        String statement = "INSERT INTO galleria.FOTOGRAFIA (Dispositivo, IDAutore, Coordinate, Visibilita, DataScatto, DataEliminazione) VALUES(?, ?, ?, ?, ?, ?)";
 
-        try(PreparedStatement newFoto = connection.prepareStatement(statement)){
+        // 1. Aggiungiamo Statement.RETURN_GENERATED_KEYS
+        try (PreparedStatement newFoto = connection.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
 
             newFoto.setString(1, device);
             newFoto.setInt(2, autore);
@@ -26,16 +28,24 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
             newFoto.setBoolean(4, visibilita);
             newFoto.setDate(5, Date.valueOf(dataScatto));
 
-            if(dataEliminazione == null){
+            if (dataEliminazione == null) {
                 newFoto.setNull(6, Types.DATE);
-            }else{
+            } else {
                 newFoto.setDate(6, Date.valueOf(dataEliminazione));
             }
 
             newFoto.executeUpdate();
-        }catch(SQLException sqle){
+
+            // 2. Recuperiamo l'ID generato
+            try (ResultSet rs = newFoto.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1); // Ritorna l'ID (prima colonna dei generated keys)
+                }
+            }
+        } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
+        return null; // Ritorna null se l'inserimento fallisce
     }
 
     @Override
