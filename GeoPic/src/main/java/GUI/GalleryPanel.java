@@ -48,16 +48,57 @@ public class GalleryPanel extends JPanel {
      * @return {@link JPanel} Pannello Header
      */
     private JPanel creaHeader(String username, String id) {
-        JPanel headerPanel = new JPanel(new GridLayout(3, 1));
+        // Pannello principale che contiene le info utente e il pannello comandi
+        JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 30, 15));
         headerPanel.setBackground(new Color(230, 230, 250));
 
-        JLabel userLabel = new JLabel("Galleria Personale di " + username );
+        // Pannello per visualizzare i dati dell'utente (allineato a sinistra)
+        JPanel userInfoPanel = new JPanel(new GridLayout(2, 1));
+        userInfoPanel.setOpaque(false);
+
+        JLabel userLabel = new JLabel("Galleria Personale di " + username);
         userLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
-        headerPanel.add(userLabel);
-        headerPanel.add(new JLabel("ID: " + id));
+        JLabel idLabel = new JLabel("ID: " + id);
 
+        userInfoPanel.add(userLabel);
+        userInfoPanel.add(idLabel);
+
+        headerPanel.add(userInfoPanel, BorderLayout.WEST);
+
+        // Pannello a griglia verticale per mettere tutti i bottoni impilati e uguali
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 0, 5));
+        buttonPanel.setOpaque(false);
+
+        // Utility method al volo per creare bottoni uniformi
+        JButton addPhotoButton = new JButton("Aggiungi Foto");
+        addPhotoButton.setFocusPainted(false);
+        addPhotoButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Aggiungi Foto' da implementare!", "Aggiungi", JOptionPane.INFORMATION_MESSAGE));
+
+        JButton btnFotoStessoLuogo = new JButton("Foto per Luogo");
+        btnFotoStessoLuogo.setFocusPainted(false);
+        btnFotoStessoLuogo.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Luogo' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+
+        JButton btnFotoStessoSoggetto = new JButton("Foto per Soggetto");
+        btnFotoStessoSoggetto.setFocusPainted(false);
+        btnFotoStessoSoggetto.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Soggetto' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+
+        JButton btnTop3Luoghi = new JButton("Top 3 Luoghi");
+        btnTop3Luoghi.setFocusPainted(false);
+        btnTop3Luoghi.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
+
+        buttonPanel.add(btnFotoStessoLuogo);
+        buttonPanel.add(btnFotoStessoSoggetto);
+        buttonPanel.add(btnTop3Luoghi);
+        buttonPanel.add(addPhotoButton);
+
+        // Contenitore per non stretchare a dismisura i bottoni nel BorderLayout.EAST
+        JPanel buttonContainer = new JPanel(new BorderLayout());
+        buttonContainer.setOpaque(false);
+        buttonContainer.add(buttonPanel, BorderLayout.NORTH);
+
+        headerPanel.add(buttonContainer, BorderLayout.EAST);
         return headerPanel;
     }
 
