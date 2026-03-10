@@ -611,9 +611,13 @@ public class Controller {
     public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String[] soggetti){
         Integer idNewFoto = fotografiaPostgresDAO.insertFotografia(dispositivo, LocalDate.now(), null, visibilita, coordinate, loggedInUtente.getIdUtente());
 
+        if(idNewFoto == null){
+            System.err.println("Errore nel salvataggio della fotografia sul Database.");
+            return;
+        }
+
         GalleriaPrivata tmpGalPriv = null;
-        ArrayList<Galleria> aaa = loggedInUtente.getGalleriePossedute();
-        for (Galleria galleria : aaa) {
+        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
             if(galleria instanceof GalleriaPrivata){
                 tmpGalPriv = (GalleriaPrivata) galleria;
                 break;
@@ -627,19 +631,19 @@ public class Controller {
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
 
         Fotografia newFoto = new Fotografia(idNewFoto,
-                dispositivo,
-                LocalDate.now(),
-                null,
-                visibilita,
-                loggedInUtente,
-                getLuogoByCoordinate(luoghiInMemory, coordinate),
-                galleriaContenitrici,
-                soggettiRaffigurati);
+                                            dispositivo,
+                                            LocalDate.now(),
+                                            null,
+                                            visibilita,
+                                            loggedInUtente,
+                                            getLuogoByCoordinate(luoghiInMemory, coordinate),
+                                            galleriaContenitrici,
+                                            soggettiRaffigurati);
 
         fotografieInMemory.add(newFoto);
+        loggedInUtente.addFotoScattate(newFoto);
 
-        loggedInUtente.getFotoScattate().add(newFoto);
-
-        tmpGalPriv.addFotoAGalleria(newFoto);
+        if(tmpGalPriv != null)
+            tmpGalPriv.addFotoAGalleria(newFoto);
     }
 }
