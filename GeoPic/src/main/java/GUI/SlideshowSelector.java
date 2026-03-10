@@ -38,8 +38,12 @@ public class SlideshowSelector extends ImageSelector {
         // Imposta foto nello slideshow (metodo ereditato da ImageSelector)
         setContent(slideshow.getCompostoDaFoto());
 
-        // Aggiorna descrizione
-        descriptionArea.setText(slideshow.getDescrizione());
+        // Aggiorna descrizione, usando il dato dal database
+        if (slideshow.getDescrizione() != null && !slideshow.getDescrizione().isEmpty()) {
+            descriptionArea.setText(slideshow.getDescrizione());
+        } else {
+            descriptionArea.setText("Nessuna descrizione disponibile per questo video.");
+        }
 
         // Aggiorna thumbnail strip
         if (thumbnailStrip != null) {
