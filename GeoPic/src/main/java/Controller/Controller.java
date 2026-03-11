@@ -73,6 +73,33 @@ public class Controller {
     // --- Metodi di Caricamento ---
 
     /**
+     * Esegue il caricamento completo di tutte le entità e risolve tutte le
+     * dipendenze (linking) tra di esse, completando il Data Graph.
+     */
+    public void loadInMemory() {
+        // Flat loading
+        loadUtenti();
+        loadLuoghi();
+        loadSoggetti();
+        loadGallerie(); // Sia private che condivise
+        loadVideos();
+        loadFotografie();
+
+        // Linking
+        linkUtenteSoggetto();
+        linkOwnerGalleries();
+        linkPartecipazione();
+        linkVideoToGalleries();
+        linkFotografiaAUtente();
+        linkFotografiaLuogo();
+        linkFotografiaSoggetto();
+        linkFotoToGallerie();
+        linkFotoToVideo();
+
+        System.out.println("Data Graph caricato con successo!");
+    }
+
+    /**
      * Svuota la lista degli utenti in memoria e popola la stessa con i dati
      * recuperati dal database tramite {@link UtentePostgresDAO}.
      * @return true se il caricamento ha successo, false altrimenti.
@@ -302,126 +329,6 @@ public class Controller {
     }
 
     /**
-     * Cerca una fotografia nella lista fornita in base al suo ID univoco.
-     * @param fotografie La lista di riferimento in cui cercare.
-     * @param idFotoToFind L'ID da ricercare.
-     * @return L'oggetto {@link Fotografia} corrispondente, o null se non trovato.
-     */
-    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, Integer idFotoToFind) {
-        for (Fotografia foto : fotografie) {
-            if (foto.getIdFoto().equals(idFotoToFind)) {
-                return foto;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Recupera un'istanza di {@link Galleria} (sia privata che condivisa) dato il suo ID.
-     * @param idGalleria L'ID della galleria da recuperare.
-     * @return L'oggetto Galleria trovato o null.
-     */
-    public Galleria getGalleriaByID(Integer idGalleria) {
-        Galleria galleria = getGalleriaPrivataByID(galleriePrivateInMemory, idGalleria);
-        if (galleria != null) {
-            return galleria;
-        }
-
-        galleria = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGalleria);
-        if (galleria != null) {
-            return galleria;
-        }
-
-        return null;
-    }
-
-    /**
-     * Cerca una galleria condivisa nella lista fornita.
-     */
-    public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
-                                                      Integer galCondIdToFind) {
-        for (GalleriaCondivisa galleriaCondivisa : gallCondivise) {
-            if (galleriaCondivisa.getIdGalleria().equals(galCondIdToFind)) {
-                return galleriaCondivisa;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Cerca una galleria privata nella lista fornita.
-     */
-    public GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
-                                                  Integer galPrivIdToFind) {
-        for (GalleriaPrivata galleriaPrivata : gallPrivate) {
-            if (galleriaPrivata.getIdGalleria().equals(galPrivIdToFind)) {
-                return galleriaPrivata;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Recupera l'oggetto {@link Luogo} corrispondente alle coordinate specificate.
-     */
-    public Luogo getLuogoByCoordinate(ArrayList<Luogo> luoghi, String coordinateToFind) {
-        for (Luogo luogo : luoghi) {
-            if (luogo.getCoordinate().equals(coordinateToFind)) {
-                return luogo;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Recupera l'oggetto {@link Soggetto} tramite il suo nome identificativo.
-     */
-    public Soggetto getSoggettoByNomeSoggetto(ArrayList<Soggetto> soggetti, String nomeSoggettoToFind) {
-        for (Soggetto soggetto : soggetti) {
-            if (soggetto.getNomeSoggetto().equals(nomeSoggettoToFind)) {
-                return soggetto;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Restituisce l'utente attualmente autenticato nella sessione.
-     */
-    public Utente getLoggedInUtente() {
-        return loggedInUtente;
-    }
-
-    /**
-     * Restituisce la lista degli utenti caricati in memoria.
-     */
-    public ArrayList<Utente> getUtentiInMemory() {return utentiInMemory;}
-
-    /**
-     * Recupera un oggetto {@link Utente} tramite il suo identificativo univoco.
-     */
-    public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
-        for (Utente utente : utenti) {
-            if (utente.getIdUtente().equals(idUserToFind)) {
-                return utente;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Recupera un oggetto {@link Video} tramite il suo identificativo univoco.
-     */
-    public Video getVideoByID(ArrayList<Video> videos, Integer idVideoToFind) {
-        for (Video video : videos) {
-            if (video.getIdVideo().equals(idVideoToFind)) {
-                return video;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Crea il linking in memoria tra fotografie e i relativi autori (utenti).
      */
     public void linkFotografiaAUtente() {
@@ -631,55 +538,144 @@ public class Controller {
     }
 
     /**
-     * Esegue il caricamento completo di tutte le entità e risolve tutte le
-     * dipendenze (linking) tra di esse, completando il Data Graph.
+     * Recupera un oggetto {@link Utente} tramite il suo identificativo univoco.
      */
-    public void loadInMemory() {
-        // Flat loading
-        loadUtenti();
-        loadLuoghi();
-        loadSoggetti();
-        loadGallerie(); // Sia private che condivise
-        loadVideos();
-        loadFotografie();
-
-        // Linking
-        linkUtenteSoggetto();
-        linkOwnerGalleries();
-        linkPartecipazione();
-        linkVideoToGalleries();
-        linkFotografiaAUtente();
-        linkFotografiaLuogo();
-        linkFotografiaSoggetto();
-        linkFotoToGallerie();
-        linkFotoToVideo();
-
-        System.out.println("Data Graph caricato con successo!");
+    public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
+        for (Utente utente : utenti) {
+            if (utente.getIdUtente().equals(idUserToFind)) {
+                return utente;
+            }
+        }
+        return null;
     }
 
     /**
-     * Verifica le credenziali dell'utente.
-     * @return 2 (Admin), 1 (Utente standard), -1 (Credenziali errate).
+     * Recupera un oggetto {@link Utente} tramite il suo username.
      */
-    public int authentication(String username, String password) {
-        Integer tmpUserID = 0;
-
-        tmpUserID = utentePostgresDAO.getLoggedInUtente(username);
-
-        Utente tmpUtente = getUtenteByID(utentiInMemory, tmpUserID);
-
-        if (tmpUtente != null) {
-            if(tmpUtente.getPassword().equals(password)) {
-                loggedInUtente = tmpUtente;
-
-                if (loggedInUtente.isAdmin())
-                    return 2;
-                else
-                    return 1;
+    public Utente getUtenteByUsername(ArrayList<Utente> utenti, String usernameToFind) {
+        for (Utente utente : utenti) {
+            if (utente.getUsername().equals(usernameToFind)) {
+                return utente;
             }
         }
+        return null;
+    }
 
-        return -1;
+    /**
+     * Cerca una fotografia nella lista fornita in base al suo ID univoco.
+     * @param fotografie La lista di riferimento in cui cercare.
+     * @param idFotoToFind L'ID da ricercare.
+     * @return L'oggetto {@link Fotografia} corrispondente, o null se non trovato.
+     */
+    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, Integer idFotoToFind) {
+        for (Fotografia foto : fotografie) {
+            if (foto.getIdFoto().equals(idFotoToFind)) {
+                return foto;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Recupera un'istanza di {@link Galleria} (sia privata che condivisa) dato il suo ID.
+     * @param idGalleria L'ID della galleria da recuperare.
+     * @return L'oggetto Galleria trovato o null.
+     */
+    public Galleria getGalleriaByID(Integer idGalleria) {
+        Galleria galleria = getGalleriaPrivataByID(galleriePrivateInMemory, idGalleria);
+        if (galleria != null) {
+            return galleria;
+        }
+
+        galleria = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGalleria);
+        if (galleria != null) {
+            return galleria;
+        }
+
+        return null;
+    }
+
+    /**
+     * Cerca una galleria condivisa nella lista fornita.
+     */
+    public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
+                                                      Integer galCondIdToFind) {
+        for (GalleriaCondivisa galleriaCondivisa : gallCondivise) {
+            if (galleriaCondivisa.getIdGalleria().equals(galCondIdToFind)) {
+                return galleriaCondivisa;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Cerca una galleria privata nella lista fornita.
+     */
+    public GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
+                                                  Integer galPrivIdToFind) {
+        for (GalleriaPrivata galleriaPrivata : gallPrivate) {
+            if (galleriaPrivata.getIdGalleria().equals(galPrivIdToFind)) {
+                return galleriaPrivata;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Recupera l'oggetto {@link Luogo} corrispondente alle coordinate specificate.
+     */
+    public Luogo getLuogoByCoordinate(ArrayList<Luogo> luoghi, String coordinateToFind) {
+        for (Luogo luogo : luoghi) {
+            if (luogo.getCoordinate().equals(coordinateToFind)) {
+                return luogo;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Recupera l'oggetto {@link Soggetto} tramite il suo nome identificativo.
+     */
+    public Soggetto getSoggettoByNomeSoggetto(ArrayList<Soggetto> soggetti, String nomeSoggettoToFind) {
+        for (Soggetto soggetto : soggetti) {
+            if (soggetto.getNomeSoggetto().equals(nomeSoggettoToFind)) {
+                return soggetto;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Recupera un oggetto {@link Video} tramite il suo identificativo univoco.
+     */
+    public Video getVideoByID(ArrayList<Video> videos, Integer idVideoToFind) {
+        for (Video video : videos) {
+            if (video.getIdVideo().equals(idVideoToFind)) {
+                return video;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Restituisce la lista dei luoghi caricati in memoria.
+     */
+    public ArrayList<Luogo> getLuoghiInMemory() {
+        return luoghiInMemory;
+    }
+
+    /**
+     * Restituisce l'utente attualmente autenticato nella sessione.
+     */
+    public Utente getLoggedInUtente() {
+        return loggedInUtente;
+    }
+
+    /**
+     * Restituisce la lista degli utenti caricati in memoria.
+     */
+    public ArrayList<Utente> getUtentiInMemory() {
+        return utentiInMemory;
     }
 
     /**
@@ -717,10 +713,63 @@ public class Controller {
     }
 
     /**
+     * Verifica le credenziali dell'utente.
+     * @return 2 (Admin), 1 (Utente standard), -1 (Credenziali errate).
+     */
+    public int authentication(String username, String password) {
+        Integer tmpUserID = 0;
+
+        tmpUserID = utentePostgresDAO.getLoggedInUtente(username);
+
+        Utente tmpUtente = getUtenteByID(utentiInMemory, tmpUserID);
+
+        if (tmpUtente != null) {
+            if(tmpUtente.getPassword().equals(password)) {
+                loggedInUtente = tmpUtente;
+
+                if (loggedInUtente.isAdmin())
+                    return 2;
+                else
+                    return 1;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * Valuta le stringhe delle coordinate grezze per normalizzare il potenziale zero matematico (-0 -> +0)
+     * e restituisce la stringa formattata compatibile con il database.
+     */
+    public String normalizzaCoordinate(String latSign, String latVal, String lonSign, String lonVal) {
+        try {
+            if (Double.parseDouble(latVal) == 0.0) latSign = "+";
+            if (Double.parseDouble(lonVal) == 0.0) lonSign = "+";
+        } catch (NumberFormatException e) {
+            // Ignorato silenziosamente
+        }
+        return latSign + latVal + "," + lonSign + lonVal;
+    }
+
+    /**
+     * Verifica se un determinato luogo esiste già in base alle coordinate.
+     * @param coordinate Le coordinate da cercare.
+     * @return Il toponimo esistente (o "Sconosciuto" se nullo). Ritorna null solo se il luogo non esiste.
+     */
+    public String getToponimoEsistente(String coordinate) {
+        Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
+        if (luogo != null) {
+            return luogo.getNomeMnemonico() != null ? luogo.getNomeMnemonico() : "Sconosciuto";
+        }
+        return null; // Il luogo non esiste nel sistema
+    }
+
+    /**
      * Gestisce la logica di business per la creazione di una nuova foto,
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
+     * @return true se il salvataggio va a buon fine, false se fallisce sul database.
      */
-    public void creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti){
+    public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti, String categoriaSoggetto){
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
@@ -733,7 +782,7 @@ public class Controller {
 
         if(idNewFoto == null){
             System.err.println("Errore nel salvataggio della fotografia sul Database.");
-            return;
+            return false;
         }
 
         GalleriaPrivata tmpGalPriv = null;
@@ -752,6 +801,22 @@ public class Controller {
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
+        
+        if (soggetti != null) {
+            for (String nomeSoggetto : soggetti) {
+                Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
+                // Se non esiste, creamolo sul DB e in memoria
+                if (soggetto == null) {
+                    soggettoPostgresDAO.insertSoggetto(nomeSoggetto, categoriaSoggetto);
+                    soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
+                    soggettiInMemory.add(soggetto);
+                }
+                
+                // Mappiamo nel DB la foto con il soggetto
+                mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
+                soggettiRaffigurati.add(soggetto);
+            }
+        }
 
         Fotografia newFoto = new Fotografia(idNewFoto,
                                             dispositivo,
@@ -763,6 +828,11 @@ public class Controller {
                                             galleriaContenitrici,
                                             soggettiRaffigurati);
 
+        // Collegamento simmetrico inverso (serve per la navigazione da soggetto a foto raffiguranti il soggetto)
+        for (Soggetto s : soggettiRaffigurati) {
+            s.addFotoInCuiAppare(newFoto);
+        }
+
         fotografieInMemory.add(newFoto);
         loggedInUtente.addFotoScattate(newFoto);
 
@@ -770,6 +840,7 @@ public class Controller {
             tmpGalPriv.addFotoAGalleria(newFoto);
 
         luogo.addLuogoRaffiguratoIn(newFoto);
+        return true;
     }
 
     /**
@@ -779,10 +850,15 @@ public class Controller {
     public void creazioneNuovaGalleriaCondivisa(String nomeGalleria, String[] partecipantiString){
         Integer newGalleriaCondID = galleriaPostgresDAO.insertGalleria(nomeGalleria, true, loggedInUtente.getIdUtente());
 
-        //scrivere la logica per convertire l'array di stringhe in oggetti utenti per definire i partecipanti
-        // alla galleria
-
         ArrayList<Utente> partecipanti = new ArrayList<>();
+        if (partecipantiString != null) {
+            for (String username : partecipantiString) {
+                Utente utente = getUtenteByUsername(utentiInMemory, username);
+                if (utente != null) {
+                    partecipanti.add(utente);
+                }
+            }
+        }
 
         GalleriaCondivisa newGallCond = new GalleriaCondivisa(newGalleriaCondID,
                                                             nomeGalleria,

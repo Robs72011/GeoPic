@@ -55,6 +55,7 @@ public class Soggetto {
         this.nomeSoggetto = nomeSoggetto;
         this.categoria = categoria;
         this.utenteRappresentato = null;
+        this.fotoInCuiAppare = new ArrayList<>();
     }
 
     /** @return Il nome del soggetto. */
@@ -105,19 +106,17 @@ public class Soggetto {
     public boolean equals(final Object obj){
         if(obj == this) return true;
 
-        if(obj == null || !(obj instanceof Soggetto)) return false;
-
-        Soggetto soggetto = (Soggetto) obj;
+        if(!(obj instanceof Soggetto soggetto)) return false;
 
         return Objects.equals(nomeSoggetto, soggetto.nomeSoggetto);
     }
 
     /**
      * Aggiunge una fotografia all'elenco di quelle in cui appare il soggetto.
+     *
      * @param fotografia La {@link Fotografia} da aggiungere.
-     * @return {@code true} se aggiunta, {@code false} se già presente.
      */
-    public boolean addFotoInCuiAppare(Fotografia fotografia){
+    public void addFotoInCuiAppare(Fotografia fotografia){
         boolean aggiunta = false;
 
         if(!(this.fotoInCuiAppare.contains(fotografia))){
@@ -126,6 +125,5 @@ public class Soggetto {
             aggiunta = true;
         }
 
-        return aggiunta;
     }
 }

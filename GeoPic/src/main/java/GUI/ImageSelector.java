@@ -123,7 +123,21 @@ public class ImageSelector extends JPanel {
             sb.append("<p>Nessun luogo associato.</p>");
         }
         sb.append("<hr>");
-        // Aggiungere altro (es. soggetti)
+        
+        sb.append("<h2>Soggetti</h2>");
+        if (foto.getSoggetti() != null && !foto.getSoggetti().isEmpty()) {
+            sb.append("<ul>");
+            for (Model.Soggetto s : foto.getSoggetti()) {
+                sb.append("<li>").append(s.getNomeSoggetto());
+                if (s.getCategoria() != null && !s.getCategoria().isEmpty()) {
+                    sb.append(" (").append(s.getCategoria()).append(")");
+                }
+                sb.append("</li>");
+            }
+            sb.append("</ul>");
+        } else {
+            sb.append("<p>Nessun soggetto presente in questa foto.</p>");
+        }
 
         sb.append("</body></html>");
 
