@@ -1,6 +1,5 @@
 package GUI;
 
-import Controller.Controller;
 import Model.Video;
 
 import javax.swing.*;
@@ -21,12 +20,11 @@ public class SlideshowSelector extends ImageSelector {
      * Costruisce il pannello dello slideshow.
      * @param onBackClick Callback invocata al clic sul pulsante "Indietro" per
      * gestire il ritorno alla vista principale.
-     * @param controller Il {@link Controller} di sistema per l'accesso ai dati.
      */
-    public SlideshowSelector(Runnable onBackClick, Controller controller) {
-        super(onBackClick, controller);
+    public SlideshowSelector(Runnable onBackClick) {
+        super(List.of(), onBackClick); // Inizializza con una lista vuota finchè non viene scelto lo slideshow
 
-        descriptionArea = createDescriptionArea("");
+        descriptionArea = createDescriptionArea();
         
         // Creiamo un pannello "sud" diviso in due: a sinistra/centro i bottoni (footer), a destra la descrizione
         JPanel southContextPanel = new JPanel(new BorderLayout());
@@ -70,11 +68,10 @@ public class SlideshowSelector extends ImageSelector {
 
     /**
      * Crea un'area di testo non modificabile per visualizzare la descrizione del video.
-     * @param descrizione Il testo da visualizzare.
      * @return {@link JTextArea} configurata.
      */
-    private JTextArea createDescriptionArea(String descrizione) {
-        JTextArea textArea = new JTextArea(descrizione);
+    private JTextArea createDescriptionArea() {
+        JTextArea textArea = new JTextArea();
         textArea.setBackground(new Color(230, 230, 250));
         textArea.setFont(new Font("Arial", Font.PLAIN, 14));
         textArea.setEditable(false); // Impedisce la modifica del testo

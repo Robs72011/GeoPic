@@ -1,6 +1,5 @@
 package GUI;
 
-import Controller.Controller;
 import Model.Fotografia;
 
 import javax.swing.*;
@@ -14,21 +13,21 @@ import java.util.List;
  * di gestione, come la possibilità di rendere privata una foto selezionata.
  */
 public class ImageSelector extends JPanel {
-    protected List<Fotografia> fotografie = List.of();
+    protected List<Fotografia> fotografie;
     protected int indiceCorrente = 0;
     protected final JLabel metadataLabel = new JLabel("", SwingConstants.CENTER);
     protected final JPanel footer;
-    private final Controller controller;
 
 
     /**
      * Costruisce il pannello di visualizzazione dettagliata.
+     * @param foto La lista di oggetti {@link Fotografia} da mostrare nel dettaglio.
      * @param onBackClick Runnable eseguito al clic del tasto "Indietro", solitamente utilizzato
      * per gestire la transizione tra le card del {@link GalleryPanelContainer}.
-     * @param controller Il {@link Controller} utilizzato per le operazioni di business logic.
      */
-    public ImageSelector(Runnable onBackClick, Controller controller) {
-        this.controller = controller;
+    public ImageSelector(List<Fotografia> foto, Runnable onBackClick) {
+        this.fotografie = foto != null ? foto : List.of();
+        
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
@@ -38,21 +37,17 @@ public class ImageSelector extends JPanel {
         // Pannello footer
         this.footer = creaPannelloBottoni(onBackClick);
         this.add(this.footer, BorderLayout.SOUTH);
-    }
-
-    /**
-     * Aggiorna la lista delle fotografie disponibili e resetta l'indice di visualizzazione.
-     * @param foto La lista di oggetti {@link Fotografia} da mostrare.
-     */
-    public void setContent(List<Fotografia> foto) {
-        this.fotografie = foto != null ? foto : List.of();
-        // MODIFICA: Cambiato il nome del metodo per chiarezza
-        mostraMetadati(0);
+        
+        // Inizializza la view sul primo elemento se disponibile
+        if (!this.fotografie.isEmpty()) {
+            mostraMetadati(0);
+        }
     }
 
     /**
      * Crea e configura il pannello contenente i pulsanti di navigazione e gestione della risorsa.
-     * @param onBackClick L'evento di ritorno alla vista precedente.
+     * @param onBackClick L'evento di ritorno alla vista precedente
+     *                    (In GalleryPanelContainer sarebbe GRID del cardlayout). (Per il bottone "Indietro")
      * @return {@link JPanel} contenente i bottoni di controllo.
      */
     private JPanel creaPannelloBottoni(Runnable onBackClick) {
@@ -85,6 +80,16 @@ public class ImageSelector extends JPanel {
         buttonsPanel.add(btnIndietro);
         buttonsPanel.add(btnPrivatizza);
         return buttonsPanel;
+    }
+
+    /**
+     * Aggiorna la lista delle fotografie disponibili e posiziona la vista sul primo elemento.
+     * Necessario per componenti dinamici come SlideshowSelector che ricaricano i dati a runtime.
+     * @param foto La nuova lista di oggetti {@link Fotografia} da mostrare.
+     */
+    public void setContent(List<Fotografia> foto) {
+        this.fotografie = foto != null ? foto : List.of();
+        mostraMetadati(0);
     }
 
     /**

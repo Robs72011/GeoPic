@@ -69,11 +69,10 @@ public class GalleryPanelContainer extends JPanel {
         // --- Ricostruisce le istanze dei tre sotto-pannelli passando i dati e le callback di navigazione ---
 
         // Pannello per visualizzare le immagini ingrandite (Detail View)
-        ImageSelector imageSelector = new ImageSelector(() -> cardLayout.show(this, GRID), controller);
-        imageSelector.setContent(foto); // set dinamico del contenuto aggiornato da mostrare
+        ImageSelector imageSelector = new ImageSelector(foto, () -> cardLayout.show(this, GRID));
 
         // Pannello per visualizzare le slideshow
-        SlideshowSelector slideshowSelector = new SlideshowSelector(() -> cardLayout.show(this, GRID), controller);
+        SlideshowSelector slideshowSelector = new SlideshowSelector(() -> cardLayout.show(this, GRID));
 
         // Pannello galleria (la griglia vera e propria) con listener per i clic su immagini e slideshow.
         // Gli viene passata this::refresh come 'Runnable onRefresh', che permetterà ai componenti
