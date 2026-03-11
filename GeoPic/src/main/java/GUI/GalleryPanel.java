@@ -79,10 +79,7 @@ public class GalleryPanel extends JPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 0, 5));
         buttonPanel.setOpaque(false);
 
-        // Utility method al volo per creare bottoni uniformi
-        JButton addPhotoButton = new JButton("Aggiungi Foto");
-        addPhotoButton.setFocusPainted(false);
-        addPhotoButton.addActionListener(_ -> {
+        JButton addPhotoButton = createStyledButton("Aggiungi Foto", _ -> {
             // Recupera la finestra gerarchicamente più in alto di questo componente
             // (necessario per impostarla come JFrame 'owner' e rendere la dialog modale bloccante)
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
@@ -100,17 +97,14 @@ public class GalleryPanel extends JPanel {
             }
         });
 
-        JButton btnFotoStessoLuogo = new JButton("Foto per Luogo");
-        btnFotoStessoLuogo.setFocusPainted(false);
-        btnFotoStessoLuogo.addActionListener(_ -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Luogo' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+        JButton btnFotoStessoLuogo = createStyledButton("Foto per Luogo", _ -> 
+            JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Luogo' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
 
-        JButton btnFotoStessoSoggetto = new JButton("Foto per Soggetto");
-        btnFotoStessoSoggetto.setFocusPainted(false);
-        btnFotoStessoSoggetto.addActionListener(_ -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Soggetto' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+        JButton btnFotoStessoSoggetto = createStyledButton("Foto per Soggetto", _ -> 
+            JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Soggetto' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
 
-        JButton btnTop3Luoghi = new JButton("Top 3 Luoghi");
-        btnTop3Luoghi.setFocusPainted(false);
-        btnTop3Luoghi.addActionListener(_ -> JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
+        JButton btnTop3Luoghi = createStyledButton("Top 3 Luoghi", _ -> 
+            JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
 
         buttonPanel.add(btnFotoStessoLuogo);
         buttonPanel.add(btnFotoStessoSoggetto);
@@ -125,6 +119,22 @@ public class GalleryPanel extends JPanel {
         headerPanel.add(buttonContainer, BorderLayout.EAST);
         return headerPanel;
     }
+
+    /**
+     * Utility method per creare bottoni uniformi nel pannello.
+     * @param text Testo da visualizzare nel bottone
+     * @param action Azione da eseguire al click (se null non viene aggiunta)
+     * @return {@link JButton} formattato
+     */
+    private JButton createStyledButton(String text, java.awt.event.ActionListener action) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        if (action != null) {
+            button.addActionListener(action);
+        }
+        return button;
+    }
+
 
     /**
      * Costruisce un pannello a scorrimento contenente la griglia delle fotografie.

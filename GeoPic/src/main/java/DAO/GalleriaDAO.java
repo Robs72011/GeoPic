@@ -32,8 +32,8 @@ public interface GalleriaDAO {
      * @param condivisa Lista degli stati di condivisione.
      * @param proprietario Lista degli ID dei proprietari.
      */
-    public void getAllGallerie(ArrayList<Integer> idGalleria, ArrayList<String> nomeGalleria,
-                               ArrayList<Boolean> condivisa, ArrayList<Integer> proprietario);
+    void getAllGallerie(ArrayList<Integer> idGalleria, ArrayList<String> nomeGalleria,
+                        ArrayList<Boolean> condivisa, ArrayList<Integer> proprietario);
 
     /**
      * Recupera le informazioni di proprietà e condivisione relative alle gallerie.
@@ -41,5 +41,5 @@ public interface GalleriaDAO {
      * @param proprietario Lista degli ID dei proprietari associati.
      * @param condivisione Lista degli stati di condivisione corrispondenti.
      */
-    public void getOwner(ArrayList<Integer> idGalleria, ArrayList<Integer> proprietario, ArrayList<Boolean> condivisione);
+    void getOwner(ArrayList<Integer> idGalleria, ArrayList<Integer> proprietario, ArrayList<Boolean> condivisione);
 }

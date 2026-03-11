@@ -33,11 +33,7 @@ public class Soggetto {
         this.nomeSoggetto = nomeSoggetto;
         this.categoria = categoria;
 
-        if(utenteRappresentato != null){
-            this.utenteRappresentato = utenteRappresentato;
-        }else{
-            this.utenteRappresentato = null;
-        }
+        this.utenteRappresentato = utenteRappresentato;
 
         if(fotoInCuiAppare != null){
             this.fotoInCuiAppare = fotoInCuiAppare;

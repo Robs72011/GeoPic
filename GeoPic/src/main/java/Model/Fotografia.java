@@ -14,17 +14,17 @@ public class Fotografia {
     /** Identificativo univoco della fotografia. */
     private Integer idFoto;
 
-    /** Il dispositivo utilizzato per scattare la foto (es. modello smartphone o fotocamera). */
+    /** Il dispositivo utilizzato per scattare la foto (es. Modello smartphone o fotocamera). */
     private String dispositivo;
 
     /** La data in cui è stata scattata la fotografia. */
     private LocalDate dataDiScatto;
 
     /** La data di eliminazione logica della foto. Se {@code null}, la foto non è eliminata. */
-    private LocalDate dataDiEliminazione = null;
+    private LocalDate dataDiEliminazione;
 
     /** Flag di visibilità della foto (pubblica/privata). Default {@code true}. */
-    private boolean visibility = true;
+    private boolean visibility;
 
     /** L'utente che ha scattato la foto (Associazione "Scattata"). */
     private Utente autore;
@@ -33,13 +33,13 @@ public class Fotografia {
     private Luogo luogo;
 
     /** Elenco delle gallerie che contengono questa foto (Associazione "Contenuta"). */
-    private ArrayList<Galleria> galleriaContenitrice;
+    private final ArrayList<Galleria> galleriaContenitrice;
 
     /** Elenco dei video composti da questa foto (Associazione "Compone"). */
-    private ArrayList<Video> fotoComponeVideo;
+    private final ArrayList<Video> fotoComponeVideo;
 
     /** Elenco dei soggetti presenti nella fotografia (Associazione "Mostra"). */
-    private ArrayList<Soggetto> soggetti;
+    private final ArrayList<Soggetto> soggetti;
 
     /**
      * Costruttore completo della classe Fotografia.
@@ -60,11 +60,7 @@ public class Fotografia {
         this.idFoto = idFoto;
         this.dispositivo = dispositivo;
         this.dataDiScatto = dataDiScatto;
-        if(dataDiEliminazione == null){
-            this.dataDiEliminazione = null;
-        }else{
-            this.dataDiEliminazione = dataDiEliminazione;
-        }
+        this.dataDiEliminazione = dataDiEliminazione;
         this.visibility = visibility;
 
         if(luogo == null){
@@ -285,9 +281,7 @@ public class Fotografia {
     public boolean equals(final Object obj){
         if(obj == this) return true;
 
-        if(obj == null || !(obj instanceof Fotografia)) return false;
-
-        Fotografia fotografia = (Fotografia) obj;
+        if(!(obj instanceof Fotografia fotografia)) return false;
 
         return Objects.equals(idFoto, fotografia.idFoto);
     }

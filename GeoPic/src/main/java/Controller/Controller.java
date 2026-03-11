@@ -588,11 +588,7 @@ public class Controller {
         }
 
         galleria = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGalleria);
-        if (galleria != null) {
-            return galleria;
-        }
-
-        return null;
+        return galleria;
     }
 
     /**
@@ -717,7 +713,7 @@ public class Controller {
      * @return 2 (Admin), 1 (Utente standard), -1 (Credenziali errate).
      */
     public int authentication(String username, String password) {
-        Integer tmpUserID = 0;
+        Integer tmpUserID;
 
         tmpUserID = utentePostgresDAO.getLoggedInUtente(username);
 

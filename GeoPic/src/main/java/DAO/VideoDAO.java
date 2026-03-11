@@ -39,5 +39,5 @@ public interface VideoDAO {
      * @param idVideo Lista degli ID dei video.
      * @param idGalleria Lista degli ID delle gallerie corrispondenti.
      */
-    public void getSalvatoIn(ArrayList<Integer> idVideo, ArrayList<Integer> idGalleria);
+    void getSalvatoIn(ArrayList<Integer> idVideo, ArrayList<Integer> idGalleria);
 }

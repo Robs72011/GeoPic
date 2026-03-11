@@ -1,8 +1,5 @@
 package Model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -35,11 +32,7 @@ public abstract class Galleria{
     public Galleria(Integer idGalleria, String nomeGalleria, Utente proprietario, ArrayList<Fotografia> fotoContenute) {
         this.idGalleria = idGalleria;
         this.nomeGalleria = nomeGalleria;
-
-        if(proprietario != null)
-            this.proprietario = proprietario;
-        else
-            this.proprietario = null;
+        this.proprietario = proprietario;
 
         if(fotoContenute != null){
             this.fotoContenute = fotoContenute;
@@ -127,9 +120,7 @@ public abstract class Galleria{
     public boolean equals(final Object obj){
         if(obj == this) return true;
 
-        if(obj == null || !(obj instanceof Galleria)) return false;
-
-        Galleria galleria = (Galleria) obj;
+        if(!(obj instanceof Galleria galleria)) return false;
 
         return Objects.equals(idGalleria, galleria.idGalleria);
     }

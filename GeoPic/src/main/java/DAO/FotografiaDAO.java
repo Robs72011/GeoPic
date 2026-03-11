@@ -63,12 +63,12 @@ public interface FotografiaDAO {
      * @param idFoto Lista degli ID delle foto.
      * @param luogo Lista delle coordinate dei luoghi corrispondenti.
      */
-    public void getRaffigura(ArrayList<Integer> idFoto, ArrayList<String> luogo);
+    void getRaffigura(ArrayList<Integer> idFoto, ArrayList<String> luogo);
 
     /**
      * Recupera le associazioni "Scatta" tra fotografie e autori.
      * @param idFoto Lista degli ID delle foto.
      * @param autore Lista degli ID degli autori corrispondenti.
      */
-    public void getScatta(ArrayList<Integer> idFoto, ArrayList<Integer> autore);
+    void getScatta(ArrayList<Integer> idFoto, ArrayList<Integer> autore);
 }

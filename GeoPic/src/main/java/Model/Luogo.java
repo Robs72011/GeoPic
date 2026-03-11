@@ -16,7 +16,7 @@ public class Luogo {
     private String nomeMnemonico;
 
     /** Elenco delle fotografie che ritraggono questo luogo (Associazione "Raffigura"). */
-    private ArrayList<Fotografia> luogoRaffiguratoIn;
+    private final ArrayList<Fotografia> luogoRaffiguratoIn;
 
     /**
      * Costruttore della classe Luogo.
@@ -89,9 +89,7 @@ public class Luogo {
     public boolean equals(final Object obj){
         if(obj == this) return true;
 
-        if(obj == null || !(obj instanceof Luogo)) return false;
-
-        Luogo luogo = (Luogo) obj;
+        if(!(obj instanceof Luogo luogo)) return false;
 
         return Objects.equals(coordinate, luogo.coordinate);
     }

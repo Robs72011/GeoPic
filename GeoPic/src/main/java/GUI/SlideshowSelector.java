@@ -22,7 +22,7 @@ public class SlideshowSelector extends ImageSelector {
      * gestire il ritorno alla vista principale.
      */
     public SlideshowSelector(Runnable onBackClick) {
-        super(List.of(), onBackClick); // Inizializza con una lista vuota finchè non viene scelto lo slideshow
+        super(List.of(), onBackClick); // Inizializza con una lista vuota finché non viene scelto lo slideshow
 
         descriptionArea = createDescriptionArea();
         

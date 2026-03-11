@@ -14,7 +14,7 @@ public class GalleriaPrivata extends Galleria{
     /** * Elenco dei video salvati all'interno della galleria privata
      * (Associazione "Salvato in").
      */
-    private ArrayList<Video> videos = null;
+    private final ArrayList<Video> videos;
 
     /**
      * Costruttore completo per la GalleriaPrivata.

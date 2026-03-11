@@ -26,18 +26,18 @@ public class Utente {
     private boolean isSoggetto;
 
     /** Lista delle fotografie scattate dall'utente (Associazione "Scatta"). */
-    private ArrayList<Fotografia> fotoScattate;
+    private final ArrayList<Fotografia> fotoScattate;
 
     /** Lista delle gallerie di cui l'utente è proprietario (Associazione "Possiede"). */
-    private ArrayList<Galleria> galleriePossedute;
+    private final ArrayList<Galleria> galleriePossedute;
 
     /** Lista delle gallerie condivise a cui l'utente partecipa (Associazione "Partecipa"). */
-    private ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa;
+    private final ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa;
 
     /**
      * Costruttore completo della classe Utente.
      * Inizializza le collezioni vuote se i parametri forniti sono nulli.
-     * @param idutente ID univoco.
+     * @param idUtente ID univoco.
      * @param username Nome utente.
      * @param password Password.
      * @param isAdmin True se amministratore.
@@ -46,10 +46,10 @@ public class Utente {
      * @param galleriePossedute Lista gallerie di proprietà.
      * @param utentePartecipaGalleriaCondivisa Lista gallerie condivise a cui partecipa.
      */
-    public Utente (Integer idutente, String username, String password, boolean isAdmin, boolean isSoggetto,
+    public Utente (Integer idUtente, String username, String password, boolean isAdmin, boolean isSoggetto,
                    ArrayList<Fotografia> fotoScattate, ArrayList<Galleria> galleriePossedute,
                    ArrayList<GalleriaCondivisa> utentePartecipaGalleriaCondivisa){
-        this.idUtente = idutente;
+        this.idUtente = idUtente;
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
@@ -224,9 +224,7 @@ public class Utente {
     public boolean equals(final Object obj){
         if(obj == this) return true;
 
-        if(obj == null || !(obj instanceof Utente)) return false;
-
-        Utente utente = (Utente) obj;
+        if(!(obj instanceof Utente utente)) return false;
 
         return Objects.equals(idUtente, utente.idUtente);
     }

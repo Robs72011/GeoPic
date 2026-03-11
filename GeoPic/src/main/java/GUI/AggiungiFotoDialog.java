@@ -33,16 +33,16 @@ public class AggiungiFotoDialog extends JDialog {
 
     /**
      * Costruisce il dialog box di inserimento foto.
-     * @param parentframe Il frame padre che ha richiesto l'apertura.
+     * @param parentFrame Il frame padre che ha richiesto l'apertura.
      * @param controller Il riferimento al controller per le operazioni di business logic e persistenza.
      */
-    public AggiungiFotoDialog(Frame parentframe, Controller controller) {
-        super(parentframe, "Aggiungi Nuova Foto", true);
+    public AggiungiFotoDialog(Frame parentFrame, Controller controller) {
+        super(parentFrame, "Aggiungi Nuova Foto", true);
         this.controller = controller;
 
         setLayout(new BorderLayout(10, 10));
         setSize(400, 500);
-        setLocationRelativeTo(parentframe);
+        setLocationRelativeTo(parentFrame);
 
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -216,7 +216,7 @@ public class AggiungiFotoDialog extends JDialog {
 
     /**
      * Valida ed estrae la stringa formattata delle coordinate unendo segni e valori.
-     * @return La stringa "Lat,Lon" oppure null se c'è un errore di validazione.
+     * @return La stringa "Lat, Lon" oppure null se c'è un errore di validazione.
      */
     private String checkAndBuildCoordinates() {
         String latVal = txtLatitudine.getText().replace(" ", "");

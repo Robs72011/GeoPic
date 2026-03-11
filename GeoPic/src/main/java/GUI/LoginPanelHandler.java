@@ -12,7 +12,6 @@ public class LoginPanelHandler {
     private final Controller controller;
     private String utente;
     private String password;
-    private int risultato_login = -1;
 
 
     /**
@@ -40,7 +39,6 @@ public class LoginPanelHandler {
      * -1 se l'autenticazione fallisce.
      */
     public int auth(){
-        risultato_login = controller.authentication(utente, password);
-        return risultato_login;
+        return controller.authentication(utente, password);
     }
 }

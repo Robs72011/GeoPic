@@ -1,6 +1,5 @@
 package Model;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -22,7 +21,7 @@ public class Video {
     private String titolo;
 
     /** Elenco delle fotografie che compongono la sequenza del video (Associazione "Compone"). */
-    private ArrayList<Fotografia> compostoDaFoto;
+    private final ArrayList<Fotografia> compostoDaFoto;
 
     /** Galleria in cui il video è salvato (Associazione "Salvato in"). */
     private Galleria galleria;
@@ -136,9 +135,7 @@ public class Video {
     public boolean equals(Object obj) {
         if(obj == this) return true;
 
-        if(obj == null || !(obj instanceof Video)) return false;
-
-        Video video = (Video) obj;
+        if(!(obj instanceof Video video)) return false;
 
         return Objects.equals(idVideo, video.getIdVideo());
     }
