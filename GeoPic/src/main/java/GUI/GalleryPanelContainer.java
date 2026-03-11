@@ -23,6 +23,8 @@ public class GalleryPanelContainer extends JPanel {
 
     private final CardLayout cardLayout;
 
+    private final Controller controller;
+
     /**
      * Inizializza il contenitore configurando i vari pannelli e definendo la logica
      * di transizione tra di essi tramite callback.
@@ -30,10 +32,30 @@ public class GalleryPanelContainer extends JPanel {
      * risorse multimediali dell'utente loggato.
      */
     public GalleryPanelContainer(Controller controller) {
+        this.controller = controller;
         cardLayout = new CardLayout();
         setLayout(cardLayout);
 
-        //logica di caricamento immagini da
+        // Effettua la prima costruzione grafica del contenitore
+        refresh();
+    }
+
+    /**
+     * Aggiorna l'intero contenitore della galleria ricostruendo le sue viste interne.
+     * Viene chiamato inizialmente dal costruttore e, successivamente, 
+     * come callback (onRefresh) dopo eventuali azioni che alterano i dati
+     * (es. l'aggiunta di una nuova foto tramite AggiungiFotoDialog).
+     * Il metodo:
+     * 1) Svuota l'interfaccia corrente eliminando i vecchi componenti.
+     * 2) Interroga il controller per ottenere le liste (di foto e video) allo stato attuale.
+     * 3) Reinizializza tutti i pannelli interni passandogli i nuovi dati.
+     * 4) Rende visibile il pannello a "griglia" e comunica allo Swing manager di ridisegnare l'area.
+     */
+    public void refresh() {
+        // Rimuove dal CardLayout le istanze precedenti di GalleryPanel, ImageSelector e SlideshowSelector
+        removeAll();
+
+        // Recupera i dati freschi direttamente dal Data Graph in memoria tramite il Controller
         List<Fotografia> foto = controller.getFotoGalleriaPersonale();
         List<Video> video = controller.getVideoGalleriaPersonale();
 
@@ -44,15 +66,18 @@ public class GalleryPanelContainer extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
         }
 
-        // Pannello per visualizzare le immagini ingrandite
-        ImageSelector imageSelector = new ImageSelector(() -> cardLayout.show(this, GRID), controller);
-        imageSelector.setContent(foto); //set dinamico del contenuto da mostrare
+        // --- Ricostruisce le istanze dei tre sotto-pannelli passando i dati e le callback di navigazione ---
 
+        // Pannello per visualizzare le immagini ingrandite (Detail View)
+        ImageSelector imageSelector = new ImageSelector(() -> cardLayout.show(this, GRID), controller);
+        imageSelector.setContent(foto); // set dinamico del contenuto aggiornato da mostrare
 
         // Pannello per visualizzare le slideshow
         SlideshowSelector slideshowSelector = new SlideshowSelector(() -> cardLayout.show(this, GRID), controller);
 
-        // Pannello galleria con listener per immagini e slideshow
+        // Pannello galleria (la griglia vera e propria) con listener per i clic su immagini e slideshow.
+        // Gli viene passata this::refresh come 'Runnable onRefresh', che permetterà ai componenti
+        // annidati (es. Header) di triggerare nuovamente la ricostruzione della griglia ai successivi inserimenti.
         GalleryPanel galleryPanel = new GalleryPanel(
                 foto,
                 clickedIndex -> {
@@ -64,13 +89,20 @@ public class GalleryPanelContainer extends JPanel {
                     cardLayout.show(this, SLIDESHOW);
                     slideshowSelector.setSlideshow(slideshow);
                 },
-                controller
+                controller,
+                this::refresh
         );
 
+        // Aggiunge nuovamente le view aggiornate alla pila del CardLayout
         add(galleryPanel, GRID);
         add(imageSelector, DETAIL);
         add(slideshowSelector, SLIDESHOW);
 
+        // Mostra immediatamente la view a griglia (quella predefinita)
         cardLayout.show(this, GRID);
+        
+        // Forza a livello Swing il ricalcolo dei layout e il rendering a schermo
+        revalidate();
+        repaint();
     }
 }

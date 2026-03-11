@@ -13,6 +13,8 @@ public class GalleryPanel extends JPanel {
 
     private static final int IMAGE_SIZE = 160;
 
+    private final Runnable onRefresh;
+
     /**
      * Costruisce il pannello principale della galleria, organizzando header,
      * carosello degli slideshow e la griglia delle immagini.
@@ -21,8 +23,10 @@ public class GalleryPanel extends JPanel {
      * @param slideshowList Lista delle entità {@link Video} (slideshow) disponibili.
      * @param onSlideshowClick Callback che gestisce il clic su un elemento del carosello.
      * @param controller Il {@link Controller.Controller} di riferimento per le operazioni utente.
+     * @param onRefresh Callback per aggiornare la galleria dopo l'aggiunta di una foto.
      */
-    public GalleryPanel(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller) {
+    public GalleryPanel(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller, Runnable onRefresh) {
+        this.onRefresh = onRefresh;
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -78,23 +82,35 @@ public class GalleryPanel extends JPanel {
         // Utility method al volo per creare bottoni uniformi
         JButton addPhotoButton = new JButton("Aggiungi Foto");
         addPhotoButton.setFocusPainted(false);
-        addPhotoButton.addActionListener(e -> {
+        addPhotoButton.addActionListener(_ -> {
+            // Recupera la finestra gerarchicamente più in alto di questo componente
+            // (necessario per impostarla come JFrame 'owner' e rendere la dialog modale bloccante)
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
+            
+            // Crea e mostra la finestra di dialogo modale per inserire i dati della foto
             AggiungiFotoDialog dialog = new AggiungiFotoDialog((Frame) parentWindow, controller);
             dialog.setVisible(true);
+            
+            // Una volta chiusa la dialog (sia con successo che annullata), controlliamo
+            // se è stata configurata una callback per l'aggiornamento.
+            // Se esiste, la facciamo partire (triggera la 'refresh()' del GalleryPanelContainer 
+            // che ricaricherà foto perse dal nuovo inserimento).
+            if (onRefresh != null) {
+                onRefresh.run();
+            }
         });
 
         JButton btnFotoStessoLuogo = new JButton("Foto per Luogo");
         btnFotoStessoLuogo.setFocusPainted(false);
-        btnFotoStessoLuogo.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Luogo' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+        btnFotoStessoLuogo.addActionListener(_ -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Luogo' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
 
         JButton btnFotoStessoSoggetto = new JButton("Foto per Soggetto");
         btnFotoStessoSoggetto.setFocusPainted(false);
-        btnFotoStessoSoggetto.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Soggetto' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+        btnFotoStessoSoggetto.addActionListener(_ -> JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Soggetto' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
 
         JButton btnTop3Luoghi = new JButton("Top 3 Luoghi");
         btnTop3Luoghi.setFocusPainted(false);
-        btnTop3Luoghi.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
+        btnTop3Luoghi.addActionListener(_ -> JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
 
         buttonPanel.add(btnFotoStessoLuogo);
         buttonPanel.add(btnFotoStessoSoggetto);
@@ -124,7 +140,7 @@ public class GalleryPanel extends JPanel {
         for (int i = 0; i < fotografie.size(); i++) {
             int index = i;
             JButton button = creaImmagine(fotografie.get(i));
-            button.addActionListener(e -> onImageClick.accept(index));
+            button.addActionListener(_ -> onImageClick.accept(index));
             imagePanel.add(button);
         }
         JScrollPane scrollPane = new JScrollPane(imagePanel);
