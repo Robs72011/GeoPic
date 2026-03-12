@@ -792,7 +792,8 @@ public class Controller {
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
      * @return true se il salvataggio va a buon fine, false se fallisce sul database.
      */
-    public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti, String categoriaSoggetto){
+    public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo,
+                                      String[] soggetti, String categoriaSoggetto){
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
@@ -897,5 +898,38 @@ public class Controller {
         loggedInUtente.addGalleriePossedute(newGallCond);
         gallerieCondiviseInMemory.add(newGallCond);
 
+    }
+
+    //Metodo per la privatizzazione
+    public void setFotografiaPrivata(Integer fotoId) {
+        if (fotoId == null){
+            System.out.println("L'id della foto passato e' null.");
+            return;
+        }
+
+        Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
+
+        if(foto != null && foto.isVisibile()) {
+            fotografiaPostgresDAO.updateVisibilita(foto.getIdFoto(), false);
+
+            ArrayList<GalleriaCondivisa> daRimuovere = new ArrayList<>();
+
+            //Aggiungiamo le gallerie da cui la foto deve essere rimossa a 'daRimuovere'
+            for (Galleria gal : foto.getGalleriaContenitrice()) {
+                if (gal instanceof GalleriaCondivisa) {
+                    daRimuovere.add((GalleriaCondivisa) gal);
+                }
+            }
+
+            //Rimouoviamo il legame tra la foto e le gallerie condivise che la contengono
+            for(GalleriaCondivisa gal : daRimuovere){
+                contienePostgresDAO.deleteFotoDaGalleria(gal.getIdGalleria(), foto.getIdFoto());
+
+                foto.removeGalleriaContenitrice(gal);
+                gal.removeFotoDAGalleria(foto);
+            }
+
+            foto.setVisibility(false);
+        }
     }
 }
