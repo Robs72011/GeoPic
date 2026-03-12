@@ -788,6 +788,23 @@ public class Controller {
     }
 
     /**
+     * Ritorna la galleria privata dell'utente che ha eseguito il log in.
+     * @return La galleria privata dell'utente loggato
+     */
+    public GalleriaPrivata getLoggedInUtenteGalPriv(){
+        GalleriaPrivata tmpGalPriv = null;
+        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
+            if(galleria instanceof GalleriaPrivata){
+                tmpGalPriv = (GalleriaPrivata) galleria;
+                break;
+            }
+        }
+
+        return  tmpGalPriv;
+    }
+
+
+    /**
      * Gestisce la logica di business per la creazione di una nuova foto,
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
      * @return true se il salvataggio va a buon fine, false se fallisce sul database.
@@ -931,5 +948,34 @@ public class Controller {
 
             foto.setVisibility(false);
         }
+    }
+
+    public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
+        GalleriaPrivata galPrivUtente = getLoggedInUtenteGalPriv();
+        Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
+                galPrivUtente.getIdGalleria());
+
+        if(newVideoId == null){
+            System.out.println("Impossibile crare il video.");
+            return;
+        }
+
+        ArrayList<Fotografia> fotoCompongonoVideo = new ArrayList<>();
+        for(Integer i : foto){
+            Fotografia f = getFotografiaByID(fotografieInMemory, i);
+            if(f != null)
+                fotoCompongonoVideo.add(f);
+        }
+
+        Video newVideo = new Video(newVideoId, descrizione, titolo, fotoCompongonoVideo, galPrivUtente);
+
+        videosInMemory.add(newVideo);
+
+        for(Fotografia f : fotoCompongonoVideo){
+            f.addVideo(newVideo);
+            componePostgresDAO.insertComposizione(newVideo.getIdVideo(), f.getIdFoto());
+        }
+
+        galPrivUtente.addVideo(newVideo);
     }
 }
