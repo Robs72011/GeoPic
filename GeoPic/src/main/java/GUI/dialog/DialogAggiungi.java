@@ -12,11 +12,11 @@ import java.awt.*;
  * Le sottoclassi devono solo costruire il proprio form nel costruttore
  * usando {@link #creaMainPanel()} e {@link #creaPannelloBottoni(Runnable)}.
  */
-public abstract class AggiungiDialog extends JDialog {
+public abstract class DialogAggiungi extends JDialog {
 
     protected final Controller controller;
 
-    protected AggiungiDialog(Frame parentFrame, String titolo, Controller controller) {
+    protected DialogAggiungi(Frame parentFrame, String titolo, Controller controller) {
         super(parentFrame, titolo, true);
         this.controller = controller;
         setLayout(new BorderLayout(10, 10));

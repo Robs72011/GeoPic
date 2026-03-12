@@ -16,7 +16,7 @@ import java.text.ParseException;
  * Fornisce un form con campi per il dispositivo, le coordinate geografiche,
  * la visibilità e la gestione dei soggetti associati alla foto.
  */
-public class AggiungiFotoDialog extends AggiungiDialog {
+public class DialogAggiungiFoto extends DialogAggiungi {
 
     private JTextField txtDispositivo;
     private JCheckBox chkPrivata;
@@ -35,7 +35,7 @@ public class AggiungiFotoDialog extends AggiungiDialog {
      * @param parentFrame Il frame padre che ha richiesto l'apertura.
      * @param controller Il riferimento al controller per le operazioni di business logic e persistenza.
      */
-    public AggiungiFotoDialog(Frame parentFrame, Controller controller) {
+    public DialogAggiungiFoto(Frame parentFrame, Controller controller) {
         super(parentFrame, "Aggiungi Nuova Foto", controller);
         ArrayList<String> nomiUtentiDisponibili = controller.getUsernamesInMemory();
 

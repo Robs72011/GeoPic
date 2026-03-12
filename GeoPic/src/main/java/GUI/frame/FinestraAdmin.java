@@ -1,6 +1,6 @@
 package GUI.frame;
 
-import GUI.dialog.AggiungiUtenteDialog;
+import GUI.dialog.DialogAggiungiUtente;
 import GUI.Main;
 
 import Controller.Controller;
@@ -79,7 +79,7 @@ public class FinestraAdmin extends JFrame {
         JButton btnLogout = new JButton("Logout");
 
         btnAggiungi.addActionListener(_ -> {
-            AggiungiUtenteDialog dialog = new AggiungiUtenteDialog(this, controller);
+            DialogAggiungiUtente dialog = new DialogAggiungiUtente(this, controller);
             dialog.setVisible(true);
             aggiornaTabella();
         });

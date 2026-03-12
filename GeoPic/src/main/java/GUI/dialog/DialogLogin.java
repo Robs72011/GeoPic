@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
 /**
  * Finestra di dialogo modale utilizzata per la fase di autenticazione dell'utente.
  */
-public class LoginDialog extends JDialog {
+public class DialogLogin extends JDialog {
     private final JTextField campoUtente = new JTextField(15);
     private final JPasswordField campoPassword = new JPasswordField(15);
     private int esitoAutenticazione = 0;
@@ -18,7 +18,7 @@ public class LoginDialog extends JDialog {
     private String utenteLoggato;
     private String passwordLoggata;
 
-    public LoginDialog(Controller controller) {
+    public DialogLogin(Controller controller) {
         setTitle("Login");
         setModal(true); // Fondamentale: blocca il resto dell'app finche e aperto
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);

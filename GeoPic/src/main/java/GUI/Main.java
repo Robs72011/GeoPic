@@ -1,6 +1,6 @@
 package GUI;
 
-import GUI.dialog.LoginDialog;
+import GUI.dialog.DialogLogin;
 import GUI.frame.FinestraAdmin;
 import GUI.frame.FinestraUtente;
 
@@ -12,7 +12,7 @@ import javax.swing.*;
 /**
  * Classe di avvio dell'applicazione.
  * Si occupa di inizializzare il {@link Controller}, caricare i dati dal database
- * e gestire il flusso di autenticazione iniziale tramite {@link LoginDialog}.
+ * e gestire il flusso di autenticazione iniziale tramite {@link DialogLogin}.
  */
 public class Main {
 
@@ -29,7 +29,7 @@ public class Main {
                 controller.loadInMemory();
 
                 // Avvia il pannello di login
-                LoginDialog dialog = new LoginDialog(controller);
+                DialogLogin dialog = new DialogLogin(controller);
                 int authenticate = dialog.mostraDialogo();
 
                 // Gestisce la navigazione post-autenticazione

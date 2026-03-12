@@ -1,7 +1,7 @@
 package GUI.panel;
 
 import GUI.WrapLayout;
-import GUI.dialog.AggiungiFotoDialog;
+import GUI.dialog.DialogAggiungiFoto;
 import Model.Fotografia;
 import Model.Video;
 
@@ -109,7 +109,7 @@ public class PannelloGalleria extends JPanel {
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
             
             // Crea e mostra la finestra di dialogo modale per inserire i dati della foto
-            AggiungiFotoDialog dialog = new AggiungiFotoDialog((Frame) parentWindow, controller);
+            DialogAggiungiFoto dialog = new DialogAggiungiFoto((Frame) parentWindow, controller);
             dialog.setVisible(true);
             
             // Una volta chiusa la dialog (sia con successo che annullata), controlliamo

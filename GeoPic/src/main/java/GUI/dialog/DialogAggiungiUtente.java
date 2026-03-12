@@ -8,13 +8,13 @@ import java.awt.*;
 /**
  * Dialogo modale per l'inserimento di un nuovo utente nel sistema.
  */
-public class AggiungiUtenteDialog extends AggiungiDialog {
+public class DialogAggiungiUtente extends DialogAggiungi {
 
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JCheckBox chkAdmin;
 
-    public AggiungiUtenteDialog(Frame parentFrame, Controller controller) {
+    public DialogAggiungiUtente(Frame parentFrame, Controller controller) {
         super(parentFrame, "Aggiungi Nuovo Utente", controller);
         setSize(350, 200);
         setResizable(false);
