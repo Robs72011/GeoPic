@@ -22,7 +22,7 @@ public class LoginDialog extends JDialog {
         setTitle("Login");
         setModal(true); // Fondamentale: blocca il resto dell'app finche e aperto
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        
+
         // Pannello contenitore principale per dare margine
         JPanel mainPanel = new JPanel(new BorderLayout(20, 15));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 15, 20));
@@ -35,12 +35,25 @@ public class LoginDialog extends JDialog {
             }
         });
 
+        buildSezioneIcona(mainPanel);
+        buildSezioneForm(mainPanel);
+        buildSezioneBottoni(mainPanel, controller);
+
+        setContentPane(mainPanel);
+        pack();
+        setResizable(false); // Impedisce il ridimensionamento della finestra
+        setLocationRelativeTo(null); // Centra sullo schermo
+    }
+
+    private void buildSezioneIcona(JPanel mainPanel) {
         // --- ICONA ---
         Icon questionIcon = UIManager.getIcon("OptionPane.questionIcon");
         JLabel iconLabel = new JLabel(questionIcon);
         iconLabel.setVerticalAlignment(SwingConstants.CENTER);
         mainPanel.add(iconLabel, BorderLayout.WEST);
+    }
 
+    private void buildSezioneForm(JPanel mainPanel) {
         // --- PANNELLO CENTRALE (Form) ---
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
@@ -48,7 +61,7 @@ public class LoginDialog extends JDialog {
         JLabel lblUtente = new JLabel("Utente:");
         lblUtente.setAlignmentX(Component.LEFT_ALIGNMENT);
         campoUtente.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         JLabel lblPassword = new JLabel("Password:");
         lblPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
         campoPassword.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -62,7 +75,9 @@ public class LoginDialog extends JDialog {
         formPanel.add(campoPassword);
 
         mainPanel.add(formPanel, BorderLayout.CENTER);
+    }
 
+    private void buildSezioneBottoni(JPanel mainPanel, Controller controller) {
         // --- PANNELLO INFERIORE (Bottoni) ---
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         JButton btnLogin = new JButton("Login");
@@ -95,11 +110,6 @@ public class LoginDialog extends JDialog {
         buttonPanel.add(btnLogin);
         buttonPanel.add(btnCancella);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        setContentPane(mainPanel);
-        pack();
-        setResizable(false); // Impedisce il ridimensionamento della finestra
-        setLocationRelativeTo(null); // Centra sullo schermo
     }
 
     /**

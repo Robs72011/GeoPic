@@ -787,18 +787,6 @@ public class Controller {
         return null; // Il luogo non esiste nel sistema
     }
 
-    public GalleriaPrivata getLoggedInUtenteGalPriv(){
-        GalleriaPrivata tmpGalPriv = null;
-        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
-            if(galleria instanceof GalleriaPrivata){
-                tmpGalPriv = (GalleriaPrivata) galleria;
-                break;
-            }
-        }
-
-        return  tmpGalPriv;
-    }
-
     /**
      * Gestisce la logica di business per la creazione di una nuova foto,
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
@@ -821,17 +809,23 @@ public class Controller {
             return false;
         }
 
-        GalleriaPrivata utenteGalPriv = getLoggedInUtenteGalPriv();
+        GalleriaPrivata tmpGalPriv = null;
+        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
+            if(galleria instanceof GalleriaPrivata){
+                tmpGalPriv = (GalleriaPrivata) galleria;
+                break;
+            }
+        }
 
         ArrayList<Galleria> galleriaContenitrici = new ArrayList<>();
-        if(utenteGalPriv != null) {
-            galleriaContenitrici.add(utenteGalPriv);
+        if(tmpGalPriv != null) {
+            galleriaContenitrici.add(tmpGalPriv);
 
-            contienePostgresDAO.insertFotoAGalleria(utenteGalPriv.getIdGalleria(), idNewFoto);
+            contienePostgresDAO.insertFotoAGalleria(tmpGalPriv.getIdGalleria(), idNewFoto);
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
-
+        
         if (soggetti != null) {
             for (String nomeSoggetto : soggetti) {
                 Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
@@ -841,7 +835,7 @@ public class Controller {
                     soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
                     soggettiInMemory.add(soggetto);
                 }
-
+                
                 // Mappiamo nel DB la foto con il soggetto
                 mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
                 soggettiRaffigurati.add(soggetto);
@@ -866,8 +860,8 @@ public class Controller {
         fotografieInMemory.add(newFoto);
         loggedInUtente.addFotoScattate(newFoto);
 
-        if(utenteGalPriv != null)
-            utenteGalPriv.addFotoAGalleria(newFoto);
+        if(tmpGalPriv != null)
+            tmpGalPriv.addFotoAGalleria(newFoto);
 
         luogo.addLuogoRaffiguratoIn(newFoto);
         return true;
@@ -936,33 +930,6 @@ public class Controller {
             }
 
             foto.setVisibility(false);
-        }
-    }
-
-    public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
-        GalleriaPrivata galPrivUtente = getLoggedInUtenteGalPriv();
-        Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
-                                                            galPrivUtente.getIdGalleria());
-
-        if(newVideoId == null){
-            System.out.println("Impossibile crare il video.");
-            return;
-        }
-
-        ArrayList<Fotografia> fotoCompongonoVideo = new ArrayList<>();
-        for(Integer i : foto){
-            Fotografia f = getFotografiaByID(fotografieInMemory, i);
-            if(f != null)
-                fotoCompongonoVideo.add(f);
-        }
-
-        Video newVideo = new Video(newVideoId, descrizione, titolo, fotoCompongonoVideo, galPrivUtente);
-
-        videosInMemory.add(newVideo);
-
-        for(Fotografia f : fotoCompongonoVideo){
-            f.addVideo(newVideo);
-            componePostgresDAO.insertComposizione(newVideo.getIdVideo(), f.getIdFoto());
         }
     }
 }

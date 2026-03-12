@@ -111,6 +111,7 @@ public class VisualizzatoreFoto extends JPanel {
         sb.append("<html><body style='text-align: left; padding: 20px;'>");
         sb.append("<h1>Dettagli Fotografia</h1>");
         sb.append("<p><b>ID Foto:</b> ").append(foto.getIdFoto()).append("</p>");
+        sb.append("<p><b>Visibilità:</b> ").append(foto.isVisibile() ? "Pubblica" : "Privata").append("</p>");
         sb.append("<p><b>Dispositivo:</b> ").append(foto.getDispositivo()).append("</p>");
         sb.append("<p><b>Data Scatto:</b> ").append(foto.getDataDiScatto()).append("</p>");
         sb.append("<hr>");
