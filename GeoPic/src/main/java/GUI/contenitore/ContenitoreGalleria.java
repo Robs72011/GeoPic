@@ -1,4 +1,4 @@
-package GUI;
+package GUI.contenitore;
 
 import Controller.Controller;
 

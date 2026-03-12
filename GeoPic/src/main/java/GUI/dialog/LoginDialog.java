@@ -1,4 +1,4 @@
-package GUI;
+package GUI.dialog;
 
 import Controller.Controller;
 

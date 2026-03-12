@@ -1,6 +1,8 @@
-package GUI;
+package GUI.panel;
 
 import Controller.Controller;
+import GUI.WrapLayout;
+import GUI.frame.FinestraGalleriaCondivisa;
 import Model.GalleriaCondivisa;
 import Model.Utente;
 
@@ -13,9 +15,9 @@ import java.util.stream.Collectors;
 /**
  * Tab che visualizza le gallerie condivise dell'utente loggato tramite card a griglia.
  */
-public class SchedaSelezioneGallerieCondivise extends JPanel {
+public class PannelloSelezioneGallerieCondivise extends JPanel {
 
-    public SchedaSelezioneGallerieCondivise(Controller controller) {
+    public PannelloSelezioneGallerieCondivise(Controller controller) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 

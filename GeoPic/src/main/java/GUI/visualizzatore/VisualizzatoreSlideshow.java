@@ -1,4 +1,4 @@
-package GUI;
+package GUI.visualizzatore;
 
 import Model.Video;
 

@@ -668,6 +668,20 @@ public class Controller {
         return loggedInUtente;
     }
 
+    
+    /**
+     * @return una lista di stringhe con gli username di tutti gli utenti in memoria.
+     */
+    public ArrayList<String> getUsernamesInMemory() {
+        ArrayList<String> usernames = new ArrayList<>();
+        if (utentiInMemory != null) {
+            for (Utente u : utentiInMemory) {
+                usernames.add(u.getUsername());
+            }
+        }
+        return usernames;
+    }
+    
     /**
      * Restituisce la lista degli utenti caricati in memoria.
      */
@@ -788,11 +802,40 @@ public class Controller {
     }
 
     /**
+     * Aggiunge un nuovo utente nel sistema.
+     * @return true se l'inserimento nel database va a buon fine.
+     */
+    public boolean creazioneNuovoUtente(String username, String password, boolean isAdmin, boolean isSoggetto) {
+        boolean success = utentePostgresDAO.insertUtente(username, password, isAdmin, isSoggetto);
+        if (success) {
+            // Recupera l'ID del nuovo utente
+            Integer newUserId = utentePostgresDAO.getLoggedInUtente(username);
+            if (newUserId != null) {
+                // Genera in automatico la Galleria Personale base per l'utente, non condivisa
+                galleriaPostgresDAO.insertGalleria("Galleria Personale di " + username, false, newUserId);
+            }
+            
+            // Ricarica la memoria per tenere utenti e nuove gallerie aggiornati
+            loadInMemory(); 
+        }
+        return success;
+    }
+
+    /**
+     * Rimuove un utente dal sistema (con conseguenze a cascata su foto, gallerie, ecc.).
+     */
+    public void eliminaUtente(int idUtente) {
+        utentePostgresDAO.deleteUtente(idUtente);
+        // Poichè potrebbe scatenare eliminazioni a cascata nel DB su altre entità, ricaricamo tutto per sicurezza
+        loadInMemory(); 
+    }
+
+    /**
      * Gestisce la logica di business per la creazione di una nuova foto,
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
      * @return true se il salvataggio va a buon fine, false se fallisce sul database.
      */
-    public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti, String categoriaSoggetto, java.util.List<Integer> idGallerieCondivise){
+public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, java.util.List<String> nomiSoggetti, java.util.List<String> categorieSoggetti, java.util.List<Integer> idGallerieCondivise){
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
@@ -834,9 +877,12 @@ public class Controller {
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
-        
-        if (soggetti != null) {
-            for (String nomeSoggetto : soggetti) {
+
+        if (nomiSoggetti != null && categorieSoggetti != null && nomiSoggetti.size() == categorieSoggetti.size()) {
+            for (int i = 0; i < nomiSoggetti.size(); i++) {
+                String nomeSoggetto = nomiSoggetti.get(i);
+                String categoriaSoggetto = categorieSoggetti.get(i);
+                
                 Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
                 // Se non esiste, creamolo sul DB e in memoria
                 if (soggetto == null) {

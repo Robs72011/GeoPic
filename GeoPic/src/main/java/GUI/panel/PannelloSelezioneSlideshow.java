@@ -1,4 +1,4 @@
-package GUI;
+package GUI.panel;
 
 import Model.Video;
 
@@ -23,7 +23,6 @@ public class PannelloSelezioneSlideshow extends JPanel {
      * Crea un pannello carosello contenente le card per ogni slideshow presente nella lista.
      * @param slideshows La lista degli oggetti {@link Video} da visualizzare.
      * @param onClick Una callback che riceve il video selezionato per gestirne la riproduzione
-     * o la visualizzazione dettagliata nel {@link ContenitoreGalleria}.
      */
     public PannelloSelezioneSlideshow(List<Video> slideshows, Consumer<Video> onClick) {
         setLayout(new BorderLayout());

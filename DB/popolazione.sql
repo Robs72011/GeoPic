@@ -1,10 +1,10 @@
 BEGIN;
 
 -- 1. UTENTI (IDUtente: CHAR(5))
-INSERT INTO galleria.UTENTE (IDUtente, Username, Password, IsAdmin, IsSoggetto) VALUES
-('00001', 'admin_user', 'pass1', TRUE, FALSE),
-('00002', 'luca_b', 'pass2', FALSE, FALSE),
-('00003', 'maria_v', 'pass3', FALSE, TRUE);
+INSERT INTO galleria.UTENTE (Username, Password, IsAdmin, IsSoggetto) VALUES
+('admin_user', 'pass1', TRUE, FALSE),
+('luca_b', 'pass2', FALSE, FALSE),
+('maria_v', 'pass3', FALSE, TRUE);
 
 -- 2. LUOGHI (Coordinate: CHAR(14))
 INSERT INTO galleria.LUOGO (Coordinate, Toponimo) VALUES

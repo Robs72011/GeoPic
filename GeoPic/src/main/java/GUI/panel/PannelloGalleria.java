@@ -1,5 +1,7 @@
-package GUI;
+package GUI.panel;
 
+import GUI.WrapLayout;
+import GUI.dialog.AggiungiFotoDialog;
 import Model.Fotografia;
 import Model.Video;
 

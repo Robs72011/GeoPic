@@ -1,6 +1,11 @@
 package GUI;
 
+import GUI.dialog.LoginDialog;
+import GUI.frame.FinestraAdmin;
+import GUI.frame.FinestraUtente;
+
 import Controller.Controller;
+
 
 import javax.swing.*;
 
@@ -32,10 +37,11 @@ public class Main {
                     System.out.println("Utente: " + dialog.getUtente());
                     System.out.println("Password: " + dialog.getPassword());
                     // Avvia l'interfaccia principale per l'utente standard
-                    new FinestraPrincipale(controller);
+                    new FinestraUtente(controller);
                 }
                 else if(authenticate == 2){
-                    //parte da implementare per la gui admin
+                    // Avvia l'interfaccia di amministrazione
+                    new FinestraAdmin(controller);
                 }
         });
     }

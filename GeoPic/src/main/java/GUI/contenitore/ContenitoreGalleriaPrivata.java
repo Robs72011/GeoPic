@@ -1,4 +1,8 @@
-package GUI;
+package GUI.contenitore;
+
+import GUI.panel.PannelloGalleria;
+import GUI.visualizzatore.VisualizzatoreFoto;
+import GUI.visualizzatore.VisualizzatoreSlideshow;
 
 import Controller.Controller;
 import Model.Fotografia;

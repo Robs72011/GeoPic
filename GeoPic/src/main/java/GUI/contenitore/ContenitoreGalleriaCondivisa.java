@@ -1,5 +1,7 @@
-package GUI;
+package GUI.contenitore;
 
+import GUI.panel.PannelloGalleria;
+import GUI.visualizzatore.VisualizzatoreFoto;
 import Controller.Controller;
 import Model.Fotografia;
 import Model.GalleriaCondivisa;
@@ -35,7 +37,7 @@ public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
                     imageSelector.mostraMetadati(clickedIndex);
                 },
                 Collections.emptyList(),
-                slideshow -> {
+                _ -> {
                     // Nessun video nei panel privati
                 },
                 controller,

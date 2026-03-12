@@ -1,4 +1,4 @@
-package GUI;
+package GUI.visualizzatore;
 
 import Model.Fotografia;
 
@@ -23,7 +23,6 @@ public class VisualizzatoreFoto extends JPanel {
      * Costruisce il pannello di visualizzazione dettagliata.
      * @param foto La lista di oggetti {@link Fotografia} da mostrare nel dettaglio.
      * @param onBackClick Runnable eseguito al clic del tasto "Indietro", solitamente utilizzato
-     * per gestire la transizione tra le card del {@link ContenitoreGalleria}.
      */
     public VisualizzatoreFoto(List<Fotografia> foto, Runnable onBackClick) {
         this.fotografie = foto != null ? foto : List.of();
