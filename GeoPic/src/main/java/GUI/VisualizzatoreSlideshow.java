@@ -8,11 +8,11 @@ import java.util.List;
 
 /**
  * Pannello avanzato per la visualizzazione e la riproduzione di slideshow video.
- * Estende {@link ImageSelector} aggiungendo componenti per la visualizzazione
+ * Estende {@link VisualizzatoreFoto} aggiungendo componenti per la visualizzazione
  * della descrizione associata al video e una "thumbnail strip" (colonna laterale)
  * che elenca le fotografie che compongono lo slideshow.
  */
-public class SlideshowSelector extends ImageSelector {
+public class VisualizzatoreSlideshow extends VisualizzatoreFoto {
     private final JTextArea descriptionArea;
     private JScrollPane thumbnailStrip;
 
@@ -21,14 +21,14 @@ public class SlideshowSelector extends ImageSelector {
      * @param onBackClick Callback invocata al clic sul pulsante "Indietro" per
      * gestire il ritorno alla vista principale.
      */
-    public SlideshowSelector(Runnable onBackClick) {
+    public VisualizzatoreSlideshow(Runnable onBackClick) {
         super(List.of(), onBackClick); // Inizializza con una lista vuota finché non viene scelto lo slideshow
 
         descriptionArea = createDescriptionArea();
         
-        // Creiamo un pannello "sud" diviso in due: a sinistra/centro i bottoni (footer), a destra la descrizione
+        // Creiamo un pannello "sud" diviso in due: a sinistra/centro i bottoni (pannelloBottoni), a destra la descrizione
         JPanel southContextPanel = new JPanel(new BorderLayout());
-        southContextPanel.add(footer, BorderLayout.CENTER);
+        southContextPanel.add(pannelloBottoni, BorderLayout.CENTER);
         
         JScrollPane descriptionScrollPane = createDescriptionScrollPanel(descriptionArea);
         descriptionScrollPane.setBorder(BorderFactory.createTitledBorder("Descrizione Slideshow"));

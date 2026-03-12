@@ -263,7 +263,8 @@ public class Controller {
 
         try {
 
-            videoPostgresDAO.getAllVideo(tmpIdVideos, tmpDescrizione, tmpTitolo, tmpGalleria);
+            // Il DAO si aspetta (id, titolo, descrizione, galleria)
+            videoPostgresDAO.getAllVideo(tmpIdVideos, tmpTitolo, tmpDescrizione, tmpGalleria);
 
             for (int i = 0; i < tmpIdVideos.size(); i++) {
                 Video video = new Video(
@@ -706,6 +707,32 @@ public class Controller {
             }
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * Recupera le gallerie condivise visibili all'utente loggato.
+     * Include sia le gallerie condivise possedute, sia quelle a cui partecipa.
+     */
+    public ArrayList<GalleriaCondivisa> getGallerieCondiviseUtenteLoggato() {
+        ArrayList<GalleriaCondivisa> result = new ArrayList<>();
+
+        if (loggedInUtente == null) {
+            return result;
+        }
+
+        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
+            if (galleria instanceof GalleriaCondivisa condivisa && !result.contains(condivisa)) {
+                result.add(condivisa);
+            }
+        }
+
+        for (GalleriaCondivisa condivisa : gallerieCondiviseInMemory) {
+            if (condivisa.getPartecipanti().contains(loggedInUtente) && !result.contains(condivisa)) {
+                result.add(condivisa);
+            }
+        }
+
+        return result;
     }
 
     /**

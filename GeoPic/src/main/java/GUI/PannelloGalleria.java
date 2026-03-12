@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-public class GalleryPanel extends JPanel {
+public class PannelloGalleria extends JPanel {
 
     private static final int IMAGE_SIZE = 160;
 
@@ -25,20 +25,43 @@ public class GalleryPanel extends JPanel {
      * @param controller Il {@link Controller.Controller} di riferimento per le operazioni utente.
      * @param onRefresh Callback per aggiornare la galleria dopo l'aggiunta di una foto.
      */
-    public GalleryPanel(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller, Runnable onRefresh) {
+    public PannelloGalleria(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller, Runnable onRefresh) {
+        this(fotografie, onImageClick, slideshowList, onSlideshowClick, controller, onRefresh, null, null, true);
+    }
+
+    /**
+     * Costruisce il pannello galleria consentendo la personalizzazione dell'header
+     * e la visibilità del pulsante di aggiunta foto.
+     */
+    public PannelloGalleria(List<Fotografia> fotografie,
+                            IntConsumer onImageClick,
+                            List<Video> slideshowList,
+                            Consumer<Video> onSlideshowClick,
+                            Controller.Controller controller,
+                            Runnable onRefresh,
+                            String customTitle,
+                            String customSubtitle,
+                            boolean showAddPhotoButton) {
         this.onRefresh = onRefresh;
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel(new BorderLayout());
-        
-        Model.Utente utenteCorrente = controller.getLoggedInUtente();
-        String username = utenteCorrente != null ? utenteCorrente.getUsername() : "Sconosciuto";
-        String idUtente = utenteCorrente != null ? String.valueOf(utenteCorrente.getIdUtente()) : "N/D";
 
-        topPanel.add(creaHeader(username, idUtente, controller), BorderLayout.NORTH);
+        String headerTitle = customTitle;
+        String headerSubtitle = customSubtitle;
+        if (headerTitle == null || headerSubtitle == null) {
+            Model.Utente utenteCorrente = controller.getLoggedInUtente();
+            String username = utenteCorrente != null ? utenteCorrente.getUsername() : "Sconosciuto";
+            String idUtente = utenteCorrente != null ? String.valueOf(utenteCorrente.getIdUtente()) : "N/D";
+
+            headerTitle = "Galleria Personale di " + username;
+            headerSubtitle = "ID: " + idUtente;
+        }
+
+        topPanel.add(creaHeader(headerTitle, headerSubtitle, controller, showAddPhotoButton), BorderLayout.NORTH);
 
         if (slideshowList != null && !slideshowList.isEmpty()) {
-            SlideshowCarouselPanel carousel = new SlideshowCarouselPanel(slideshowList, onSlideshowClick);
+            PannelloSelezioneSlideshow carousel = new PannelloSelezioneSlideshow(slideshowList, onSlideshowClick);
             topPanel.add(carousel, BorderLayout.SOUTH);
         }
 
@@ -50,12 +73,10 @@ public class GalleryPanel extends JPanel {
      * Crea il pannello informativo dell'utente e il pannello comandi laterale.
      * Il pannello include etichette con le info dell'utente e pulsanti per l'interazione
      * con le funzionalità di ricerca e inserimento dati.
-     * @param username Nome utente del proprietario della galleria.
-     * @param id Identificativo univoco dell'utente.
      * @param controller Riferimento al controller per attivare i dialoghi.
      * @return {@link JPanel} configurato con layout BorderLayout.
      */
-    private JPanel creaHeader(String username, String id, Controller.Controller controller) {
+    private JPanel creaHeader(String headerTitle, String headerSubtitle, Controller.Controller controller, boolean showAddPhotoButton) {
         // Pannello principale che contiene le info utente e il pannello comandi
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 30, 15));
@@ -65,10 +86,10 @@ public class GalleryPanel extends JPanel {
         JPanel userInfoPanel = new JPanel(new GridLayout(2, 1));
         userInfoPanel.setOpaque(false);
 
-        JLabel userLabel = new JLabel("Galleria Personale di " + username);
+        JLabel userLabel = new JLabel(headerTitle);
         userLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
-        JLabel idLabel = new JLabel("ID: " + id);
+        JLabel idLabel = new JLabel(headerSubtitle);
 
         userInfoPanel.add(userLabel);
         userInfoPanel.add(idLabel);
@@ -76,7 +97,8 @@ public class GalleryPanel extends JPanel {
         headerPanel.add(userInfoPanel, BorderLayout.WEST);
 
         // Pannello a griglia verticale per mettere tutti i bottoni impilati e uguali
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 0, 5));
+        int buttonRows = showAddPhotoButton ? 4 : 3;
+        JPanel buttonPanel = new JPanel(new GridLayout(buttonRows, 1, 0, 5));
         buttonPanel.setOpaque(false);
 
         JButton addPhotoButton = createStyledButton("Aggiungi Foto", _ -> {
@@ -109,7 +131,9 @@ public class GalleryPanel extends JPanel {
         buttonPanel.add(btnFotoStessoLuogo);
         buttonPanel.add(btnFotoStessoSoggetto);
         buttonPanel.add(btnTop3Luoghi);
-        buttonPanel.add(addPhotoButton);
+        if (showAddPhotoButton) {
+            buttonPanel.add(addPhotoButton);
+        }
 
         // Contenitore per non stretchare a dismisura i bottoni nel BorderLayout.EAST
         JPanel buttonContainer = new JPanel(new BorderLayout());

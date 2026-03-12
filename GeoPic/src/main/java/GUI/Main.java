@@ -7,7 +7,7 @@ import javax.swing.*;
 /**
  * Classe di avvio dell'applicazione.
  * Si occupa di inizializzare il {@link Controller}, caricare i dati dal database
- * e gestire il flusso di autenticazione iniziale tramite {@link LoginPanel}.
+ * e gestire il flusso di autenticazione iniziale tramite {@link LoginDialog}.
  */
 public class Main {
 
@@ -24,15 +24,15 @@ public class Main {
                 controller.loadInMemory();
 
                 // Avvia il pannello di login
-                LoginPanel dialog = new LoginPanel();
-                int authenticate = dialog.Login(controller);
+                LoginDialog dialog = new LoginDialog(controller);
+                int authenticate = dialog.mostraDialogo();
 
                 // Gestisce la navigazione post-autenticazione
                 if(authenticate == 1) {
                     System.out.println("Utente: " + dialog.getUtente());
                     System.out.println("Password: " + dialog.getPassword());
                     // Avvia l'interfaccia principale per l'utente standard
-                    new TabbedPaneFrame(controller);
+                    new FinestraPrincipale(controller);
                 }
                 else if(authenticate == 2){
                     //parte da implementare per la gui admin

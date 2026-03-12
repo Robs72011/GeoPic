@@ -12,31 +12,31 @@ import java.util.List;
  * (come ID, dispositivo, data e luogo) formattati in HTML. Supporta inoltre operazioni
  * di gestione, come la possibilità di rendere privata una foto selezionata.
  */
-public class ImageSelector extends JPanel {
+public class VisualizzatoreFoto extends JPanel {
     protected List<Fotografia> fotografie;
     protected int indiceCorrente = 0;
-    protected final JLabel metadataLabel = new JLabel("", SwingConstants.CENTER);
-    protected final JPanel footer;
+    protected final JLabel imageLabel = new JLabel("", SwingConstants.CENTER);
+    protected final JPanel pannelloBottoni;
 
 
     /**
      * Costruisce il pannello di visualizzazione dettagliata.
      * @param foto La lista di oggetti {@link Fotografia} da mostrare nel dettaglio.
      * @param onBackClick Runnable eseguito al clic del tasto "Indietro", solitamente utilizzato
-     * per gestire la transizione tra le card del {@link GalleryPanelContainer}.
+     * per gestire la transizione tra le card del {@link ContenitoreGalleria}.
      */
-    public ImageSelector(List<Fotografia> foto, Runnable onBackClick) {
+    public VisualizzatoreFoto(List<Fotografia> foto, Runnable onBackClick) {
         this.fotografie = foto != null ? foto : List.of();
         
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        metadataLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        this.add(new JScrollPane(metadataLabel), BorderLayout.CENTER);
+        imageLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        this.add(new JScrollPane(imageLabel), BorderLayout.CENTER);
 
-        // Pannello footer
-        this.footer = creaPannelloBottoni(onBackClick);
-        this.add(this.footer, BorderLayout.SOUTH);
+        // Pannello buttonPayload
+        this.pannelloBottoni = creaPannelloBottoni(onBackClick);
+        this.add(this.pannelloBottoni, BorderLayout.SOUTH);
         
         // Inizializza la view sul primo elemento se disponibile
         if (!this.fotografie.isEmpty()) {
@@ -93,13 +93,13 @@ public class ImageSelector extends JPanel {
     }
 
     /**
-     * Aggiorna il contenuto della {@code metadataLabel} visualizzando i dettagli
+     * Aggiorna il contenuto della {@code imageLabel} visualizzando i dettagli
      * della fotografia situata all'indice specificato.
      * @param index L'indice della fotografia nella lista {@code fotografie}.
      */
     public void mostraMetadati(int index) {
         if (fotografie == null || fotografie.isEmpty()) {
-            metadataLabel.setText("Nessuna fotografia da mostrare.");
+            imageLabel.setText("Nessuna fotografia da mostrare.");
             return;
         }
 
@@ -141,7 +141,7 @@ public class ImageSelector extends JPanel {
 
         sb.append("</body></html>");
 
-        metadataLabel.setText(sb.toString());
+        imageLabel.setText(sb.toString());
     }
 }
 

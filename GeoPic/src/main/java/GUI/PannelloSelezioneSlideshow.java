@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * Ogni slideshow è rappresentato come una "card" grafica cliccabile che, all'interazione dell'utente,
  * attiva una {@link Consumer} callback definita per la gestione del passaggio alla vista dedicata.
  */
-public class SlideshowCarouselPanel extends JPanel {
+public class PannelloSelezioneSlideshow extends JPanel {
 
     private static final int CARD_WIDTH = 240;
     private static final int CARD_HEIGHT = 135; // Aspect ratio 16:9
@@ -23,9 +23,9 @@ public class SlideshowCarouselPanel extends JPanel {
      * Crea un pannello carosello contenente le card per ogni slideshow presente nella lista.
      * @param slideshows La lista degli oggetti {@link Video} da visualizzare.
      * @param onClick Una callback che riceve il video selezionato per gestirne la riproduzione
-     * o la visualizzazione dettagliata nel {@link GalleryPanelContainer}.
+     * o la visualizzazione dettagliata nel {@link ContenitoreGalleria}.
      */
-    public SlideshowCarouselPanel(List<Video> slideshows, Consumer<Video> onClick) {
+    public PannelloSelezioneSlideshow(List<Video> slideshows, Consumer<Video> onClick) {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 15));
 
@@ -58,7 +58,8 @@ public class SlideshowCarouselPanel extends JPanel {
         background.setLayout(new BorderLayout());
         background.setBackground(new Color(220, 220, 220));
 
-        JLabel titleLabel = new JLabel("<html><div style='text-align: center;'><b>" + slideshow.getTitolo() + "</b></div></html>", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("<html><div style='text-align: center;'><b>" + slideshow.getTitolo() +
+                "</b></div></html>", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         background.add(titleLabel, BorderLayout.CENTER);
 
