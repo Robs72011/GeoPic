@@ -26,9 +26,10 @@ public class VideoPostgresDAO implements VideoDAO {
      * @param titoloVideo Il titolo assegnato al video.
      * @param descrizione La descrizione testuale del contenuto.
      * @param galleria L'ID della galleria di appartenenza.
+     * @return L'id del video appena inserito
      */
     @Override
-    public void insertVideo(String titoloVideo, String descrizione, int galleria) {
+    public Integer insertVideo(String titoloVideo, String descrizione, int galleria) {
         String statement = "INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES (?, ?, ?)";
 
         try(PreparedStatement aggiuntaVideo = connection.prepareStatement(statement)){
@@ -39,9 +40,18 @@ public class VideoPostgresDAO implements VideoDAO {
 
             aggiuntaVideo.executeUpdate();
 
+            try(ResultSet rs = aggiuntaVideo.getGeneratedKeys()){
+                if(rs.next()){
+                    return rs.getInt(1);
+                }
+            }catch (SQLException sqle){
+                sqle.printStackTrace();
+            }
         }catch(SQLException sqle){
             sqle.printStackTrace();
         }
+
+        return null;
     }
 
     /**

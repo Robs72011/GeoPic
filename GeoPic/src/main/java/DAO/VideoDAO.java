@@ -14,8 +14,9 @@ public interface VideoDAO {
      * @param titoloVideo Il titolo del video.
      * @param descrizione La descrizione del contenuto del video.
      * @param galleria L'identificativo della galleria in cui il video è salvato.
+     * @return L'id del video appena inserito
      */
-    void insertVideo(String titoloVideo, String descrizione, int galleria);
+    Integer insertVideo(String titoloVideo, String descrizione, int galleria);
 
     /**
      * Elimina un video dal sistema in base al suo identificativo.

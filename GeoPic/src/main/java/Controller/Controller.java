@@ -668,7 +668,7 @@ public class Controller {
         return loggedInUtente;
     }
 
-    
+
     /**
      * @return una lista di stringhe con gli username di tutti gli utenti in memoria.
      */
@@ -681,7 +681,7 @@ public class Controller {
         }
         return usernames;
     }
-    
+
     /**
      * Restituisce la lista degli utenti caricati in memoria.
      */
@@ -814,9 +814,9 @@ public class Controller {
                 // Genera in automatico la Galleria Personale base per l'utente, non condivisa
                 galleriaPostgresDAO.insertGalleria("Galleria Personale di " + username, false, newUserId);
             }
-            
+
             // Ricarica la memoria per tenere utenti e nuove gallerie aggiornati
-            loadInMemory(); 
+            loadInMemory();
         }
         return success;
     }
@@ -827,8 +827,25 @@ public class Controller {
     public void eliminaUtente(int idUtente) {
         utentePostgresDAO.deleteUtente(idUtente);
         // Poichè potrebbe scatenare eliminazioni a cascata nel DB su altre entità, ricaricamo tutto per sicurezza
-        loadInMemory(); 
+        loadInMemory();
     }
+
+    /**
+     * Ritorna la galleria privata dell'utente che ha eseguito il log in.
+     * @return La galleria privata dell'utente loggato
+     */
+    public GalleriaPrivata getLoggedInUtenteGalPriv(){
+        GalleriaPrivata tmpGalPriv = null;
+        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
+            if(galleria instanceof GalleriaPrivata){
+                tmpGalPriv = (GalleriaPrivata) galleria;
+                break;
+            }
+        }
+
+        return  tmpGalPriv;
+    }
+
 
     /**
      * Gestisce la logica di business per la creazione di una nuova foto,
@@ -882,7 +899,7 @@ public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String
             for (int i = 0; i < nomiSoggetti.size(); i++) {
                 String nomeSoggetto = nomiSoggetti.get(i);
                 String categoriaSoggetto = categorieSoggetti.get(i);
-                
+
                 Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
                 // Se non esiste, creamolo sul DB e in memoria
                 if (soggetto == null) {
@@ -962,5 +979,67 @@ public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String
         loggedInUtente.addGalleriePossedute(newGallCond);
         gallerieCondiviseInMemory.add(newGallCond);
 
+    }
+
+    //Metodo per la privatizzazione
+    public void setFotografiaPrivata(Integer fotoId) {
+        if (fotoId == null){
+            System.out.println("L'id della foto passato e' null.");
+            return;
+        }
+
+        Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
+
+        if(foto != null && foto.isVisibile()) {
+            fotografiaPostgresDAO.updateVisibilita(foto.getIdFoto(), false);
+
+            ArrayList<GalleriaCondivisa> daRimuovere = new ArrayList<>();
+
+            //Aggiungiamo le gallerie da cui la foto deve essere rimossa a 'daRimuovere'
+            for (Galleria gal : foto.getGalleriaContenitrice()) {
+                if (gal instanceof GalleriaCondivisa) {
+                    daRimuovere.add((GalleriaCondivisa) gal);
+                }
+            }
+
+            //Rimouoviamo il legame tra la foto e le gallerie condivise che la contengono
+            for(GalleriaCondivisa gal : daRimuovere){
+                contienePostgresDAO.deleteFotoDaGalleria(gal.getIdGalleria(), foto.getIdFoto());
+
+                foto.removeGalleriaContenitrice(gal);
+                gal.removeFotoDAGalleria(foto);
+            }
+
+            foto.setVisibility(false);
+        }
+    }
+
+    public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
+        GalleriaPrivata galPrivUtente = getLoggedInUtenteGalPriv();
+        Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
+                galPrivUtente.getIdGalleria());
+
+        if(newVideoId == null){
+            System.out.println("Impossibile crare il video.");
+            return;
+        }
+
+        ArrayList<Fotografia> fotoCompongonoVideo = new ArrayList<>();
+        for(Integer i : foto){
+            Fotografia f = getFotografiaByID(fotografieInMemory, i);
+            if(f != null)
+                fotoCompongonoVideo.add(f);
+        }
+
+        Video newVideo = new Video(newVideoId, descrizione, titolo, fotoCompongonoVideo, galPrivUtente);
+
+        videosInMemory.add(newVideo);
+
+        for(Fotografia f : fotoCompongonoVideo){
+            f.addVideo(newVideo);
+            componePostgresDAO.insertComposizione(newVideo.getIdVideo(), f.getIdFoto());
+        }
+
+        galPrivUtente.addVideo(newVideo);
     }
 }
