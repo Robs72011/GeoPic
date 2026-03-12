@@ -831,7 +831,7 @@ public class Controller {
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
-        
+
         if (soggetti != null) {
             for (String nomeSoggetto : soggetti) {
                 Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
@@ -841,7 +841,7 @@ public class Controller {
                     soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
                     soggettiInMemory.add(soggetto);
                 }
-                
+
                 // Mappiamo nel DB la foto con il soggetto
                 mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
                 soggettiRaffigurati.add(soggetto);
