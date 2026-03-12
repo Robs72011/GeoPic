@@ -792,11 +792,11 @@ public class Controller {
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
      * @return true se il salvataggio va a buon fine, false se fallisce sul database.
      */
-    public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti, String categoriaSoggetto){
+    public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, String[] soggetti, String categoriaSoggetto, java.util.List<Integer> idGallerieCondivise){
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
-            luogo = new Luogo(coordinate, toponimo, new ArrayList<Fotografia>());
+            luogo = new Luogo(coordinate, toponimo, new ArrayList<>());
             luoghiInMemory.add(luogo);
         }
 
@@ -821,6 +821,16 @@ public class Controller {
             galleriaContenitrici.add(tmpGalPriv);
 
             contienePostgresDAO.insertFotoAGalleria(tmpGalPriv.getIdGalleria(), idNewFoto);
+        }
+
+        if (idGallerieCondivise != null) {
+            for (Integer idGc : idGallerieCondivise) {
+                GalleriaCondivisa gc = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGc);
+                if (gc != null) {
+                    galleriaContenitrici.add(gc);
+                    contienePostgresDAO.insertFotoAGalleria(gc.getIdGalleria(), idNewFoto);
+                }
+            }
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
@@ -862,6 +872,15 @@ public class Controller {
         if(tmpGalPriv != null)
             tmpGalPriv.addFotoAGalleria(newFoto);
 
+        if (idGallerieCondivise != null) {
+            for (Integer idGc : idGallerieCondivise) {
+                GalleriaCondivisa gc = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGc);
+                if (gc != null) {
+                    gc.addFotoAGalleria(newFoto);
+                }
+            }
+        }
+
         luogo.addLuogoRaffiguratoIn(newFoto);
         return true;
     }
@@ -886,7 +905,7 @@ public class Controller {
         GalleriaCondivisa newGallCond = new GalleriaCondivisa(newGalleriaCondID,
                                                             nomeGalleria,
                                                             loggedInUtente,
-                                                            new ArrayList<Fotografia>(),
+                                                            new ArrayList<>(),
                                                             partecipanti);
 
         for(Utente utente : partecipanti){

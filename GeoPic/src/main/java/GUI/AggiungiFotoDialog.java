@@ -2,10 +2,12 @@ package GUI;
 
 import Controller.Controller;
 import Model.Utente;
+import Model.GalleriaCondivisa;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
 
@@ -18,18 +20,19 @@ public class AggiungiFotoDialog extends JDialog {
 
     private final Controller controller;
 
-    private final JTextField txtDispositivo;
-    private final JCheckBox chkVisibilita;
+    private JTextField txtDispositivo;
+    private JCheckBox chkPrivata;
+    private JList<GalleriaCondivisa> listGallerieCondivise;
     
-    private final JComboBox<String> cbSegnoLat;
-    private final JFormattedTextField txtLatitudine;
-    private final JComboBox<String> cbSegnoLon;
-    private final JFormattedTextField txtLongitudine;
-    private final JTextField txtToponimo;
+    private JComboBox<String> cbSegnoLat;
+    private JFormattedTextField txtLatitudine;
+    private JComboBox<String> cbSegnoLon;
+    private JFormattedTextField txtLongitudine;
+    private JTextField txtToponimo;
     
-    private final JComboBox<String> cbCategoriaSoggetto;
-    private final JComboBox<String> cbUtenti;
-    private final JTextField txtNomeSoggetto;
+    private JComboBox<String> cbCategoriaSoggetto;
+    private JComboBox<String> cbUtenti;
+    private JTextField txtNomeSoggetto;
 
     /**
      * Costruisce il dialog box di inserimento foto.
@@ -41,12 +44,37 @@ public class AggiungiFotoDialog extends JDialog {
         this.controller = controller;
 
         setLayout(new BorderLayout(10, 10));
-        setSize(400, 500);
+        setSize(500, 600);
         setLocationRelativeTo(parentFrame);
 
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
+        // 1. Dispositivo e 2. Luogo
+        buildSezioneDatiBaseELuogo(formPanel);
+
+        // 3. Visibilità e Gallerie Condivise
+        buildSezioneVisibilitaEGallerie(formPanel);
+
+        buildSezioneCategoriaSoggetti(formPanel);
+
+        add(formPanel, BorderLayout.CENTER);
+
+        // Pulsanti in basso
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnSalva = new JButton("Salva");
+        JButton btnAnnulla = new JButton("Annulla");
+
+        btnAnnulla.addActionListener(_ -> dispose());
+        btnSalva.addActionListener(_ -> salvaFoto());
+
+        buttonPanel.add(btnSalva);
+        buttonPanel.add(btnAnnulla);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void buildSezioneDatiBaseELuogo(JPanel formPanel) {
         // 1. Dispositivo
         formPanel.add(new JLabel("Dispositivo:"));
         txtDispositivo = new JTextField();
@@ -66,13 +94,53 @@ public class AggiungiFotoDialog extends JDialog {
         formPanel.add(new JLabel("Nome Luogo (Toponimo):"));
         txtToponimo = new JTextField();
         formPanel.add(txtToponimo);
+    }
 
+    private void buildSezioneVisibilitaEGallerie(JPanel formPanel) {
         // 3. Visibilità
-        formPanel.add(new JLabel("Pubblica (Visibilità):"));
-        chkVisibilita = new JCheckBox();
-        chkVisibilita.setSelected(true);
-        formPanel.add(chkVisibilita);
+        formPanel.add(new JLabel("Privata:"));
+        chkPrivata = new JCheckBox();
+        chkPrivata.setSelected(true);
+        formPanel.add(chkPrivata);
 
+        // Pannello gallerie condivise
+        formPanel.add(new JLabel("Condividi in Gallerie (Ctrl+Click):"));
+        listGallerieCondivise = new JList<>();
+        ArrayList<GalleriaCondivisa> gallerieCondivise = controller.getGallerieCondiviseUtenteLoggato();
+        DefaultListModel<GalleriaCondivisa> modelGallerie = new DefaultListModel<>();
+        for(GalleriaCondivisa g : gallerieCondivise) modelGallerie.addElement(g);
+        listGallerieCondivise.setModel(modelGallerie);
+        listGallerieCondivise.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        listGallerieCondivise.setEnabled(false); // Inizialmente è privata, quindi lista disabilitata
+
+        listGallerieCondivise.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof GalleriaCondivisa) {
+                    setText(((GalleriaCondivisa) value).getNomeGalleria());
+                }
+                return this;
+            }
+        });
+        
+        JScrollPane scrollGallerie = new JScrollPane(listGallerieCondivise);
+        scrollGallerie.setPreferredSize(new Dimension(150, 60));
+        formPanel.add(scrollGallerie);
+
+        chkPrivata.addActionListener(_ -> {
+            boolean isPrivata = chkPrivata.isSelected();
+            listGallerieCondivise.setEnabled(!isPrivata);
+            if (isPrivata) {
+                listGallerieCondivise.clearSelection();
+            } else if (!modelGallerie.isEmpty()) {
+                // Seleziona la prima galleria di default se si toglie la spunta "Privata"
+                listGallerieCondivise.setSelectedIndex(0); 
+            }
+        });
+    }
+
+    private void buildSezioneCategoriaSoggetti(JPanel formPanel) {
         // 4. Soggetto
         formPanel.add(new JLabel("Categoria Soggetto:"));
         cbCategoriaSoggetto = new JComboBox<>(new String[]{"Nessuno", "Persona", "Animale", "Oggetto", "Paesaggio", "Utente"});
@@ -106,21 +174,6 @@ public class AggiungiFotoDialog extends JDialog {
 
         // Simula la selezione iniziale
         cbCategoriaSoggetto.setSelectedItem("Nessuno");
-
-        add(formPanel, BorderLayout.CENTER);
-
-        // Pulsanti in basso
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnSalva = new JButton("Salva");
-        JButton btnAnnulla = new JButton("Annulla");
-
-        btnAnnulla.addActionListener(_ -> dispose());
-        btnSalva.addActionListener(_ -> salvaFoto());
-
-        buttonPanel.add(btnSalva);
-        buttonPanel.add(btnAnnulla);
-
-        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     /**
@@ -183,7 +236,19 @@ public class AggiungiFotoDialog extends JDialog {
      */
     private void salvaFoto() {
         String dispositivo = txtDispositivo.getText().trim();
-        boolean visibilita = chkVisibilita.isSelected();
+        // Spunta Privata = false visibilita (non visibile). Spunta !Privata = true visibilita (pubblica)
+        boolean visibilita = !chkPrivata.isSelected();
+        
+        List<Integer> idGallerieCondivise = new ArrayList<>();
+        if (visibilita) {
+            for (GalleriaCondivisa gc : listGallerieCondivise.getSelectedValuesList()) {
+                idGallerieCondivise.add(gc.getIdGalleria());
+            }
+            if (idGallerieCondivise.isEmpty()) {
+                mostraErrore("Hai deciso di renderla visibile ma non hai selezionato nessuna galleria da condividere.");
+                return;
+            }
+        }
         
         if (dispositivo.isEmpty()) {
             mostraErrore("Il campo 'Dispositivo' è obbligatorio.");
@@ -202,7 +267,7 @@ public class AggiungiFotoDialog extends JDialog {
         String categoria = (String) cbCategoriaSoggetto.getSelectedItem();
 
         try {
-            boolean success = controller.creazioneNuovaFoto(dispositivo, visibilita, coordinate, toponimo, soggetti, categoria);
+            boolean success = controller.creazioneNuovaFoto(dispositivo, visibilita, coordinate, toponimo, soggetti, categoria, idGallerieCondivise);
             if (success) {
                 mostraMessaggio("Foto aggiunta con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
                 dispose(); // Chiude la dialog e innesca il refresh
