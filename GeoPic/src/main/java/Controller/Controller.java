@@ -787,6 +787,18 @@ public class Controller {
         return null; // Il luogo non esiste nel sistema
     }
 
+    public GalleriaPrivata getLoggedInUtenteGalPriv(){
+        GalleriaPrivata tmpGalPriv = null;
+        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
+            if(galleria instanceof GalleriaPrivata){
+                tmpGalPriv = (GalleriaPrivata) galleria;
+                break;
+            }
+        }
+
+        return  tmpGalPriv;
+    }
+
     /**
      * Gestisce la logica di business per la creazione di una nuova foto,
      * persistendo il dato nel DB e aggiornando il grafo in memoria.
@@ -809,19 +821,13 @@ public class Controller {
             return false;
         }
 
-        GalleriaPrivata tmpGalPriv = null;
-        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
-            if(galleria instanceof GalleriaPrivata){
-                tmpGalPriv = (GalleriaPrivata) galleria;
-                break;
-            }
-        }
+        GalleriaPrivata utenteGalPriv = getLoggedInUtenteGalPriv();
 
         ArrayList<Galleria> galleriaContenitrici = new ArrayList<>();
-        if(tmpGalPriv != null) {
-            galleriaContenitrici.add(tmpGalPriv);
+        if(utenteGalPriv != null) {
+            galleriaContenitrici.add(utenteGalPriv);
 
-            contienePostgresDAO.insertFotoAGalleria(tmpGalPriv.getIdGalleria(), idNewFoto);
+            contienePostgresDAO.insertFotoAGalleria(utenteGalPriv.getIdGalleria(), idNewFoto);
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
@@ -860,8 +866,8 @@ public class Controller {
         fotografieInMemory.add(newFoto);
         loggedInUtente.addFotoScattate(newFoto);
 
-        if(tmpGalPriv != null)
-            tmpGalPriv.addFotoAGalleria(newFoto);
+        if(utenteGalPriv != null)
+            utenteGalPriv.addFotoAGalleria(newFoto);
 
         luogo.addLuogoRaffiguratoIn(newFoto);
         return true;
@@ -930,6 +936,33 @@ public class Controller {
             }
 
             foto.setVisibility(false);
+        }
+    }
+
+    public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
+        GalleriaPrivata galPrivUtente = getLoggedInUtenteGalPriv();
+        Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
+                                                            galPrivUtente.getIdGalleria());
+
+        if(newVideoId == null){
+            System.out.println("Impossibile crare il video.");
+            return;
+        }
+
+        ArrayList<Fotografia> fotoCompongonoVideo = new ArrayList<>();
+        for(Integer i : foto){
+            Fotografia f = getFotografiaByID(fotografieInMemory, i);
+            if(f != null)
+                fotoCompongonoVideo.add(f);
+        }
+
+        Video newVideo = new Video(newVideoId, descrizione, titolo, fotoCompongonoVideo, galPrivUtente);
+
+        videosInMemory.add(newVideo);
+
+        for(Fotografia f : fotoCompongonoVideo){
+            f.addVideo(newVideo);
+            componePostgresDAO.insertComposizione(newVideo.getIdVideo(), f.getIdFoto());
         }
     }
 }
