@@ -16,12 +16,12 @@ INSERT INTO galleria.LUOGO (Coordinate, Toponimo) VALUES
 
 -- 3. GALLERIE (Personali obbligatorie + Condivise)
 -- IDGalleria: CHAR(10)
-INSERT INTO galleria.GALLERIA (IDGalleria, NomeGalleria, Condivisa, Proprietario) VALUES
-('0000000001', 'Privata Admin', FALSE, '00001'),
-('0000000002', 'Privata Luca', FALSE, '00002'),
-('0000000003', 'Privata Maria', FALSE, '00003'),
-('0000000004', 'Viaggio di Gruppo Roma', TRUE, '00001'),
-('0000000005', 'Gita a Napoli', TRUE, '00002'); -- Proprietario: 00002
+INSERT INTO galleria.GALLERIA (NomeGalleria, Condivisa, Proprietario) VALUES
+('Privata Admin', FALSE, '00001'),
+('Privata Luca', FALSE, '00002'),
+('Privata Maria', FALSE, '00003'),
+('Viaggio di Gruppo Roma', TRUE, '00001'),
+('Gita a Napoli', TRUE, '00002'); -- Proprietario: 00002
 
 -- 4. FOTOGRAFIE
 INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto) VALUES
@@ -34,11 +34,11 @@ INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, Da
 ('Canon EOS', '00001', '+40.85,+014.26', TRUE, '2024-03-11'); -- Autore Admin, Napoli
 
 -- 5. VIDEO (Solo in galleria personale dell'utente)
-INSERT INTO galleria.VIDEO (IDVideo, TitoloVideo, Descrizione, Galleria) VALUES
-('0000000001', 'Ricordi Vaticano', 'Clip privata admin al vaticano', '0000000001'),
-('0000000002', 'Volo su Napoli', 'Riprese col drone di Luca su Napoli', '0000000002'),
-('0000000003', 'Timelaps Firenze', 'Tramonto meraviglioso a Firenze Maria', '0000000003'),
-('0000000004', 'Viaggio a Roma Highlights', 'I migliori momenti a Roma di Admin', '0000000001');
+INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES
+('Ricordi Vaticano', 'Clip privata admin al vaticano', '0000000001'),
+('Volo su Napoli', 'Riprese col drone di Luca su Napoli', '0000000002'),
+('Timelaps Firenze', 'Tramonto meraviglioso a Firenze Maria', '0000000003'),
+('Viaggio a Roma Highlights', 'I migliori momenti a Roma di Admin', '0000000001');
 
 -- 6. PARTECIPA (Solo i partecipanti, NON il proprietario)
 INSERT INTO galleria.PARTECIPA (IDGalleria, IDUtente) VALUES
