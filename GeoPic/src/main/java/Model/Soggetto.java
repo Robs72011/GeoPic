@@ -122,4 +122,8 @@ public class Soggetto {
         }
 
     }
+
+    public ArrayList<Fotografia> getFotoInCuiAppare(){
+        return fotoInCuiAppare;
+    }
 }

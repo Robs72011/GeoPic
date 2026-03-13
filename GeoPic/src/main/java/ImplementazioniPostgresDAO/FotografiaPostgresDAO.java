@@ -208,4 +208,17 @@ public class FotografiaPostgresDAO implements FotografiaDAO {
             sqle.printStackTrace();
         }
     }
+
+    public void updateAutore(Integer idFoto, Integer idUtenteNuovo){
+        String statement = "UPDATE galleria.FOTOGRAFIA SET Autore = ? WHERE IDFoto = ?";
+
+        try(PreparedStatement updateAutore = connection.prepareStatement(statement)){
+            updateAutore.setInt(1, idUtenteNuovo);
+            updateAutore.setInt(2, idFoto);
+
+            updateAutore.executeUpdate();
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
 }

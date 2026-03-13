@@ -1154,14 +1154,15 @@ public class Controller {
         Utente utenteDaEliminare = getUtenteByID(utentiInMemory, idUtenteDaEliminare);
         if(utenteDaEliminare == null) return;
 
-        ArrayList<Fotografia> fotoScattateDaUtente = utenteDaEliminare.getFotoScattate();
+        ArrayList<Fotografia> fotoScattateDaUtente = new ArrayList<>(utenteDaEliminare.getFotoScattate());
         ArrayList<Fotografia> fotoDaEliminare = new ArrayList<>();
 
         for(Fotografia foto : fotoScattateDaUtente){
             //if(foto not in una galleria condivisa, eliminazione semplice){
             if(!foto.isFotoInGalleriaCondivisa()){
                 fotoDaEliminare.add(foto);
-            }else{ //foto e' in una galleria condivisa
+            }else{ //foto è in una galleria condivisa
+                boolean deveRestare = false;
 
                 //Qui prendo i soggetti della foto che sono utenti e li metto in utentiAsSoggetti
                 ArrayList<Utente> utentiAsSoggetti = new ArrayList<>();
@@ -1176,19 +1177,38 @@ public class Controller {
                         // per ogni partecipante vedo se sono soggetto della foto
                         for(Utente partecipante : gallCond.getPartecipanti()){
                             if(utentiAsSoggetti.contains(partecipante) && !partecipante.equals(utenteDaEliminare)){
-                                // la foto rimane/cambia proprietario
-                            }else{
-                                // elimina foto da gal cond, la foto non ha soggetti che sono dei partecipanti
+                                deveRestare = true;
+                                break;
                             }
                         }
                     }
-
+                    if(deveRestare) break;
                 }
-
+                if(deveRestare){
+                    foto.setAutore(loggedInUtente);
+                    loggedInUtente.addFotoScattate(foto);
+                    fotografiaPostgresDAO.updateAutore(foto.getIdFoto(), loggedInUtente.getIdUtente());
+                }else{
+                    // elimina foto da gal cond, la foto non ha soggetti che sono dei partecipanti
+                    fotoDaEliminare.add(foto);
+                }
             }
         }
 
-        //usando fotoDaEliminare come riferimento, avviene l'eliminazione in memoria e sul db
+        for(Fotografia foto : fotoDaEliminare){
+            fotografiaPostgresDAO.deleteFotografia(foto.getIdFoto());
+
+            fotografieInMemory.remove(foto);
+
+            for(Soggetto soggetto : foto.getSoggetti())
+                soggetto.getFotoInCuiAppare().remove(foto);
+
+            for(Galleria gall : foto.getGalleriaContenitrice())
+                gall.getFotoContenute().remove(foto);
+        }
+
+        utentePostgresDAO.deleteUtente(idUtenteDaEliminare);
+        utentiInMemory.remove(utenteDaEliminare);
     }
 
     public boolean utentePartecipaAGallCond(GalleriaCondivisa gallCond, Utente utente){
