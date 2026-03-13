@@ -2,7 +2,7 @@ BEGIN;
 
 -- 1. UTENTI (IDUtente: CHAR(5))
 INSERT INTO galleria.UTENTE (Username, Password, IsAdmin, IsSoggetto) VALUES
-('admin_user', 'pass1', TRUE, FALSE),
+('admin', 'pass1', TRUE, FALSE),
 ('luca_b', 'pass2', FALSE, FALSE),
 ('maria_v', 'pass3', FALSE, TRUE);
 
