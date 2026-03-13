@@ -13,7 +13,6 @@ public class PannelloAggiungiSoggetti extends JPanel {
     private final JPanel containerSoggetti;
     private final List<SoggettoRowPanel> righeSoggetti;
     private final ArrayList<String> nomiUtentiDisponibili;
-    private final JScrollPane scrollSoggetti;
 
     public PannelloAggiungiSoggetti(ArrayList<String> nomiUtentiDisponibili) {
         this.nomiUtentiDisponibili = nomiUtentiDisponibili;
@@ -38,7 +37,7 @@ public class PannelloAggiungiSoggetti extends JPanel {
         // Aggiungo la prima riga di default
         aggiungiRigaSoggetto();
 
-        scrollSoggetti = new JScrollPane(containerSoggetti);
+        JScrollPane scrollSoggetti = new JScrollPane(containerSoggetti);
         scrollSoggetti.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollSoggetti.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollSoggetti.setPreferredSize(new Dimension(500, 150));
@@ -73,7 +72,7 @@ public class PannelloAggiungiSoggetti extends JPanel {
     public class SoggettoRowPanel extends JPanel {
         private final JComboBox<String> cbCategoria;
         private final JTextField txtNome;
-        private final JList<String> listUtenti;
+        private final JComboBox<String> cbUtente;
 
         public SoggettoRowPanel(ArrayList<String> utenti) {
             // Allineamento a destra come richiesto
@@ -85,11 +84,12 @@ public class PannelloAggiungiSoggetti extends JPanel {
             txtNome = new JTextField();
             txtNome.setPreferredSize(new Dimension(90, 22)); // Più piccolo (in precedenza 100x25)
 
-            listUtenti = new JList<>(utenti.toArray(new String[0]));
-            listUtenti.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            listUtenti.setVisibleRowCount(2);
-            JScrollPane scrollUtenti = new JScrollPane(listUtenti);
-            scrollUtenti.setPreferredSize(new Dimension(110, 40)); // Più piccolo (in precedenza 130x45)
+            cbUtente = new JComboBox<>();
+            cbUtente.addItem("Seleziona utente");
+            for (String utente : utenti) {
+                cbUtente.addItem(utente);
+            }
+            cbUtente.setPreferredSize(new Dimension(120, 22));
 
             cbCategoria.addActionListener(_ -> aggiornaStatoCampi());
 
@@ -106,7 +106,7 @@ public class PannelloAggiungiSoggetti extends JPanel {
 
             add(cbCategoria);
             add(txtNome);
-            add(scrollUtenti);
+            add(cbUtente);
             add(btnRimuovi);
 
             cbCategoria.setSelectedItem("Nessuno"); // Innesca aggiornaStatoCampi
@@ -117,16 +117,16 @@ public class PannelloAggiungiSoggetti extends JPanel {
             if ("Utente".equals(cat)) {
                 txtNome.setEnabled(false);
                 txtNome.setText("");
-                listUtenti.setEnabled(true);
+                cbUtente.setEnabled(true);
             } else if ("Nessuno".equals(cat)) {
                 txtNome.setEnabled(false);
                 txtNome.setText("");
-                listUtenti.setEnabled(false);
-                listUtenti.clearSelection();
+                cbUtente.setEnabled(false);
+                cbUtente.setSelectedIndex(0);
             } else {
                 txtNome.setEnabled(true);
-                listUtenti.setEnabled(false);
-                listUtenti.clearSelection();
+                cbUtente.setEnabled(false);
+                cbUtente.setSelectedIndex(0);
             }
         }
 
@@ -138,8 +138,11 @@ public class PannelloAggiungiSoggetti extends JPanel {
             return txtNome.getText().trim();
         }
 
-        public List<String> getUtentiSelezionati() {
-            return listUtenti.getSelectedValuesList();
+        public String getUtenteSelezionato() {
+            if (cbUtente.getSelectedIndex() <= 0) {
+                return "";
+            }
+            return (String) cbUtente.getSelectedItem();
         }
     }
 }

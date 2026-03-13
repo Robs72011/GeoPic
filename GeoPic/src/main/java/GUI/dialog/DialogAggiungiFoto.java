@@ -2,6 +2,7 @@ package GUI.dialog;
 
 import Controller.Controller;
 import GUI.panel.PannelloAggiungiSoggetti;
+import Model.Fotografia;
 import Model.GalleriaCondivisa;
 
 import javax.swing.*;
@@ -122,8 +123,6 @@ public class DialogAggiungiFoto extends DialogAggiungi {
             listGallerieCondivise.setEnabled(!isPrivata);
             if (isPrivata) {
                 listGallerieCondivise.clearSelection();
-            } else if (!modelGallerie.isEmpty()) {
-                listGallerieCondivise.setSelectedIndex(0); 
             }
         });
     }
@@ -155,17 +154,9 @@ public class DialogAggiungiFoto extends DialogAggiungi {
     private void salvaFoto() {
         String dispositivo = txtDispositivo.getText().trim();
         boolean visibilita = !chkPrivata.isSelected();
-        
-        List<Integer> idGallerieCondivise = new ArrayList<>();
-        if (visibilita) {
-            for (GalleriaCondivisa gc : listGallerieCondivise.getSelectedValuesList()) {
-                idGallerieCondivise.add(gc.getIdGalleria());
-            }
-            if (idGallerieCondivise.isEmpty()) {
-                mostraErrore("Hai deciso di renderla visibile ma non hai selezionato nessuna galleria da condividere.");
-                return;
-            }
-        }
+        List<GalleriaCondivisa> gallerieCondiviseSelezionate = visibilita
+                ? listGallerieCondivise.getSelectedValuesList()
+                : new ArrayList<>();
         
         if (dispositivo.isEmpty()) {
             mostraErrore("Il campo 'Dispositivo' è obbligatorio.");
@@ -187,15 +178,13 @@ public class DialogAggiungiFoto extends DialogAggiungi {
             if ("Nessuno".equals(categoria)) continue;
 
             if ("Utente".equals(categoria)) {
-                List<String> selezionati = riga.getUtentiSelezionati();
-                if (selezionati.isEmpty()) {
+                String utenteSelezionato = riga.getUtenteSelezionato();
+                if (utenteSelezionato.isEmpty()) {
                     mostraErrore("Hai scelto la categoria 'Utente' ma non hai selezionato nessuno dalla lista.");
                     return;
                 }
-                for (String utente : selezionati) {
-                    nomiSoggettiFinali.add(utente);
-                    categorieSoggettiFinali.add("Utente");
-                }
+                nomiSoggettiFinali.add(utenteSelezionato);
+                categorieSoggettiFinali.add("Utente");
             } else {
                 String nomeSoggetto = riga.getNome();
                 if (nomeSoggetto.isEmpty()) {
@@ -208,23 +197,24 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         }
 
         try {
-            boolean success = controller.creazioneNuovaFoto(
+            Fotografia nuovaFoto = controller.creazioneNuovaFoto(
                 dispositivo, 
                 visibilita, 
                 coordinate, 
                 toponimo, 
                 nomiSoggettiFinali, 
-                categorieSoggettiFinali, 
-                idGallerieCondivise
+                categorieSoggettiFinali
             );
-            if (success) {
+
+            if (nuovaFoto != null) {
+                controller.AggiungiFotoCondivisa(nuovaFoto, gallerieCondiviseSelezionate);
                 mostraMessaggio("Foto aggiunta con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
                 dispose(); // Chiude la dialog e innesca il refresh
             } else {
-                mostraMessaggio("Errore durante il salvataggio nel database.", "Errore", JOptionPane.ERROR_MESSAGE);
+                mostraErrore("Errore durante il salvataggio nel database.");
             }
         } catch (Exception e) {
-            mostraMessaggio("Eccezione Imprevista: " + e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+            mostraErrore("Eccezione Imprevista: " + e.getMessage());
         }
     }
 

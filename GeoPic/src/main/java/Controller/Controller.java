@@ -849,10 +849,13 @@ public class Controller {
 
     /**
      * Gestisce la logica di business per la creazione di una nuova foto,
-     * persistendo il dato nel DB e aggiornando il grafo in memoria.
-     * @return true se il salvataggio va a buon fine, false se fallisce sul database.
+        * persistendo il dato nel DB e aggiornando il grafo in memoria.
+        * L'eventuale inserimento nelle gallerie condivise viene gestito separatamente.
+        * @return la nuova fotografia creata, oppure null se il salvataggio fallisce.
      */
-public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo, java.util.List<String> nomiSoggetti, java.util.List<String> categorieSoggetti, java.util.List<Integer> idGallerieCondivise){
+    public Fotografia creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo,
+                                         java.util.List<String> nomiSoggetti, java.util.List<String> categorieSoggetti)
+    {
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
@@ -865,7 +868,7 @@ public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String
 
         if(idNewFoto == null){
             System.err.println("Errore nel salvataggio della fotografia sul Database.");
-            return false;
+            return null;
         }
 
         GalleriaPrivata tmpGalPriv = null;
@@ -881,16 +884,6 @@ public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String
             galleriaContenitrici.add(tmpGalPriv);
 
             contienePostgresDAO.insertFotoAGalleria(tmpGalPriv.getIdGalleria(), idNewFoto);
-        }
-
-        if (idGallerieCondivise != null) {
-            for (Integer idGc : idGallerieCondivise) {
-                GalleriaCondivisa gc = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGc);
-                if (gc != null) {
-                    galleriaContenitrici.add(gc);
-                    contienePostgresDAO.insertFotoAGalleria(gc.getIdGalleria(), idNewFoto);
-                }
-            }
         }
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
@@ -935,17 +928,39 @@ public boolean creazioneNuovaFoto(String dispositivo, boolean visibilita, String
         if(tmpGalPriv != null)
             tmpGalPriv.addFotoAGalleria(newFoto);
 
-        if (idGallerieCondivise != null) {
-            for (Integer idGc : idGallerieCondivise) {
-                GalleriaCondivisa gc = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGc);
-                if (gc != null) {
-                    gc.addFotoAGalleria(newFoto);
-                }
-            }
+        luogo.addLuogoRaffiguratoIn(newFoto);
+        return newFoto;
+    }
+
+    /**
+     * Aggiunge una fotografia già esistente alle gallerie condivise selezionate nella dialog.
+     * La fotografia rimane comunque contenuta nella galleria privata dell'utente proprietario.
+     */
+    public void AggiungiFotoCondivisa(Fotografia fotoDaCondividere,
+                                      java.util.List<GalleriaCondivisa> gallerieCondiviseSelezionate) {
+        if (fotoDaCondividere == null || gallerieCondiviseSelezionate == null) {
+            return;
         }
 
-        luogo.addLuogoRaffiguratoIn(newFoto);
-        return true;
+        for (GalleriaCondivisa galleriaSelezionata : gallerieCondiviseSelezionate) {
+            if (galleriaSelezionata == null) {
+                continue;
+            }
+
+            GalleriaCondivisa galleriaInMemory = getGalleriaCondivisaByID(
+                    gallerieCondiviseInMemory,
+                    galleriaSelezionata.getIdGalleria());
+
+            if (galleriaInMemory == null) {
+                continue;
+            }
+
+            if (!fotoDaCondividere.getGalleriaContenitrice().contains(galleriaInMemory)) {
+                contienePostgresDAO.insertFotoAGalleria(galleriaInMemory.getIdGalleria(), fotoDaCondividere.getIdFoto());
+                fotoDaCondividere.addGalleriaContenitrice(galleriaInMemory);
+                galleriaInMemory.addFotoAGalleria(fotoDaCondividere);
+            }
+        }
     }
 
     /**

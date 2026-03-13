@@ -58,6 +58,6 @@ public abstract class DialogAggiungi extends JDialog {
     }
 
     protected void mostraErrore(String messaggio) {
-        mostraMessaggio(messaggio, "Errore di Validazione", JOptionPane.WARNING_MESSAGE);
+        mostraMessaggio(messaggio, "Errore", JOptionPane.ERROR_MESSAGE);
     }
 }
