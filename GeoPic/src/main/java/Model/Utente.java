@@ -182,6 +182,14 @@ public class Utente {
     }
 
     /**
+     * Recupera l'elenco delle gallerie a cui partecipa l'utente
+     * @return Un {@link ArrayList} contenente le gallerie a cui l'utente partecipa.
+     */
+    public ArrayList<GalleriaCondivisa> getUtentePartecipaGalleriaCondivisa() {
+        return utentePartecipaGalleriaCondivisa;
+    }
+
+    /**
      * Registra la partecipazione a una galleria condivisa.
      * @param galCond La {@link GalleriaCondivisa}.
      * @return {@code true} se aggiunta.

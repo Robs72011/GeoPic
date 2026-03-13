@@ -272,6 +272,20 @@ public class Fotografia {
     }
 
     /**
+     * Controlla se la foto e' contenuta in una galleria condivisa
+     * @return {@code true} se la foto e' presente in una galleria condivisa,
+     * {@code false} se la galleria e' presente solo nella galleria privata
+     */
+    public boolean isFotoInGalleriaCondivisa(){
+        for(Galleria galleria : this.galleriaContenitrice){
+            if(galleria instanceof GalleriaCondivisa){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Confronta questa fotografia con un altro oggetto per verificarne l'uguaglianza.
      * Il confronto avviene basandosi esclusivamente sull'{@code idFoto}.
      * @param obj L'oggetto da confrontare.

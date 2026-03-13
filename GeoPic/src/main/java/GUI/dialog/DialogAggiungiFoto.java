@@ -170,8 +170,8 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         if (toponimo == null) return;
 
         // Recuperiamo tutti i soggetti interrogando il nuovo pannello esterno
-        List<String> nomiSoggettiFinali = new ArrayList<>();
-        List<String> categorieSoggettiFinali = new ArrayList<>();
+        ArrayList<String> nomiSoggettiFinali = new ArrayList<>();
+        ArrayList<String> categorieSoggettiFinali = new ArrayList<>();
 
         for (PannelloAggiungiSoggetti.SoggettoRowPanel riga : pannelloSoggetti.getRigheSoggetti()) {
             String categoria = riga.getCategoria();

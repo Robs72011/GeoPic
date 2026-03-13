@@ -6,6 +6,8 @@ import Model.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Controller principale dell'applicazione.
@@ -884,38 +886,6 @@ public class Controller {
             contienePostgresDAO.insertFotoAGalleria(autoreGalPriv.getIdGalleria(), idNewFoto);
         }
 
-        /*
-        ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
-
-        Soggetto soggetto = null;
-        if (nomiSoggetti != null && categorieSoggetti != null && nomiSoggetti.size() == categorieSoggetti.size()) {
-            for (int i = 0; i < nomiSoggetti.size(); i++) {
-                String nomeSoggetto = nomiSoggetti.get(i);
-                String categoriaSoggetto = categorieSoggetti.get(i);
-
-                soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
-
-                // Se non esiste, creiamolo sul DB e in memoria
-                if (soggetto == null) {
-
-                    if(categoriaSoggetto.equals("Utente")){
-                        Utente utenteSoggetto = getUtenteByUsername(utentiInMemory, nomeSoggetto);
-                        soggettoPostgresDAO.insertUtenteAsSoggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto.getIdUtente());
-                        soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto, null);
-                    }else{
-                        soggettoPostgresDAO.insertSoggetto(nomeSoggetto, categoriaSoggetto);
-                        soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
-                        soggettiInMemory.add(soggetto);
-                    }
-                }
-
-                // Mappiamo nel DB la foto con il soggetto
-                mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
-                soggettiRaffigurati.add(soggetto);
-            }
-        }
-        */
-
         //Finalmente viene creato la nuova foto in memoria
         Fotografia newFoto = new Fotografia(idNewFoto,
                                             dispositivo,
@@ -1048,6 +1018,10 @@ public class Controller {
 
     }
 
+    /**
+     *
+     * @param fotoId
+     */
     //Metodo per la privatizzazione
     public void setFotografiaPrivata(Integer fotoId) {
         if (fotoId == null){
@@ -1081,6 +1055,27 @@ public class Controller {
         }
     }
 
+    /**
+     * Metodo che rende una foto privata, pubblica
+     * Non vengono fatti altri controlli in quanto, se fino a quel momento la foto era privata,
+     * allora essa era solo nella galleria privata e in nessun altra galleria.
+     * @param fotoId
+     */
+    public void setFotografiaPubblica(Integer fotoId) {
+        if (fotoId == null){
+            System.out.println("L'id della foto passato e' null.");
+            return;
+        }
+
+        Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
+
+        if(foto != null && !(foto.isVisibile())) {
+            fotografiaPostgresDAO.updateVisibilita(foto.getIdFoto(), true);
+
+            foto.setVisibility(true);
+        }
+    }
+
     public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
         GalleriaPrivata galPrivUtente = getLoggedInUtenteGalPriv();
         Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
@@ -1108,5 +1103,95 @@ public class Controller {
         }
 
         galPrivUtente.addVideo(newVideo);
+    }
+
+    /**
+     * Metodo che recuperare tutte le foto scattate in un luogo
+     * @param coordinate Coordinate del luogo per cui si vogliono vedere tutte le foto
+     * @return ArrayList di Fotografie scattate alle coordinate passate
+     */
+    public ArrayList<Fotografia> getAllFotoScattateInUnLuogo(String coordinate){
+
+        Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
+        if(luogo == null){
+            return new ArrayList<>();
+        }else {
+            return fotografieInMemory.stream()
+                    .filter(f -> f.getLuogo() != null && f.getLuogo().equals(luogo))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+    }
+
+    public ArrayList<Fotografia> getAllFotoConStessoSoggetto(String nomeSoggetto){
+        Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
+
+        if(soggetto == null){
+            return new ArrayList<>();
+        }else{
+            return fotografieInMemory.stream()
+                    .filter(f -> f.getSoggetti().contains(soggetto))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+    }
+
+    public ArrayList<Luogo> getTop3Luoghi(){
+        return fotografieInMemory.stream()
+                .filter(f -> f.getLuogo() != null)
+                .collect(Collectors.groupingBy(Fotografia::getLuogo, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<Luogo, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void eliminazioneUtenteByAdmin(Integer idUtenteDaEliminare){
+        if(!loggedInUtente.isAdmin()){
+            System.out.println("L'utente loggato, non e' admin, di conseguenza non puo' proseguire con l'eliminazione di un utente.");
+            return;
+        }
+
+        Utente utenteDaEliminare = getUtenteByID(utentiInMemory, idUtenteDaEliminare);
+        if(utenteDaEliminare == null) return;
+
+        ArrayList<Fotografia> fotoScattateDaUtente = utenteDaEliminare.getFotoScattate();
+        ArrayList<Fotografia> fotoDaEliminare = new ArrayList<>();
+
+        for(Fotografia foto : fotoScattateDaUtente){
+            //if(foto not in una galleria condivisa, eliminazione semplice){
+            if(!foto.isFotoInGalleriaCondivisa()){
+                fotoDaEliminare.add(foto);
+            }else{ //foto e' in una galleria condivisa
+
+                //Qui prendo i soggetti della foto che sono utenti e li metto in utentiAsSoggetti
+                ArrayList<Utente> utentiAsSoggetti = new ArrayList<>();
+                for(Soggetto soggetto : foto.getSoggetti()){
+                    if(soggetto.isUtente() && soggetto.getUtenteRappresentato() != null)
+                        utentiAsSoggetti.add(soggetto.getUtenteRappresentato());
+                }
+
+                //Vado a prendere le gallerie condivise in cui la foto è presente
+                for(Galleria gall : foto.getGalleriaContenitrice()){
+                    if(gall instanceof GalleriaCondivisa gallCond){
+                        // per ogni partecipante vedo se sono soggetto della foto
+                        for(Utente partecipante : gallCond.getPartecipanti()){
+                            if(utentiAsSoggetti.contains(partecipante) && !partecipante.equals(utenteDaEliminare)){
+                                // la foto rimane/cambia proprietario
+                            }else{
+                                // elimina foto da gal cond, la foto non ha soggetti che sono dei partecipanti
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        //usando fotoDaEliminare come riferimento, avviene l'eliminazione in memoria e sul db
+    }
+
+    public boolean utentePartecipaAGallCond(GalleriaCondivisa gallCond, Utente utente){
+        return gallCond.getPartecipanti().contains(utente);
     }
 }
