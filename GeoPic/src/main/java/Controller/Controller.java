@@ -854,8 +854,9 @@ public class Controller {
         * @return la nuova fotografia creata, oppure null se il salvataggio fallisce.
      */
     public Fotografia creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo,
-                                         java.util.List<String> nomiSoggetti, java.util.List<String> categorieSoggetti)
-    {
+                                         ArrayList<String> nomiSoggetti, ArrayList<String> categorieSoggetti){
+
+        //Se il luogo non esiste, viene creato e inserito in memoria e nel DB
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if(luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
@@ -871,42 +872,51 @@ public class Controller {
             return null;
         }
 
-        GalleriaPrivata tmpGalPriv = null;
-        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
-            if(galleria instanceof GalleriaPrivata){
-                tmpGalPriv = (GalleriaPrivata) galleria;
-                break;
-            }
-        }
+        //Prendiamo la galleria privata dell'autore della foto
+        GalleriaPrivata autoreGalPriv = getLoggedInUtenteGalPriv();
 
+        //La aggiungiamo alla lista di gallerie che contengono la foto
+        //In memoria (lato foto) e nel DB
         ArrayList<Galleria> galleriaContenitrici = new ArrayList<>();
-        if(tmpGalPriv != null) {
-            galleriaContenitrici.add(tmpGalPriv);
+        if(autoreGalPriv != null) {
+            galleriaContenitrici.add(autoreGalPriv);
 
-            contienePostgresDAO.insertFotoAGalleria(tmpGalPriv.getIdGalleria(), idNewFoto);
+            contienePostgresDAO.insertFotoAGalleria(autoreGalPriv.getIdGalleria(), idNewFoto);
         }
 
+        /*
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
 
+        Soggetto soggetto = null;
         if (nomiSoggetti != null && categorieSoggetti != null && nomiSoggetti.size() == categorieSoggetti.size()) {
             for (int i = 0; i < nomiSoggetti.size(); i++) {
                 String nomeSoggetto = nomiSoggetti.get(i);
                 String categoriaSoggetto = categorieSoggetti.get(i);
 
-                Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
-                // Se non esiste, creamolo sul DB e in memoria
+                soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
+
+                // Se non esiste, creiamolo sul DB e in memoria
                 if (soggetto == null) {
-                    soggettoPostgresDAO.insertSoggetto(nomeSoggetto, categoriaSoggetto);
-                    soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
-                    soggettiInMemory.add(soggetto);
+
+                    if(categoriaSoggetto.equals("Utente")){
+                        Utente utenteSoggetto = getUtenteByUsername(utentiInMemory, nomeSoggetto);
+                        soggettoPostgresDAO.insertUtenteAsSoggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto.getIdUtente());
+                        soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto, null);
+                    }else{
+                        soggettoPostgresDAO.insertSoggetto(nomeSoggetto, categoriaSoggetto);
+                        soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
+                        soggettiInMemory.add(soggetto);
+                    }
                 }
-                
+
                 // Mappiamo nel DB la foto con il soggetto
                 mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
                 soggettiRaffigurati.add(soggetto);
             }
         }
+        */
 
+        //Finalmente viene creato la nuova foto in memoria
         Fotografia newFoto = new Fotografia(idNewFoto,
                                             dispositivo,
                                             LocalDate.now(),
@@ -915,20 +925,62 @@ public class Controller {
                                             loggedInUtente,
                                             luogo,
                                             galleriaContenitrici,
-                                            soggettiRaffigurati);
+                                            null);
+
+
+        ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
+
+        Soggetto soggetto = null;
+        if (nomiSoggetti != null && categorieSoggetti != null && nomiSoggetti.size() == categorieSoggetti.size()) {
+            for (int i = 0; i < nomiSoggetti.size(); i++) {
+                String nomeSoggetto = nomiSoggetti.get(i);
+                String categoriaSoggetto = categorieSoggetti.get(i);
+
+                soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
+
+                // Se non esiste, creiamolo sul DB e in memoria
+                if (soggetto == null) {
+
+                    if(categoriaSoggetto.equals("Utente")){
+                        Utente utenteSoggetto = getUtenteByUsername(utentiInMemory, nomeSoggetto);
+                        soggettoPostgresDAO.insertUtenteAsSoggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto.getIdUtente());
+                        soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto, null);
+                        utenteSoggetto.setSoggetto(true);
+                    }else{
+                        soggettoPostgresDAO.insertSoggetto(nomeSoggetto, categoriaSoggetto);
+                        soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
+                    }
+                    soggettiInMemory.add(soggetto);
+                }
+
+                // Mappiamo nel DB la foto con il soggetto
+                mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
+                soggettiRaffigurati.add(soggetto);
+            }
+        }
 
         // Collegamento simmetrico inverso (serve per la navigazione da soggetto a foto raffiguranti il soggetto)
         for (Soggetto s : soggettiRaffigurati) {
             s.addFotoInCuiAppare(newFoto);
+
+            // Se il soggetto è un Utente, aggiorniamo anche l'oggetto Utente reale
+            if (s.getCategoria().equals("Utente") && s.getUtenteRappresentato() != null) {
+                s.getUtenteRappresentato().setSoggetto(true);
+            }
         }
 
+        //Aggiungiamo la foto scattata in memoria
         fotografieInMemory.add(newFoto);
+        //e alla lista delle foto scattate dall'utente
         loggedInUtente.addFotoScattate(newFoto);
 
-        if(tmpGalPriv != null)
-            tmpGalPriv.addFotoAGalleria(newFoto);
+        //Aggiungiamo la nuova foto alla galleria privata dell'autore (lato galleria)
+        if(autoreGalPriv != null)
+            autoreGalPriv.addFotoAGalleria(newFoto);
 
+        //Aggiungiamo la foto alla lista dei luoghi in cui e' raffigurato il luogo (lato luogo)
         luogo.addLuogoRaffiguratoIn(newFoto);
+
         return newFoto;
     }
 
