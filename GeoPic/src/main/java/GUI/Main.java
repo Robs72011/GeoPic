@@ -34,8 +34,6 @@ public class Main {
 
                 // Gestisce la navigazione post-autenticazione
                 if(authenticate == 1) {
-                    System.out.println("Utente: " + dialog.getUtente());
-                    System.out.println("Password: " + dialog.getPassword());
                     // Avvia l'interfaccia principale per l'utente standard
                     new FinestraUtente(controller);
                 }

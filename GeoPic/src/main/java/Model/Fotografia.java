@@ -62,6 +62,7 @@ public class Fotografia {
         this.dataDiScatto = dataDiScatto;
         this.dataDiEliminazione = dataDiEliminazione;
         this.visibility = visibility;
+        this.autore = autore;
 
         if(luogo == null){
             this.luogo = new Luogo("", "", new ArrayList<>());

@@ -72,17 +72,17 @@ INSERT INTO galleria.COMPONE (IDVideo, IDFoto) VALUES
 
 -- 9. SOGGETTI (Utenti e Paesaggi)
 INSERT INTO galleria.SOGGETTO (NomeSoggetto, Categoria, IDUtente) VALUES
-('Maria Verdi', 'Persona', '00003'),
+('maria_v', 'Utente', '00003'),
 ('Tramonto Veneziano', 'Paesaggio', NULL),
 ('Vesuvio', 'Paesaggio', NULL),
 ('Cupolone', 'Monumento', NULL);
 
 -- 10. MOSTRA (Soggetto -> Foto)
 INSERT INTO galleria.MOSTRA (NomeSoggetto, IDFoto) VALUES
-('Maria Verdi', '0000000003'),
+('maria_v', '0000000003'),
 ('Tramonto Veneziano', '0000000002'),
 ('Cupolone', '0000000001'),
 ('Vesuvio', '0000000005'),
-('Maria Verdi', '0000000006'); -- Maria si è fatta un selfie a Firenze
+('maria_v', '0000000006'); -- Maria si è fatta un selfie a Firenze
 
 COMMIT;

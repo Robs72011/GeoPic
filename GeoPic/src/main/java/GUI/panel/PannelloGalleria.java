@@ -1,8 +1,10 @@
 package GUI.panel;
 
-import GUI.WrapLayout;
+import GUI.utility.WrapLayout;
+import GUI.dialog.DialogAggiungiFotoGalleriaCondivisa;
 import GUI.dialog.DialogAggiungiFoto;
 import Model.Fotografia;
+import Model.GalleriaCondivisa;
 import Model.Video;
 
 import javax.swing.*;
@@ -28,7 +30,7 @@ public class PannelloGalleria extends JPanel {
      * @param onRefresh Callback per aggiornare la galleria dopo l'aggiunta di una foto.
      */
     public PannelloGalleria(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller, Runnable onRefresh) {
-        this(fotografie, onImageClick, slideshowList, onSlideshowClick, controller, onRefresh, null, null, true);
+        this(fotografie, onImageClick, slideshowList, onSlideshowClick, controller, onRefresh, null, null, true, true, null);
     }
 
     /**
@@ -43,7 +45,9 @@ public class PannelloGalleria extends JPanel {
                             Runnable onRefresh,
                             String customTitle,
                             String customSubtitle,
-                            boolean showAddPhotoButton) {
+                            boolean showAddPhotoButton,
+                            boolean showSearchButtons,
+                            Runnable onAddPhotoCustomAction) {
         this.onRefresh = onRefresh;
         setLayout(new BorderLayout());
 
@@ -60,7 +64,7 @@ public class PannelloGalleria extends JPanel {
             headerSubtitle = "ID: " + idUtente;
         }
 
-        topPanel.add(creaHeader(headerTitle, headerSubtitle, controller, showAddPhotoButton), BorderLayout.NORTH);
+        topPanel.add(creaHeader(headerTitle, headerSubtitle, controller, showAddPhotoButton, showSearchButtons, onAddPhotoCustomAction), BorderLayout.NORTH);
 
         if (slideshowList != null && !slideshowList.isEmpty()) {
             PannelloSelezioneSlideshow carousel = new PannelloSelezioneSlideshow(slideshowList, onSlideshowClick);
@@ -78,7 +82,12 @@ public class PannelloGalleria extends JPanel {
      * @param controller Riferimento al controller per attivare i dialoghi.
      * @return {@link JPanel} configurato con layout BorderLayout.
      */
-    private JPanel creaHeader(String headerTitle, String headerSubtitle, Controller.Controller controller, boolean showAddPhotoButton) {
+    private JPanel creaHeader(String headerTitle,
+                              String headerSubtitle,
+                              Controller.Controller controller,
+                              boolean showAddPhotoButton,
+                              boolean showSearchButtons,
+                              Runnable onAddPhotoCustomAction) {
         // Pannello principale che contiene le info utente e il pannello comandi
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 30, 15));
@@ -98,26 +107,25 @@ public class PannelloGalleria extends JPanel {
 
         headerPanel.add(userInfoPanel, BorderLayout.WEST);
 
-        // Pannello a griglia verticale per mettere tutti i bottoni impilati e uguali
-        int buttonRows = showAddPhotoButton ? 4 : 3;
+        int buttonRows = 0;
+        if (showSearchButtons) {
+            buttonRows += 3;
+        }
+        if (showAddPhotoButton) {
+            buttonRows += 1;
+        }
+        if (buttonRows == 0) {
+            buttonRows = 1;
+        }
+
         JPanel buttonPanel = new JPanel(new GridLayout(buttonRows, 1, 0, 5));
         buttonPanel.setOpaque(false);
 
         JButton addPhotoButton = createStyledButton("Aggiungi Foto", _ -> {
-            // Recupera la finestra gerarchicamente più in alto di questo componente
-            // (necessario per impostarla come JFrame 'owner' e rendere la dialog modale bloccante)
-            Window parentWindow = SwingUtilities.getWindowAncestor(this);
-            
-            // Crea e mostra la finestra di dialogo modale per inserire i dati della foto
-            DialogAggiungiFoto dialog = new DialogAggiungiFoto((Frame) parentWindow, controller);
-            dialog.setVisible(true);
-            
-            // Una volta chiusa la dialog (sia con successo che annullata), controlliamo
-            // se è stata configurata una callback per l'aggiornamento.
-            // Se esiste, la facciamo partire (triggera la 'refresh()' del GalleryPanelContainer 
-            // che ricaricherà foto perse dal nuovo inserimento).
-            if (onRefresh != null) {
-                onRefresh.run();
+            if (onAddPhotoCustomAction != null) {
+                onAddPhotoCustomAction.run();
+            } else {
+                apriDialogAggiungiFoto(controller);
             }
         });
 
@@ -130,9 +138,11 @@ public class PannelloGalleria extends JPanel {
         JButton btnTop3Luoghi = createStyledButton("Top 3 Luoghi", _ -> 
             JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
 
-        buttonPanel.add(btnFotoStessoLuogo);
-        buttonPanel.add(btnFotoStessoSoggetto);
-        buttonPanel.add(btnTop3Luoghi);
+        if (showSearchButtons) {
+            buttonPanel.add(btnFotoStessoLuogo);
+            buttonPanel.add(btnFotoStessoSoggetto);
+            buttonPanel.add(btnTop3Luoghi);
+        }
         if (showAddPhotoButton) {
             buttonPanel.add(addPhotoButton);
         }
@@ -159,6 +169,35 @@ public class PannelloGalleria extends JPanel {
             button.addActionListener(action);
         }
         return button;
+    }
+
+    private void apriDialogAggiungiFoto(Controller.Controller controller) {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        Frame owner = parentWindow instanceof Frame ? (Frame) parentWindow : null;
+
+        DialogAggiungiFoto dialog = new DialogAggiungiFoto(owner, controller);
+        dialog.setVisible(true);
+
+        if (onRefresh != null) {
+            onRefresh.run();
+        }
+    }
+
+    public static Runnable createAddPhotoToSharedGalleryAction(JComponent source,
+                                                                Controller.Controller controller,
+                                                                GalleriaCondivisa galleriaCondivisa,
+                                                                Runnable onRefresh) {
+        return () -> {
+            Window parentWindow = SwingUtilities.getWindowAncestor(source);
+            Frame owner = parentWindow instanceof Frame ? (Frame) parentWindow : null;
+
+            DialogAggiungiFotoGalleriaCondivisa dialog = new DialogAggiungiFotoGalleriaCondivisa(owner, controller, galleriaCondivisa);
+            dialog.setVisible(true);
+
+            if (onRefresh != null) {
+                onRefresh.run();
+            }
+        };
     }
 
 

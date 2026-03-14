@@ -1,19 +1,19 @@
 package GUI.contenitore;
 
+import GUI.frame.FinestraVisualizzatoreFoto;
+import GUI.frame.FinestraVisualizzatoreSlideshow;
 import GUI.panel.PannelloGalleria;
-import GUI.visualizzatore.VisualizzatoreFoto;
-import GUI.visualizzatore.VisualizzatoreSlideshow;
 
 import Controller.Controller;
 import Model.Fotografia;
 import Model.Video;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContenitoreGalleriaPrivata extends ContenitoreGalleria {
-    private static final String SLIDESHOW = "slideshow";
-
     public ContenitoreGalleriaPrivata(Controller controller) {
         super(controller);
         refresh(); // Effettua la prima costruzione
@@ -21,44 +21,57 @@ public class ContenitoreGalleriaPrivata extends ContenitoreGalleria {
 
     @Override
     public void refresh() {
-        removeAll();
+        beginRefresh();
 
-        List<Fotografia> foto = controller.getFotoGalleriaPersonale();
+        List<Fotografia> foto = new ArrayList<>(controller.getFotoGalleriaPersonale());
         List<Video> video = controller.getVideoGalleriaPersonale();
-
-        if (foto == null || video == null) {
-            JOptionPane.showMessageDialog(null,
-                    "Nessuna fotografia o video trovato nella galleria personale",
-                    "Errore",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        VisualizzatoreFoto imageSelector = new VisualizzatoreFoto(foto, () -> cardLayout.show(this, GRID));
-        VisualizzatoreSlideshow slideshowSelector = new VisualizzatoreSlideshow(() -> cardLayout.show(this, GRID));
 
         PannelloGalleria pannelloGalleria = new PannelloGalleria(
                 foto,
-                clickedIndex -> {
-                    cardLayout.show(this, DETAIL);
-                    imageSelector.mostraMetadati(clickedIndex);
-                },
+                clickedIndex -> apriFrameFoto(foto, clickedIndex),
                 video,
-                slideshow -> {
-                    cardLayout.show(this, SLIDESHOW);
-                    slideshowSelector.setSlideshow(slideshow);
-                },
+                this::apriFrameSlideshow,
                 controller,
                 this::refresh
         );
 
-        add(pannelloGalleria, GRID);
-        add(imageSelector, DETAIL);
-        add(slideshowSelector, SLIDESHOW);
+        add(pannelloGalleria, BorderLayout.CENTER);
 
-        cardLayout.show(this, GRID);
-        
-        revalidate();
-        repaint();
+        finalizeRefresh();
+    }
+
+    private void apriFrameFoto(List<Fotografia> foto, int clickedIndex) {
+        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (parent == null) {
+            return;
+        }
+
+        FinestraVisualizzatoreFoto dettaglio = new FinestraVisualizzatoreFoto(
+                controller,
+                parent,
+                new ArrayList<>(foto),
+                clickedIndex,
+                this::refresh
+        );
+        dettaglio.setLocationRelativeTo(parent);
+        dettaglio.setVisible(true);
+        parent.setVisible(false);
+    }
+
+    private void apriFrameSlideshow(Video slideshow) {
+        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (parent == null || slideshow == null) {
+            return;
+        }
+
+        FinestraVisualizzatoreSlideshow frameSlideshow = new FinestraVisualizzatoreSlideshow(
+                controller,
+                parent,
+                slideshow,
+                this::refresh
+        );
+        frameSlideshow.setLocationRelativeTo(parent);
+        frameSlideshow.setVisible(true);
+        parent.setVisible(false);
     }
 }

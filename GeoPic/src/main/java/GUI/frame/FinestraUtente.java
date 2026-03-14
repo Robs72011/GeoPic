@@ -3,15 +3,13 @@ package GUI.frame;
 import Controller.Controller;
 import GUI.contenitore.ContenitoreGalleriaPrivata;
 import GUI.panel.PannelloSelezioneGallerieCondivise;
+import Model.GalleriaCondivisa;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Finestra Utente che gestisce la navigazione tra le macro-aree
- * tramite un {@link JTabbedPane}.
- * La classe organizza l'interfaccia utente in schede distinte, permettendo all'utente
- * di passare rapidamente tra la propria galleria personale e le gallerie condivise.
+ * Finestra utente principale con navigazione iniziale a tab.
  */
 public class FinestraUtente extends JFrame {
     //Costanti per le grandezze del frame
@@ -20,6 +18,10 @@ public class FinestraUtente extends JFrame {
     public static final int FRAME_MIN_WIDTH = 700;
     public static final int FRAME_MIN_HEIGHT = 400;
 
+    private final Controller controller;
+    private final ContenitoreGalleriaPrivata contenitoreGalleriaPrivata;
+    private final PannelloSelezioneGallerieCondivise pannelloGallerieCondivise;
+
     /**
      * Costruisce la finestra principale dell'applicazione.
      * Inizializza il layout, imposta le dimensioni minime e aggiunge le schede
@@ -27,17 +29,43 @@ public class FinestraUtente extends JFrame {
      * viste figlie per le operazioni di recupero dati.
      */
     public FinestraUtente(Controller controller) {
+        this.controller = controller;
+
         setTitle("GeoPic");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setMinimumSize(new Dimension(FRAME_MIN_WIDTH, FRAME_MIN_HEIGHT));
+
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        //Schede del frame
-        tabbedPane.addTab("Galleria Personale", new ContenitoreGalleriaPrivata(controller));
-        tabbedPane.addTab("Galleria Condivisa", new PannelloSelezioneGallerieCondivise(controller));
+        contenitoreGalleriaPrivata = new ContenitoreGalleriaPrivata(this.controller);
+        pannelloGallerieCondivise = new PannelloSelezioneGallerieCondivise(this.controller, this::apriDettaglioGalleriaCondivisa);
+
+        tabbedPane.addTab("Galleria Personale", contenitoreGalleriaPrivata);
+        tabbedPane.addTab("Galleria Condivisa", pannelloGallerieCondivise);
+
+        tabbedPane.addChangeListener(_ -> {
+            int idx = tabbedPane.getSelectedIndex();
+            if (idx == 0) {
+                contenitoreGalleriaPrivata.refresh();
+            } else if (idx == 1) {
+                pannelloGallerieCondivise.refresh();
+            }
+        });
 
         add(tabbedPane);
+        setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private void apriDettaglioGalleriaCondivisa(GalleriaCondivisa galleriaCondivisa) {
+        if (galleriaCondivisa == null) {
+            return;
+        }
+
+        FinestraGalleriaCondivisa dettaglio = new FinestraGalleriaCondivisa(controller, this, galleriaCondivisa);
+        dettaglio.setLocationRelativeTo(this);
+        dettaglio.setVisible(true);
+        setVisible(false);
     }
 }

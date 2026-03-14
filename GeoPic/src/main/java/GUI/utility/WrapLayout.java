@@ -1,4 +1,4 @@
-package GUI;
+package GUI.utility;
 
 import java.awt.*;
 
@@ -87,4 +87,3 @@ public class WrapLayout extends FlowLayout {
         }
     }
 }
-

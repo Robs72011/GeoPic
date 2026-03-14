@@ -16,13 +16,11 @@ public class DialogAggiungiUtente extends DialogAggiungi {
 
     public DialogAggiungiUtente(Frame parentFrame, Controller controller) {
         super(parentFrame, "Aggiungi Nuovo Utente", controller);
-        setSize(350, 200);
-        setResizable(false);
+        configuraDimensioni(350, 200, 350, 200, false);
 
         JPanel mainPanel = creaMainPanel();
         buildSezioneForm(mainPanel);
-        add(mainPanel, BorderLayout.CENTER);
-        add(creaPannelloBottoni(this::salvaUtente), BorderLayout.SOUTH);
+        montaContenutoConBottoniSalva(mainPanel, this::salvaUtente);
     }
 
     private void buildSezioneForm(JPanel mainPanel) {

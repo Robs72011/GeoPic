@@ -33,6 +33,17 @@ public abstract class DialogAggiungi extends JDialog {
         return mainPanel;
     }
 
+    protected void configuraDimensioni(int width, int height, int minWidth, int minHeight, boolean resizable) {
+        setSize(width, height);
+        setMinimumSize(new Dimension(minWidth, minHeight));
+        setResizable(resizable);
+    }
+
+    protected void montaContenutoConBottoniSalva(JPanel mainPanel, Runnable onSalva) {
+        add(mainPanel, BorderLayout.CENTER);
+        add(creaPannelloBottoni(onSalva), BorderLayout.SOUTH);
+    }
+
     /**
      * Crea il pannello con i bottoni Salva e Annulla allineati a destra.
      * Il bottone Salva è impostato come default button (invocabile con Invio).

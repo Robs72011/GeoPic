@@ -12,7 +12,7 @@ public class GalleriaCondivisa extends Galleria{
     /** * Elenco degli utenti che partecipano alla galleria (Associazione "Partecipa").
      * Indica chi ha accesso ai contenuti oltre al proprietario.
      */
-    private ArrayList<Utente> partecipanti = null;
+    private final ArrayList<Utente> partecipanti;
 
     /**
      * Costruttore completo per la GalleriaCondivisa.
@@ -76,5 +76,10 @@ public class GalleriaCondivisa extends Galleria{
         }
 
         return rimozione;
+    }
+
+    @Override
+    public String toString() {
+        return getNomeGalleria();
     }
 }

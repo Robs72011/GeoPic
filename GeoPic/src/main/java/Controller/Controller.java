@@ -6,6 +6,7 @@ import Model.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -543,7 +544,7 @@ public class Controller {
     /**
      * Recupera un oggetto {@link Utente} tramite il suo identificativo univoco.
      */
-    public Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
+    private Utente getUtenteByID(ArrayList<Utente> utenti, Integer idUserToFind) {
         for (Utente utente : utenti) {
             if (utente.getIdUtente().equals(idUserToFind)) {
                 return utente;
@@ -555,7 +556,7 @@ public class Controller {
     /**
      * Recupera un oggetto {@link Utente} tramite il suo username.
      */
-    public Utente getUtenteByUsername(ArrayList<Utente> utenti, String usernameToFind) {
+    private Utente getUtenteByUsername(ArrayList<Utente> utenti, String usernameToFind) {
         for (Utente utente : utenti) {
             if (utente.getUsername().equals(usernameToFind)) {
                 return utente;
@@ -570,7 +571,7 @@ public class Controller {
      * @param idFotoToFind L'ID da ricercare.
      * @return L'oggetto {@link Fotografia} corrispondente, o null se non trovato.
      */
-    public Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, Integer idFotoToFind) {
+    private Fotografia getFotografiaByID(ArrayList<Fotografia> fotografie, Integer idFotoToFind) {
         for (Fotografia foto : fotografie) {
             if (foto.getIdFoto().equals(idFotoToFind)) {
                 return foto;
@@ -584,7 +585,7 @@ public class Controller {
      * @param idGalleria L'ID della galleria da recuperare.
      * @return L'oggetto Galleria trovato o null.
      */
-    public Galleria getGalleriaByID(Integer idGalleria) {
+    private Galleria getGalleriaByID(Integer idGalleria) {
         Galleria galleria = getGalleriaPrivataByID(galleriePrivateInMemory, idGalleria);
         if (galleria != null) {
             return galleria;
@@ -597,8 +598,8 @@ public class Controller {
     /**
      * Cerca una galleria condivisa nella lista fornita.
      */
-    public GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
-                                                      Integer galCondIdToFind) {
+    private GalleriaCondivisa getGalleriaCondivisaByID(ArrayList<GalleriaCondivisa> gallCondivise,
+                                                       Integer galCondIdToFind) {
         for (GalleriaCondivisa galleriaCondivisa : gallCondivise) {
             if (galleriaCondivisa.getIdGalleria().equals(galCondIdToFind)) {
                 return galleriaCondivisa;
@@ -610,8 +611,8 @@ public class Controller {
     /**
      * Cerca una galleria privata nella lista fornita.
      */
-    public GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
-                                                  Integer galPrivIdToFind) {
+    private GalleriaPrivata getGalleriaPrivataByID(ArrayList<GalleriaPrivata> gallPrivate,
+                                                   Integer galPrivIdToFind) {
         for (GalleriaPrivata galleriaPrivata : gallPrivate) {
             if (galleriaPrivata.getIdGalleria().equals(galPrivIdToFind)) {
                 return galleriaPrivata;
@@ -623,7 +624,7 @@ public class Controller {
     /**
      * Recupera l'oggetto {@link Luogo} corrispondente alle coordinate specificate.
      */
-    public Luogo getLuogoByCoordinate(ArrayList<Luogo> luoghi, String coordinateToFind) {
+    private Luogo getLuogoByCoordinate(ArrayList<Luogo> luoghi, String coordinateToFind) {
         for (Luogo luogo : luoghi) {
             if (luogo.getCoordinate().equals(coordinateToFind)) {
                 return luogo;
@@ -635,7 +636,7 @@ public class Controller {
     /**
      * Recupera l'oggetto {@link Soggetto} tramite il suo nome identificativo.
      */
-    public Soggetto getSoggettoByNomeSoggetto(ArrayList<Soggetto> soggetti, String nomeSoggettoToFind) {
+    private Soggetto getSoggettoByNomeSoggetto(ArrayList<Soggetto> soggetti, String nomeSoggettoToFind) {
         for (Soggetto soggetto : soggetti) {
             if (soggetto.getNomeSoggetto().equals(nomeSoggettoToFind)) {
                 return soggetto;
@@ -645,9 +646,27 @@ public class Controller {
     }
 
     /**
+     * Recupera un soggetto collegato a un determinato utente (se presente).
+     */
+    private Soggetto getSoggettoByUtente(ArrayList<Soggetto> soggetti, Utente utenteToFind) {
+        if (utenteToFind == null) {
+            return null;
+        }
+
+        for (Soggetto soggetto : soggetti) {
+            Utente rappresentato = soggetto.getUtenteRappresentato();
+            if (rappresentato != null && rappresentato.getIdUtente().equals(utenteToFind.getIdUtente())) {
+                return soggetto;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Recupera un oggetto {@link Video} tramite il suo identificativo univoco.
      */
-    public Video getVideoByID(ArrayList<Video> videos, Integer idVideoToFind) {
+    private Video getVideoByID(ArrayList<Video> videos, Integer idVideoToFind) {
         for (Video video : videos) {
             if (video.getIdVideo().equals(idVideoToFind)) {
                 return video;
@@ -695,17 +714,20 @@ public class Controller {
      * Recupera le fotografie dalla galleria personale dell'utente loggato.
      * @return una lista di oggetti Fotografia. Se l'utente non è loggato o non ha una galleria, ritorna una lista vuota.
      */
+    /**
+     * Recupera la galleria personale (privata) dell'utente loggato.
+     */
+    public GalleriaPrivata getGalleriaPersonale() {
+        if (loggedInUtente == null) return null;
+        return galleriePrivateInMemory.stream()
+                .filter(g -> g.getProprietario() != null && g.getProprietario().getIdUtente().equals(loggedInUtente.getIdUtente()))
+                .findFirst()
+                .orElse(null);
+    }
+
     public ArrayList<Fotografia> getFotoGalleriaPersonale() {
-        if (loggedInUtente == null) {
-            return new ArrayList<>();
-        }
-        for (GalleriaPrivata galleria : galleriePrivateInMemory) {
-            if (galleria.getProprietario() != null && galleria.getProprietario().getIdUtente().equals(loggedInUtente.getIdUtente())) {
-                // Assumendo che la galleria contenga direttamente la lista di foto dopo il linking
-                return galleria.getFotoContenute();
-            }
-        }
-        return new ArrayList<>();
+        GalleriaPrivata gp = getGalleriaPersonale();
+        return gp != null ? gp.getFotoContenute() : new ArrayList<>();
     }
 
     /**
@@ -713,16 +735,8 @@ public class Controller {
      * @return una lista di oggetti Video. Se l'utente non è loggato o non ha una galleria, ritorna una lista vuota.
      */
     public ArrayList<Video> getVideoGalleriaPersonale() {
-        if (loggedInUtente == null) {
-            return new ArrayList<>();
-        }
-        for (GalleriaPrivata galleria : galleriePrivateInMemory) {
-            if (galleria.getProprietario() != null && galleria.getProprietario().getIdUtente().equals(loggedInUtente.getIdUtente())) {
-                // Assumendo che la galleria contenga direttamente la lista di video dopo il linking
-                return galleria.getVideos();
-            }
-        }
-        return new ArrayList<>();
+        GalleriaPrivata gp = getGalleriaPersonale();
+        return gp != null ? gp.getVideos() : new ArrayList<>();
     }
 
     /**
@@ -823,21 +837,7 @@ public class Controller {
         return success;
     }
 
-    /**
-     * Ritorna la galleria privata dell'utente che ha eseguito il log in.
-     * @return La galleria privata dell'utente loggato
-     */
-    public GalleriaPrivata getLoggedInUtenteGalPriv(){
-        GalleriaPrivata tmpGalPriv = null;
-        for (Galleria galleria : loggedInUtente.getGalleriePossedute()) {
-            if(galleria instanceof GalleriaPrivata){
-                tmpGalPriv = (GalleriaPrivata) galleria;
-                break;
-            }
-        }
-
-        return  tmpGalPriv;
-    }
+    
 
 
     /**
@@ -848,6 +848,11 @@ public class Controller {
      */
     public Fotografia creazioneNuovaFoto(String dispositivo, boolean visibilita, String coordinate, String toponimo,
                                          ArrayList<String> nomiSoggetti, ArrayList<String> categorieSoggetti){
+
+        if (loggedInUtente == null) {
+            System.err.println("Nessun utente loggato: impossibile creare una fotografia senza autore.");
+            return null;
+        }
 
         //Se il luogo non esiste, viene creato e inserito in memoria e nel DB
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
@@ -866,7 +871,7 @@ public class Controller {
         }
 
         //Prendiamo la galleria privata dell'autore della foto
-        GalleriaPrivata autoreGalPriv = getLoggedInUtenteGalPriv();
+        GalleriaPrivata autoreGalPriv = getGalleriaPersonale();
 
         //La aggiungiamo alla lista di gallerie che contengono la foto
         //In memoria (lato foto) e nel DB
@@ -886,37 +891,50 @@ public class Controller {
                                             loggedInUtente,
                                             luogo,
                                             galleriaContenitrici,
-                                            null);
+                                            new ArrayList<>());
 
 
         ArrayList<Soggetto> soggettiRaffigurati = new ArrayList<>();
 
-        Soggetto soggetto = null;
+        Soggetto soggetto;
         if (nomiSoggetti != null && categorieSoggetti != null && nomiSoggetti.size() == categorieSoggetti.size()) {
             for (int i = 0; i < nomiSoggetti.size(); i++) {
                 String nomeSoggetto = nomiSoggetti.get(i);
                 String categoriaSoggetto = categorieSoggetti.get(i);
 
-                soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
+                if ("Utente".equals(categoriaSoggetto)) {
+                    Utente utenteSoggetto = getUtenteByUsername(utentiInMemory, nomeSoggetto);
+                    if (utenteSoggetto == null) {
+                        System.err.println("Soggetto utente non valido: " + nomeSoggetto);
+                        continue;
+                    }
 
-                // Se non esiste, creiamolo sul DB e in memoria
-                if (soggetto == null) {
-
-                    if(categoriaSoggetto.equals("Utente")){
-                        Utente utenteSoggetto = getUtenteByUsername(utentiInMemory, nomeSoggetto);
+                    // Un utente puo essere associato a un solo soggetto (vincolo unico su idutente).
+                    soggetto = getSoggettoByUtente(soggettiInMemory, utenteSoggetto);
+                    if (soggetto == null) {
                         soggettoPostgresDAO.insertUtenteAsSoggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto.getIdUtente());
                         soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto, utenteSoggetto, null);
-                        utenteSoggetto.setSoggetto(true);
-                    }else{
+                        soggettiInMemory.add(soggetto);
+                    }
+
+                    utenteSoggetto.setSoggetto(true);
+                } else {
+                    soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
+
+                    if (soggetto == null) {
                         soggettoPostgresDAO.insertSoggetto(nomeSoggetto, categoriaSoggetto);
                         soggetto = new Soggetto(nomeSoggetto, categoriaSoggetto);
+                        soggettiInMemory.add(soggetto);
                     }
-                    soggettiInMemory.add(soggetto);
                 }
 
-                // Mappiamo nel DB la foto con il soggetto
-                mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
-                soggettiRaffigurati.add(soggetto);
+                // Mappiamo nel DB usando il nome reale del soggetto in memoria.
+                mostraPostgresDAO.insertSoggettoInFoto(soggetto.getNomeSoggetto(), idNewFoto);
+
+                if (!soggettiRaffigurati.contains(soggetto)) {
+                    soggettiRaffigurati.add(soggetto);
+                }
+                newFoto.addSoggetto(soggetto);
             }
         }
 
@@ -945,6 +963,33 @@ public class Controller {
         return newFoto;
     }
 
+    public Fotografia creazioneNuovaFotoConCondivisione(String dispositivo,
+                                                        boolean visibilita,
+                                                        String coordinate,
+                                                        String toponimo,
+                                                        ArrayList<String> nomiSoggetti,
+                                                        ArrayList<String> categorieSoggetti,
+                                                        List<GalleriaCondivisa> gallerieCondiviseSelezionate) {
+        Fotografia nuovaFoto = creazioneNuovaFoto(
+                dispositivo,
+                visibilita,
+                coordinate,
+                toponimo,
+                nomiSoggetti,
+                categorieSoggetti
+        );
+
+        if (nuovaFoto == null) {
+            return null;
+        }
+
+        if (gallerieCondiviseSelezionate != null && !gallerieCondiviseSelezionate.isEmpty()) {
+            AggiungiFotoCondivisa(nuovaFoto, gallerieCondiviseSelezionate);
+        }
+
+        return nuovaFoto;
+    }
+
     /**
      * Aggiunge una fotografia già esistente alle gallerie condivise selezionate nella dialog.
      * La fotografia rimane comunque contenuta nella galleria privata dell'utente proprietario.
@@ -953,6 +998,14 @@ public class Controller {
                                       java.util.List<GalleriaCondivisa> gallerieCondiviseSelezionate) {
         if (fotoDaCondividere == null || gallerieCondiviseSelezionate == null) {
             return;
+        }
+
+        // Se la foto e' privata, la rendiamo pubblica prima di condividerla.
+        if (!fotoDaCondividere.isVisibile()) {
+            setFotografiaPubblica(fotoDaCondividere.getIdFoto());
+            if (!fotoDaCondividere.isVisibile()) {
+                return;
+            }
         }
 
         for (GalleriaCondivisa galleriaSelezionata : gallerieCondiviseSelezionate) {
@@ -974,6 +1027,47 @@ public class Controller {
                 galleriaInMemory.addFotoAGalleria(fotoDaCondividere);
             }
         }
+    }
+
+    public void AggiungiFotoCondivisa(java.util.List<Fotografia> fotoDaCondividere,
+                                      GalleriaCondivisa galleriaCondivisaDestinazione) {
+        if (fotoDaCondividere == null || galleriaCondivisaDestinazione == null) {
+            return;
+        }
+
+        ArrayList<GalleriaCondivisa> destinazione = new ArrayList<>();
+        destinazione.add(galleriaCondivisaDestinazione);
+
+        for (Fotografia foto : fotoDaCondividere) {
+            if (foto != null) {
+                AggiungiFotoCondivisa(foto, destinazione);
+            }
+        }
+    }
+
+    public ArrayList<Fotografia> getFotoCandidabiliCondivisione(Integer idGalleriaCondivisa) {
+        ArrayList<Fotografia> candidabili = new ArrayList<>();
+
+        if (idGalleriaCondivisa == null) {
+            return candidabili;
+        }
+
+        GalleriaCondivisa galleriaDestinazione = getGalleriaCondivisaByID(gallerieCondiviseInMemory, idGalleriaCondivisa);
+        if (galleriaDestinazione == null) {
+            return candidabili;
+        }
+
+        ArrayList<Fotografia> fotoPersonali = getFotoGalleriaPersonale();
+        for (Fotografia foto : fotoPersonali) {
+            if (foto == null) {
+                continue;
+            }
+            if (!galleriaDestinazione.getFotoContenute().contains(foto)) {
+                candidabili.add(foto);
+            }
+        }
+
+        return candidabili;
     }
 
     /**
@@ -1022,6 +1116,11 @@ public class Controller {
 
         Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
 
+        if (!utentePuoGestireVisibilitaFoto(foto)) {
+            System.out.println("Non e' possibile modificare la visibilita' di una foto non propria.");
+            return;
+        }
+
         if(foto != null && foto.isVisibile()) {
             fotografiaPostgresDAO.updateVisibilita(foto.getIdFoto(), false);
 
@@ -1060,6 +1159,11 @@ public class Controller {
 
         Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
 
+        if (!utentePuoGestireVisibilitaFoto(foto)) {
+            System.out.println("Non e' possibile modificare la visibilita' di una foto non propria.");
+            return;
+        }
+
         if(foto != null && !(foto.isVisibile())) {
             fotografiaPostgresDAO.updateVisibilita(foto.getIdFoto(), true);
 
@@ -1067,8 +1171,52 @@ public class Controller {
         }
     }
 
+    public boolean utenteLoggatoPuoGestireVisibilitaFoto(Integer fotoId) {
+        if (fotoId == null) {
+            return false;
+        }
+
+        Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
+        return utentePuoGestireVisibilitaFoto(foto);
+    }
+
+    public boolean aggiornaVisibilitaFotografia(Integer fotoId, boolean visibile) {
+        if (fotoId == null) {
+            return false;
+        }
+
+        Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
+        if (!utentePuoGestireVisibilitaFoto(foto)) {
+            return false;
+        }
+
+        if (foto.isVisibile() == visibile) {
+            return true;
+        }
+
+        if (visibile) {
+            setFotografiaPubblica(fotoId);
+        } else {
+            setFotografiaPrivata(fotoId);
+        }
+
+        Fotografia fotoAggiornata = getFotografiaByID(fotografieInMemory, fotoId);
+        return fotoAggiornata != null && fotoAggiornata.isVisibile() == visibile;
+    }
+
+    private boolean utentePuoGestireVisibilitaFoto(Fotografia foto) {
+        if (loggedInUtente == null || foto == null || foto.getAutore() == null) {
+            return false;
+        }
+
+        Integer idUtenteLoggato = loggedInUtente.getIdUtente();
+        Integer idAutoreFoto = foto.getAutore().getIdUtente();
+
+        return idUtenteLoggato != null && idUtenteLoggato.equals(idAutoreFoto);
+    }
+
     public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
-        GalleriaPrivata galPrivUtente = getLoggedInUtenteGalPriv();
+        GalleriaPrivata galPrivUtente = getGalleriaPersonale();
         Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
                 galPrivUtente.getIdGalleria());
 
@@ -1136,7 +1284,7 @@ public class Controller {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public void eliminazioneUtenteByAdmin(Integer idUtenteDaEliminare){
+    private void eliminazioneUtenteByAdmin(Integer idUtenteDaEliminare){
         if(!loggedInUtente.isAdmin()){
             System.out.println("L'utente loggato, non e' admin, di conseguenza non puo' proseguire con l'eliminazione di un utente.");
             return;
@@ -1202,7 +1350,16 @@ public class Controller {
         utentiInMemory.remove(utenteDaEliminare);
     }
 
-    public boolean utentePartecipaAGallCond(GalleriaCondivisa gallCond, Utente utente){
-        return gallCond.getPartecipanti().contains(utente);
+    public void eliminazioneUtentiByAdmin(List<Integer> idsUtentiDaEliminare) {
+        if (idsUtentiDaEliminare == null || idsUtentiDaEliminare.isEmpty()) return;
+        if (loggedInUtente == null || !loggedInUtente.isAdmin()) return;
+
+        for (Integer idUtente : idsUtentiDaEliminare) {
+            if (idUtente == null) continue;
+            if (loggedInUtente.getIdUtente().equals(idUtente)) continue;
+            if (getUtenteByID(utentiInMemory, idUtente) == null) continue;
+            eliminazioneUtenteByAdmin(idUtente);
+        }
     }
+
 }

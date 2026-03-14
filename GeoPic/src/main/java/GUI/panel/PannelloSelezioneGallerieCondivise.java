@@ -1,8 +1,7 @@
 package GUI.panel;
 
 import Controller.Controller;
-import GUI.WrapLayout;
-import GUI.frame.FinestraGalleriaCondivisa;
+import GUI.utility.WrapLayout;
 import Model.GalleriaCondivisa;
 import Model.Utente;
 
@@ -10,14 +9,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
  * Tab che visualizza le gallerie condivise dell'utente loggato tramite card a griglia.
  */
 public class PannelloSelezioneGallerieCondivise extends JPanel {
+    private final Controller controller;
+    private final Consumer<GalleriaCondivisa> onGalleriaSelected;
 
-    public PannelloSelezioneGallerieCondivise(Controller controller) {
+    public PannelloSelezioneGallerieCondivise(Controller controller, Consumer<GalleriaCondivisa> onGalleriaSelected) {
+        this.controller = controller;
+        this.onGalleriaSelected = onGalleriaSelected;
+        refresh();
+    }
+
+    public void refresh() {
+        removeAll();
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
@@ -29,7 +38,7 @@ public class PannelloSelezioneGallerieCondivise extends JPanel {
 
         List<GalleriaCondivisa> gallerieCondivise = controller.getGallerieCondiviseUtenteLoggato();
         for (GalleriaCondivisa galleria : gallerieCondivise) {
-            gridPanel.add(createSharedGalleryCard(controller, galleria));
+            gridPanel.add(createSharedGalleryCard(galleria));
         }
 
         if (gallerieCondivise.isEmpty()) {
@@ -42,9 +51,12 @@ public class PannelloSelezioneGallerieCondivise extends JPanel {
             scrollPane.getVerticalScrollBar().setUnitIncrement(16);
             add(scrollPane, BorderLayout.CENTER);
         }
+
+        revalidate();
+        repaint();
     }
 
-    private JPanel createSharedGalleryCard(Controller controller, GalleriaCondivisa galleriaCondivisa) {
+    private JPanel createSharedGalleryCard(GalleriaCondivisa galleriaCondivisa) {
         String partecipantiText = formatPartecipanti(galleriaCondivisa.getPartecipanti());
 
         JPanel background = new JPanel(new BorderLayout());
@@ -80,9 +92,16 @@ public class PannelloSelezioneGallerieCondivise extends JPanel {
         // Evento di clic sul pannello
         cardPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                FinestraGalleriaCondivisa frame = new FinestraGalleriaCondivisa(controller, galleriaCondivisa);
-                frame.setLocationRelativeTo(SwingUtilities.getWindowAncestor(cardPanel));
-                frame.setVisible(true);
+                if (onGalleriaSelected == null) {
+                    JOptionPane.showMessageDialog(
+                            PannelloSelezioneGallerieCondivise.this,
+                            "Navigazione non configurata: impossibile aprire la galleria.",
+                            "Azione non disponibile",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+                onGalleriaSelected.accept(galleriaCondivisa);
             }
         });
 
