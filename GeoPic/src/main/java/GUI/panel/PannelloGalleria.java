@@ -29,8 +29,23 @@ public class PannelloGalleria extends JPanel {
      * @param controller Il {@link Controller.Controller} di riferimento per le operazioni utente.
      * @param onRefresh Callback per aggiornare la galleria dopo l'aggiunta di una foto.
      */
-    public PannelloGalleria(List<Fotografia> fotografie, IntConsumer onImageClick, List<Video> slideshowList, Consumer<Video> onSlideshowClick, Controller.Controller controller, Runnable onRefresh) {
-        this(fotografie, onImageClick, slideshowList, onSlideshowClick, controller, onRefresh, null, null, true, true, null);
+    public PannelloGalleria(List<Fotografia> fotografie,
+                            IntConsumer onImageClick,
+                            List<Video> slideshowList,
+                            Consumer<Video> onSlideshowClick,
+                            Controller.Controller controller,
+                            Runnable onRefresh) {
+        this(fotografie,
+                onImageClick,
+                slideshowList,
+                onSlideshowClick,
+                controller,
+                onRefresh,
+                null,
+                null,
+                true,
+                true,
+                null);
     }
 
     /**
@@ -64,7 +79,12 @@ public class PannelloGalleria extends JPanel {
             headerSubtitle = "ID: " + idUtente;
         }
 
-        topPanel.add(creaHeader(headerTitle, headerSubtitle, controller, showAddPhotoButton, showSearchButtons, onAddPhotoCustomAction), BorderLayout.NORTH);
+        topPanel.add(creaHeader(headerTitle,
+                headerSubtitle,
+                controller,
+                showAddPhotoButton,
+                showSearchButtons,
+                onAddPhotoCustomAction), BorderLayout.NORTH);
 
         if (slideshowList != null && !slideshowList.isEmpty()) {
             PannelloSelezioneSlideshow carousel = new PannelloSelezioneSlideshow(slideshowList, onSlideshowClick);
@@ -130,13 +150,22 @@ public class PannelloGalleria extends JPanel {
         });
 
         JButton btnFotoStessoLuogo = createStyledButton("Foto per Luogo", _ -> 
-            JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Luogo' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+            JOptionPane.showMessageDialog(this,
+                    "Funzionalità 'Foto per Luogo' da implementare!",
+                    "Ricerca",
+                    JOptionPane.INFORMATION_MESSAGE));
 
         JButton btnFotoStessoSoggetto = createStyledButton("Foto per Soggetto", _ -> 
-            JOptionPane.showMessageDialog(this, "Funzionalità 'Foto per Soggetto' da implementare!", "Ricerca", JOptionPane.INFORMATION_MESSAGE));
+            JOptionPane.showMessageDialog(this,
+                    "Funzionalità 'Foto per Soggetto' da implementare!",
+                    "Ricerca",
+                    JOptionPane.INFORMATION_MESSAGE));
 
         JButton btnTop3Luoghi = createStyledButton("Top 3 Luoghi", _ -> 
-            JOptionPane.showMessageDialog(this, "Funzionalità 'Top 3 Luoghi' da implementare!", "Classifica", JOptionPane.INFORMATION_MESSAGE));
+            JOptionPane.showMessageDialog(this,
+                    "Funzionalità 'Top 3 Luoghi' da implementare!",
+                    "Classifica",
+                    JOptionPane.INFORMATION_MESSAGE));
 
         if (showSearchButtons) {
             buttonPanel.add(btnFotoStessoLuogo);

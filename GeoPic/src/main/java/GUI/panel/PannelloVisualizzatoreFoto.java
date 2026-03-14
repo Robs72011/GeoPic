@@ -21,7 +21,6 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     protected final JPanel pannelloBottoni;
     private final JButton btnPrivatizza;
     private final Controller controller;
-    private final Runnable onContenutoMutato;
 
 
     /**
@@ -31,11 +30,9 @@ public class PannelloVisualizzatoreFoto extends JPanel {
      */
     public PannelloVisualizzatoreFoto(List<Fotografia> foto,
                                       Runnable onBackClick,
-                                      Controller controller,
-                                      Runnable onContenutoMutato) {
+                                      Controller controller) {
         this.fotografie = foto != null ? new ArrayList<>(foto) : List.of();
         this.controller = controller;
-        this.onContenutoMutato = onContenutoMutato;
         
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -126,10 +123,6 @@ public class PannelloVisualizzatoreFoto extends JPanel {
                     JOptionPane.WARNING_MESSAGE
             );
             return;
-        }
-
-        if (onContenutoMutato != null) {
-            onContenutoMutato.run();
         }
 
         mostraMetadati(indiceCorrente);

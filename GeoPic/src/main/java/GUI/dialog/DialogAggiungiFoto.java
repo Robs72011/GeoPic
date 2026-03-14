@@ -8,7 +8,6 @@ import Model.GalleriaCondivisa;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
 
@@ -117,7 +116,7 @@ public class DialogAggiungiFoto extends DialogAggiungi {
     private void salvaFoto() {
         String dispositivo = txtDispositivo.getText().trim();
         boolean visibilita = !chkPrivata.isSelected();
-        List<GalleriaCondivisa> gallerieCondiviseSelezionate = getGallerieCondiviseSelezionate(visibilita);
+        ArrayList<GalleriaCondivisa> gallerieCondiviseSelezionate = getGallerieCondiviseSelezionate(visibilita);
         
         if (dispositivo.isEmpty()) {
             mostraErrore("Il campo 'Dispositivo' è obbligatorio.");
@@ -158,11 +157,11 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         }
     }
 
-    private List<GalleriaCondivisa> getGallerieCondiviseSelezionate(boolean visibilita) {
+    private ArrayList<GalleriaCondivisa> getGallerieCondiviseSelezionate(boolean visibilita) {
         if (!visibilita) {
             return new ArrayList<>();
         }
-        return listGallerieCondivise.getSelectedValuesList();
+        return new ArrayList<>(listGallerieCondivise.getSelectedValuesList());
     }
 
     private String checkAndBuildCoordinates() {

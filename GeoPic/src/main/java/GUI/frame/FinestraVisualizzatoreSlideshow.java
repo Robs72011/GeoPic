@@ -32,8 +32,7 @@ public class FinestraVisualizzatoreSlideshow extends JFrame {
 
         PannelloVisualizzatoreSlideshow visualizzatore = new PannelloVisualizzatoreSlideshow(
                 this::tornaAlPadre,
-                controller,
-                onParentRefresh
+            controller
         );
         visualizzatore.setSlideshow(slideshow);
 

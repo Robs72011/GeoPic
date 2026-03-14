@@ -35,8 +35,7 @@ public class FinestraVisualizzatoreFoto extends JFrame {
         PannelloVisualizzatoreFoto visualizzatore = new PannelloVisualizzatoreFoto(
                 foto,
                 this::tornaAlPadre,
-                controller,
-                onParentRefresh
+            controller
         );
         visualizzatore.mostraMetadati(indiceIniziale);
 

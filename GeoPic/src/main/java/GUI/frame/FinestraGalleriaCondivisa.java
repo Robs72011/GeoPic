@@ -35,8 +35,8 @@ public class FinestraGalleriaCondivisa extends JFrame {
         JButton btnIndietro = new JButton("< Indietro");
         btnIndietro.addActionListener(_ -> tornaAlPadre());
 
-        JLabel titolo = new JLabel("Dettaglio Galleria Condivisa", SwingConstants.CENTER);
-        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel titolo = new JLabel(" Torna alla selezione", SwingConstants.LEFT);
+        titolo.setFont(new Font("Arial", Font.BOLD, 15));
 
         header.add(btnIndietro, BorderLayout.WEST);
         header.add(titolo, BorderLayout.CENTER);

@@ -22,8 +22,8 @@ public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto 
      * @param onBackClick Callback invocata al clic sul pulsante "Indietro" per
      * gestire il ritorno alla vista principale.
      */
-    public PannelloVisualizzatoreSlideshow(Runnable onBackClick, Controller controller, Runnable onContenutoMutato) {
-        super(List.of(), onBackClick, controller, onContenutoMutato); // Inizializza con una lista vuota finché non viene scelto lo slideshow
+    public PannelloVisualizzatoreSlideshow(Runnable onBackClick, Controller controller) {
+        super(List.of(), onBackClick, controller); // Inizializza con una lista vuota finché non viene scelto lo slideshow
 
         descriptionArea = createDescriptionArea();
         
