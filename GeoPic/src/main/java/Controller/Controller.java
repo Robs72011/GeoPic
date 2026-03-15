@@ -1666,5 +1666,6 @@ public class Controller {
         //rompo il legame tra la foto e la galleria privata nel DB
         contienePostgresDAO.deleteFotoDaGalleria(fotoDaEliminare.getIdFoto(), galleriaPrivata.getIdGalleria());
 
+        fotografieInMemory.remove(fotoDaEliminare);
     }
 }
