@@ -1568,6 +1568,9 @@ public class Controller {
         if(fotoDaEliminare.getFotoComponeVideo().size() <= 0){
             //imposto la data di eliminazione in memoria, per la questione video
             fotoDaEliminare.setDataDiEliminazione(LocalDate.now());
+
+            //aggiorno la data di eliminazione su DB
+            fotografiaPostgresDAO.updateDataEliminazione(fotoDaEliminare.getIdFoto(), fotoDaEliminare.getDataDiEliminazione());
         }
 
         /*
@@ -1583,9 +1586,7 @@ public class Controller {
         //rompo il legame soggetti - foto
         fotoDaEliminare.getSoggetti().remove(fotoDaEliminare);
          */
-        
-        //aggiorno la data di eliminazione su DB
-        fotografiaPostgresDAO.updateDataEliminazione(fotoDaEliminare.getIdFoto(), fotoDaEliminare.getDataDiEliminazione());
+
 
         //rompo il legame tra la foto e la galleria privata nel DB
         contienePostgresDAO.deleteFotoDaGalleria(fotoDaEliminare.getIdFoto(), galleriaPrivata.getIdGalleria());
