@@ -824,15 +824,6 @@ public class Controller {
     }
 
     /**
-     * Rimuove un utente dal sistema (con conseguenze a cascata su foto, gallerie, ecc.).
-     */
-    public void eliminaUtente(int idUtente) {
-        utentePostgresDAO.deleteUtente(idUtente);
-        // Poichè potrebbe scatenare eliminazioni a cascata nel DB su altre entità, ricaricamo tutto per sicurezza
-        loadInMemory();
-    }
-
-    /**
      * Ritorna la galleria privata dell'utente che ha eseguito il log in.
      * @return La galleria privata dell'utente loggato
      */
@@ -926,6 +917,7 @@ public class Controller {
                 // Mappiamo nel DB la foto con il soggetto
                 mostraPostgresDAO.insertSoggettoInFoto(nomeSoggetto, idNewFoto);
                 soggettiRaffigurati.add(soggetto);
+                newFoto.setSoggetti(soggettiRaffigurati);
             }
         }
 
