@@ -1550,4 +1550,45 @@ public class Controller {
 
     }
 
+    public void eliminazioneFotoGalleriaPrivata(Integer idFoto){
+        //vado a prendere la foto da eliminare direttamente dalla galleria personale dell'utente
+        Fotografia fotoDaEliminare = getFotografiaByID(getFotoGalleriaPersonale(), idFoto);
+
+        if (idFoto == null || fotoDaEliminare == null) return;
+
+        //vado a prendere la galleria personale dell'utente
+        GalleriaPrivata galleriaPrivata = getGalleriaPersonale();
+
+        //rompo il legame foto - galleria in memoria
+        fotoDaEliminare.getGalleriaContenitrice().remove(galleriaPrivata);
+
+        //rompo il legame galleria - foto in memoria
+        galleriaPrivata.getFotoContenute().remove(fotoDaEliminare);
+
+        if(fotoDaEliminare.getFotoComponeVideo().size() <= 0){
+            //imposto la data di eliminazione in memoria, per la questione video
+            fotoDaEliminare.setDataDiEliminazione(LocalDate.now());
+        }
+
+        /*
+        //rompo il legame foto - luogo
+        fotoDaEliminare.setLuogo(null);
+
+        //rompo il legame luogo - foto
+        fotoDaEliminare.getLuogo().removeLuogoRaffiguratoIn(fotoDaEliminare);
+
+        //rompo il legame foto - soggetti
+        fotoDaEliminare.getSoggetti().clear();
+
+        //rompo il legame soggetti - foto
+        fotoDaEliminare.getSoggetti().remove(fotoDaEliminare);
+         */
+        
+        //aggiorno la data di eliminazione su DB
+        fotografiaPostgresDAO.updateDataEliminazione(fotoDaEliminare.getIdFoto(), fotoDaEliminare.getDataDiEliminazione());
+
+        //rompo il legame tra la foto e la galleria privata nel DB
+        contienePostgresDAO.deleteFotoDaGalleria(fotoDaEliminare.getIdFoto(), galleriaPrivata.getIdGalleria());
+
+    }
 }
