@@ -1443,6 +1443,81 @@ public class Controller {
     }
 
     /**
+     * Ricerca testuale nelle foto della galleria personale per luogo (toponimo o coordinate).
+     *
+     * @param filtro testo cercato
+     * @return elenco foto che soddisfano il filtro
+     */
+    public ArrayList<Fotografia> ricercaFotoPersonalePerLuogo(String filtro) {
+        ArrayList<Fotografia> risultati = new ArrayList<>();
+        String filtroNormalizzato = filtro != null ? filtro.trim().toLowerCase() : "";
+
+        if (filtroNormalizzato.isEmpty()) {
+            return risultati;
+        }
+
+        for (Fotografia foto : getFotoGalleriaPersonale()) {
+            if (foto == null || foto.getLuogo() == null) {
+                continue;
+            }
+
+            String nomeLuogo = foto.getLuogo().getNomeMnemonico() != null
+                    ? foto.getLuogo().getNomeMnemonico().toLowerCase()
+                    : "";
+            String coordinate = foto.getLuogo().getCoordinate() != null
+                    ? foto.getLuogo().getCoordinate().toLowerCase()
+                    : "";
+
+            if (nomeLuogo.contains(filtroNormalizzato) || coordinate.contains(filtroNormalizzato)) {
+                risultati.add(foto);
+            }
+        }
+
+        return risultati;
+    }
+
+    /**
+     * Ricerca testuale nelle foto della galleria personale per soggetto (nome o categoria).
+     *
+     * @param filtro testo cercato
+     * @return elenco foto che soddisfano il filtro
+     */
+    public ArrayList<Fotografia> ricercaFotoPersonalePerSoggetto(String filtro) {
+        ArrayList<Fotografia> risultati = new ArrayList<>();
+        String filtroNormalizzato = filtro != null ? filtro.trim().toLowerCase() : "";
+
+        if (filtroNormalizzato.isEmpty()) {
+            return risultati;
+        }
+
+        for (Fotografia foto : getFotoGalleriaPersonale()) {
+            if (foto == null || foto.getSoggetti() == null || foto.getSoggetti().isEmpty()) {
+                continue;
+            }
+
+            for (Soggetto soggetto : foto.getSoggetti()) {
+                if (soggetto == null) {
+                    continue;
+                }
+
+                String nome = soggetto.getNomeSoggetto() != null
+                        ? soggetto.getNomeSoggetto().toLowerCase()
+                        : "";
+                String categoria = soggetto.getCategoria() != null
+                        ? soggetto.getCategoria().toLowerCase()
+                        : "";
+
+                if (nome.contains(filtroNormalizzato) || categoria.contains(filtroNormalizzato)) {
+                    risultati.add(foto);
+                    break;
+                }
+            }
+        }
+
+        return risultati;
+    }
+
+    /**
      * Identifica i tre luoghi più ricorrenti nelle fotografie salvate nel sistema.
      * Vengono filtrate le foto che non hanno un luogo associato.
      * @return Un {@link ArrayList} di {@link Luogo} contenente i primi 3 luoghi per numero di scatti,

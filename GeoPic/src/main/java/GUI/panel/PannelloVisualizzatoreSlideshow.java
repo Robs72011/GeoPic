@@ -1,10 +1,12 @@
 package GUI.panel;
 
 import Controller.Controller;
+import Model.Fotografia;
 import Model.Video;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto {
     private final JTextArea descriptionArea;
-    private JScrollPane thumbnailStrip;
+    private final JScrollPane thumbnailStrip;
 
     /**
      * Costruisce il pannello dello slideshow.
@@ -23,19 +25,23 @@ public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto 
      * gestire il ritorno alla vista principale.
      */
     public PannelloVisualizzatoreSlideshow(Runnable onBackClick, Controller controller) {
-        super(List.of(), onBackClick, controller); // Inizializza con una lista vuota finché non viene scelto lo slideshow
+        super(new ArrayList<>(), onBackClick, controller); // Inizializza con una lista vuota finché non viene scelto lo slideshow
 
         descriptionArea = createDescriptionArea();
-        
-        // Creiamo un pannello "sud" diviso in due: a sinistra/centro i bottoni (pannelloBottoni), a destra la descrizione
+
         JPanel southContextPanel = new JPanel(new BorderLayout());
         southContextPanel.add(pannelloBottoni, BorderLayout.CENTER);
-        
+
         JScrollPane descriptionScrollPane = createDescriptionScrollPanel(descriptionArea);
         descriptionScrollPane.setBorder(BorderFactory.createTitledBorder("Descrizione Slideshow"));
         southContextPanel.add(descriptionScrollPane, BorderLayout.EAST);
-        
-        add(southContextPanel, BorderLayout.SOUTH);
+
+        impostaContenutoSud(southContextPanel);
+
+        thumbnailStrip = new JScrollPane();
+        thumbnailStrip.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        thumbnailStrip.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(thumbnailStrip, BorderLayout.EAST);
     }
 
     /**
@@ -44,24 +50,19 @@ public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto 
      * @param slideshow L'oggetto {@link Video} da visualizzare.
      */
     public void setSlideshow(Video slideshow) {
-        if (slideshow == null) return;
+        if (slideshow == null) {
+            return;
+        }
 
-        // Imposta foto nello slideshow (metodo ereditato da ImageSelector)
         setContent(slideshow.getCompostoDaFoto());
 
-        // Aggiorna descrizione, usando il dato dal database
         if (slideshow.getDescrizione() != null && !slideshow.getDescrizione().isEmpty()) {
             descriptionArea.setText(slideshow.getDescrizione());
         } else {
             descriptionArea.setText("Nessuna descrizione disponibile per questo video.");
         }
 
-        // Aggiorna thumbnail strip
-        if (thumbnailStrip != null) {
-            remove(thumbnailStrip);
-        }
-        thumbnailStrip = createThumbnailStrip(slideshow.getCompostoDaFoto());
-        add(thumbnailStrip, BorderLayout.EAST);
+        thumbnailStrip.setViewportView(createThumbnailContent(slideshow.getCompostoDaFoto()));
 
         revalidate();
         repaint();
@@ -91,34 +92,30 @@ public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto 
         JScrollPane descriptionScrollPane = new JScrollPane(Component);
         descriptionScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         descriptionScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        Component.setPreferredSize(new Dimension(400, 100)); // Adatta la dimensione orizzontale
-        Component.setMinimumSize(new Dimension(200, 100)); // Imposta una dimensione minima per evitare che si schiacci
+        Component.setPreferredSize(new Dimension(400, 100));
+        Component.setMinimumSize(new Dimension(200, 100));
         return descriptionScrollPane;
     }
 
     /**
-     * Genera una striscia laterale (thumbnail strip) con l'elenco delle fotografie
+     * Genera il contenuto della striscia laterale con l'elenco delle fotografie
      * che compongono lo slideshow.
      * @param fotografie Lista delle {@link Model.Fotografia} contenute nel video.
-     * @return {@link JScrollPane} verticale contenente i metadati delle foto.
+     * @return {@link JPanel} verticale contenente i metadati delle foto.
      */
-    private JScrollPane createThumbnailStrip(List<Model.Fotografia> fotografie) {
+    private JPanel createThumbnailContent(List<Fotografia> fotografie) {
         JPanel thumbPanel = new JPanel();
         thumbPanel.setLayout(new BoxLayout(thumbPanel, BoxLayout.Y_AXIS));
         thumbPanel.setPreferredSize(new Dimension(150, 0));
         thumbPanel.setBackground(Color.LIGHT_GRAY);
 
         if (fotografie != null) {
-            for (Model.Fotografia foto : fotografie) {
+            for (Fotografia foto : new ArrayList<>(fotografie)) {
                 JLabel thumbLabel = new JLabel("<html><b>Foto ID:</b> " + foto.getIdFoto() + " <br><i>" + foto.getDataDiScatto() + "</i></html>");
                 thumbLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 thumbPanel.add(thumbLabel);
             }
         }
-
-        JScrollPane scrollPane = new JScrollPane(thumbPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        return scrollPane;
+        return thumbPanel;
     }
 }

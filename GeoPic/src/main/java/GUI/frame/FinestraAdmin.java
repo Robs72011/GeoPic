@@ -81,15 +81,32 @@ public class FinestraAdmin extends JFrame {
 
     private void confermaEliminazione() {
         ArrayList<Integer> idSelezionati = new ArrayList<>();
+        Integer idAdminLoggato = controller.getLoggedInUtente() != null
+                ? controller.getLoggedInUtente().getIdUtente()
+                : null;
+        boolean adminSelezionato = false;
         DefaultTableModel anteprima = new DefaultTableModel(new String[]{"ID", "Username", "Admin"}, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             if (Boolean.TRUE.equals(tableModel.getValueAt(i, 0)) && tableModel.getValueAt(i, 1) instanceof Integer id) {
+                if (idAdminLoggato != null && idAdminLoggato.equals(id)) {
+                    adminSelezionato = true;
+                    continue;
+                }
                 idSelezionati.add(id);
                 anteprima.addRow(new Object[]{ tableModel.getValueAt(i, 1), tableModel.getValueAt(i, 2), tableModel.getValueAt(i, 3) });
             }
+        }
+
+        if (adminSelezionato) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Non puoi eliminare te stesso come amministratore. La tua selezione verrà ignorata.",
+                    "Operazione non consentita",
+                    JOptionPane.WARNING_MESSAGE
+            );
         }
 
         if (idSelezionati.isEmpty()) {

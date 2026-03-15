@@ -2,11 +2,11 @@ package GUI.panel;
 
 import Controller.Controller;
 import Model.Fotografia;
+import Model.Soggetto;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Pannello dedicato alla visualizzazione dettagliata delle informazioni relative a una {@link Fotografia}.
@@ -15,10 +15,11 @@ import java.util.List;
  * di gestione, come la possibilità di rendere privata una foto selezionata.
  */
 public class PannelloVisualizzatoreFoto extends JPanel {
-    protected List<Fotografia> fotografie;
+    protected ArrayList<Fotografia> fotografie;
     protected int indiceCorrente = 0;
     protected final JLabel imageLabel = new JLabel("", SwingConstants.CENTER);
     protected final JPanel pannelloBottoni;
+    private final JPanel pannelloSud;
     private final JButton btnPrivatizza;
     private final Controller controller;
 
@@ -28,24 +29,25 @@ public class PannelloVisualizzatoreFoto extends JPanel {
      * @param foto La lista di oggetti {@link Fotografia} da mostrare nel dettaglio.
      * @param onBackClick Runnable eseguito al clic del tasto "Indietro", solitamente utilizzato
      */
-    public PannelloVisualizzatoreFoto(List<Fotografia> foto,
+    public PannelloVisualizzatoreFoto(ArrayList<Fotografia> foto,
                                       Runnable onBackClick,
                                       Controller controller) {
-        this.fotografie = foto != null ? new ArrayList<>(foto) : List.of();
+        this.fotografie = foto != null ? new ArrayList<>(foto) : new ArrayList<>();
         this.controller = controller;
-        
-        this.setLayout(new BorderLayout());
-        this.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
         imageLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        this.add(new JScrollPane(imageLabel), BorderLayout.CENTER);
+        add(new JScrollPane(imageLabel), BorderLayout.CENTER);
 
-        this.btnPrivatizza = new JButton();
-        this.pannelloBottoni = creaPannelloBottoni(onBackClick);
-        this.add(this.pannelloBottoni, BorderLayout.SOUTH);
-        
-        // Inizializza la view sul primo elemento se disponibile
-        if (!this.fotografie.isEmpty()) {
+        btnPrivatizza = new JButton();
+        pannelloBottoni = creaPannelloBottoni(onBackClick);
+        pannelloSud = new JPanel(new BorderLayout());
+        pannelloSud.add(pannelloBottoni, BorderLayout.CENTER);
+        add(pannelloSud, BorderLayout.SOUTH);
+
+        if (!fotografie.isEmpty()) {
             mostraMetadati(0);
         }
     }
@@ -60,18 +62,8 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         JButton btnPrecedente = new JButton("<< Precedente");
         JButton btnSuccessivo = new JButton("Successivo >>");
 
-        btnPrecedente.addActionListener(_ -> {
-            if (fotografie == null || fotografie.isEmpty()) {
-                return;
-            }
-            mostraMetadati((indiceCorrente - 1 + fotografie.size()) % fotografie.size());
-        });
-        btnSuccessivo.addActionListener(_ -> {
-            if (fotografie == null || fotografie.isEmpty()) {
-                return;
-            }
-            mostraMetadati((indiceCorrente + 1) % fotografie.size());
-        });
+        btnPrecedente.addActionListener(_ -> naviga(-1));
+        btnSuccessivo.addActionListener(_ -> naviga(1));
         btnIndietro.addActionListener(_ -> onBackClick.run());
 
         btnPrivatizza.addActionListener(_ -> toggleVisibilitaFoto());
@@ -89,13 +81,33 @@ public class PannelloVisualizzatoreFoto extends JPanel {
      * Necessario per componenti dinamici come SlideshowSelector che ricaricano i dati a runtime.
      * @param foto La nuova lista di oggetti {@link Fotografia} da mostrare.
      */
-    public void setContent(List<Fotografia> foto) {
-        this.fotografie = foto != null ? new ArrayList<>(foto) : List.of();
+    public void setContent(ArrayList<Fotografia> foto) {
+        this.fotografie = foto != null ? new ArrayList<>(foto) : new ArrayList<>();
         mostraMetadati(0);
     }
 
+    protected void impostaContenutoSud(Component component) {
+        pannelloSud.removeAll();
+        if (component != null) {
+            pannelloSud.add(component, BorderLayout.CENTER);
+        }
+        pannelloSud.revalidate();
+        pannelloSud.repaint();
+    }
+
+    private boolean haFotografie() {
+        return !fotografie.isEmpty();
+    }
+
+    private void naviga(int delta) {
+        if (!haFotografie()) {
+            return;
+        }
+        mostraMetadati((indiceCorrente + delta + fotografie.size()) % fotografie.size());
+    }
+
     private void toggleVisibilitaFoto() {
-        if (fotografie == null || fotografie.isEmpty()) {
+        if (!haFotografie()) {
             return;
         }
 
@@ -167,7 +179,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
      * @param index L'indice della fotografia nella lista {@code fotografie}.
      */
     public void mostraMetadati(int index) {
-        if (fotografie == null || fotografie.isEmpty()) {
+        if (!haFotografie()) {
             imageLabel.setText("Nessuna fotografia da mostrare.");
             return;
         }
@@ -180,7 +192,10 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         Fotografia foto = fotografie.get(indiceCorrente);
         aggiornaBottoneVisibilita(foto);
 
-        // MODIFICA: Costruzione di una stringa HTML per visualizzare i metadati.
+        imageLabel.setText(costruisciHtmlMetadati(foto));
+    }
+
+    protected String costruisciHtmlMetadati(Fotografia foto) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html><body style='text-align: left; padding: 20px;'>");
         sb.append("<h1>Dettagli Fotografia</h1>");
@@ -199,11 +214,11 @@ public class PannelloVisualizzatoreFoto extends JPanel {
             sb.append("<p>Nessun luogo associato.</p>");
         }
         sb.append("<hr>");
-        
+
         sb.append("<h2>Soggetti</h2>");
         if (foto.getSoggetti() != null && !foto.getSoggetti().isEmpty()) {
             sb.append("<ul>");
-            for (Model.Soggetto s : foto.getSoggetti()) {
+            for (Soggetto s : foto.getSoggetti()) {
                 sb.append("<li>").append(s.getNomeSoggetto());
                 if (s.getCategoria() != null && !s.getCategoria().isEmpty()) {
                     sb.append(" (").append(s.getCategoria()).append(")");
@@ -216,8 +231,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         }
 
         sb.append("</body></html>");
-
-        imageLabel.setText(sb.toString());
+        return sb.toString();
     }
 }
 
