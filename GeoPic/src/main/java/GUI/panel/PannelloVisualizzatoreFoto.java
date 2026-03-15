@@ -60,8 +60,18 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         JButton btnPrecedente = new JButton("<< Precedente");
         JButton btnSuccessivo = new JButton("Successivo >>");
 
-        btnPrecedente.addActionListener(_ -> mostraMetadati((indiceCorrente - 1 + fotografie.size()) % fotografie.size()));
-        btnSuccessivo.addActionListener(_ -> mostraMetadati((indiceCorrente + 1) % fotografie.size()));
+        btnPrecedente.addActionListener(_ -> {
+            if (fotografie == null || fotografie.isEmpty()) {
+                return;
+            }
+            mostraMetadati((indiceCorrente - 1 + fotografie.size()) % fotografie.size());
+        });
+        btnSuccessivo.addActionListener(_ -> {
+            if (fotografie == null || fotografie.isEmpty()) {
+                return;
+            }
+            mostraMetadati((indiceCorrente + 1) % fotografie.size());
+        });
         btnIndietro.addActionListener(_ -> onBackClick.run());
 
         btnPrivatizza.addActionListener(_ -> toggleVisibilitaFoto());
@@ -104,7 +114,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
                 ? "Sei sicuro di voler rendere la foto privata?"
                 : "Sei sicuro di voler rendere la foto pubblica?";
         int scelta = JOptionPane.showConfirmDialog(
-                null,
+            this,
                 messaggio,
                 "Conferma",
                 JOptionPane.YES_NO_OPTION,

@@ -71,4 +71,32 @@ public abstract class DialogAggiungi extends JDialog {
     protected void mostraErrore(String messaggio) {
         mostraMessaggio(messaggio, "Errore", JOptionPane.ERROR_MESSAGE);
     }
+
+    protected void mostraSuccessoEChiudi(String messaggio) {
+        mostraSuccessoEChiudi(messaggio, "Successo");
+    }
+
+    protected void mostraSuccessoEChiudi(String messaggio, String titolo) {
+        mostraMessaggio(messaggio, titolo, JOptionPane.INFORMATION_MESSAGE);
+        dispose();
+    }
+
+    protected boolean conferma(Object messaggio, String titolo, int tipoMessaggio) {
+        int scelta = JOptionPane.showConfirmDialog(
+                this,
+                messaggio,
+                titolo,
+                JOptionPane.YES_NO_OPTION,
+                tipoMessaggio
+        );
+        return scelta == JOptionPane.YES_OPTION;
+    }
+
+    protected String trimToEmpty(String valore) {
+        return valore == null ? "" : valore.trim();
+    }
+
+    protected boolean isBlank(String valore) {
+        return trimToEmpty(valore).isEmpty();
+    }
 }

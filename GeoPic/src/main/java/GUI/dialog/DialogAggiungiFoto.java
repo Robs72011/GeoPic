@@ -118,7 +118,7 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         boolean visibilita = !chkPrivata.isSelected();
         ArrayList<GalleriaCondivisa> gallerieCondiviseSelezionate = getGallerieCondiviseSelezionate(visibilita);
         
-        if (dispositivo.isEmpty()) {
+        if (isBlank(dispositivo)) {
             mostraErrore("Il campo 'Dispositivo' è obbligatorio.");
             return;
         }
@@ -150,8 +150,7 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         );
 
         if (nuovaFoto != null) {
-            mostraMessaggio("Foto aggiunta con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Chiude la dialog e innesca il refresh
+            mostraSuccessoEChiudi("Foto aggiunta con successo!");
         } else {
             mostraErrore("Errore durante il salvataggio nel database.");
         }
@@ -189,14 +188,16 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         String topoEsistente = controller.getToponimoEsistente(coordinate);
         
         if (topoEsistente != null && !toponimo.equals(topoEsistente)) {
-            int scelta = JOptionPane.showConfirmDialog(this,
+                boolean confermato = conferma(
                     "Attenzione: nel sistema esiste già un luogo con le coordinate " + coordinate + ".\n" +
                     "Il toponimo storico esistente è '" + topoEsistente + "'.\n" +
                     "Il toponimo nuovo ('" + toponimo + "') verrà ignorato.\n" +
                     "Vuoi procedere associando la foto al luogo storico esistente?",
-                    "Luogo Già Esistente", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            
-            if (scelta != JOptionPane.YES_OPTION) {
+                    "Luogo Già Esistente",
+                    JOptionPane.WARNING_MESSAGE
+                );
+
+                if (!confermato) {
                 return null; 
             }
         }

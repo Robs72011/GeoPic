@@ -108,15 +108,13 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         }
 
         if (!fotoPrivateSelezionate.isEmpty()) {
-            int scelta = JOptionPane.showConfirmDialog(
-                    this,
+            boolean confermato = conferma(
                     creaPannelloConfermaPrivatizzate(fotoPrivateSelezionate),
                     "Conferma Cambio Visibilita",
-                    JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
             );
 
-            if (scelta != JOptionPane.YES_OPTION) {
+            if (!confermato) {
                 return;
             }
         }
@@ -128,8 +126,7 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
             messaggio += "\nFoto rese pubbliche automaticamente: " + fotoPrivateSelezionate.size();
         }
 
-        mostraMessaggio(messaggio, "Successo", JOptionPane.INFORMATION_MESSAGE);
-        dispose();
+        mostraSuccessoEChiudi(messaggio);
     }
 
     private JPanel creaPannelloConfermaPrivatizzate(List<Fotografia> fotoPrivateSelezionate) {

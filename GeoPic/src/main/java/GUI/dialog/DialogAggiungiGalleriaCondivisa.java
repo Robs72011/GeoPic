@@ -42,7 +42,6 @@ public class DialogAggiungiGalleriaCondivisa extends DialogAggiungi {
 
         montaContenutoConBottoniSalva(mainPanel, this::salvaGalleriaCondivisa);
         configuraDimensioni(560, 420, 500, 360, true);
-        setLocationRelativeTo(parentFrame);
     }
 
     private JPanel creaPannelloForm() {
@@ -68,11 +67,9 @@ public class DialogAggiungiGalleriaCondivisa extends DialogAggiungi {
     }
 
     private void salvaGalleriaCondivisa() {
-        String nomeGalleria = campoNomeGalleria.getText() != null
-                ? campoNomeGalleria.getText().trim()
-                : "";
+        String nomeGalleria = trimToEmpty(campoNomeGalleria.getText());
 
-        if (nomeGalleria.isEmpty()) {
+        if (isBlank(nomeGalleria)) {
             mostraErrore("Inserisci il nome della galleria condivisa.");
             return;
         }
@@ -81,7 +78,6 @@ public class DialogAggiungiGalleriaCondivisa extends DialogAggiungi {
         String[] partecipanti = selezionati.isEmpty() ? null : selezionati.toArray(new String[0]);
 
         controller.creazioneNuovaGalleriaCondivisa(nomeGalleria, partecipanti);
-        mostraMessaggio("Galleria condivisa creata con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
-        dispose();
+        mostraSuccessoEChiudi("Galleria condivisa creata con successo.", "Operazione completata");
     }
 }
