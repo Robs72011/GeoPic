@@ -39,7 +39,7 @@ public class Fotografia {
     private final ArrayList<Video> fotoComponeVideo;
 
     /** Elenco dei soggetti presenti nella fotografia (Associazione "Mostra"). */
-    private final ArrayList<Soggetto> soggetti;
+    private ArrayList<Soggetto> soggetti;
 
     /**
      * Costruttore completo della classe Fotografia.
@@ -214,6 +214,10 @@ public class Fotografia {
         }
 
         return aggiunta;
+    }
+
+    public void setSoggetti(ArrayList<Soggetto> soggetti) {
+        this.soggetti = soggetti;
     }
 
     /**
