@@ -1114,7 +1114,7 @@ public class Controller {
      * @see #getGalleriaCondivisaByID(ArrayList, Integer)
      */
     public void AggiungiFotoCondivisa(Fotografia fotoDaCondividere,
-                                      java.util.List<GalleriaCondivisa> gallerieCondiviseSelezionate) {
+                                      ArrayList<GalleriaCondivisa> gallerieCondiviseSelezionate) {
         if (fotoDaCondividere == null || gallerieCondiviseSelezionate == null) {
             return;
         }
@@ -1148,7 +1148,7 @@ public class Controller {
         }
     }
 
-    public void AggiungiFotoCondivisa(java.util.List<Fotografia> fotoDaCondividere,
+    public void AggiungiFotoCondivisa(ArrayList<Fotografia> fotoDaCondividere,
                                       GalleriaCondivisa galleriaCondivisaDestinazione) {
         if (fotoDaCondividere == null || galleriaCondivisaDestinazione == null) {
             return;
@@ -1290,7 +1290,7 @@ public class Controller {
      * Metodo che rende una foto privata, pubblica
      * Non vengono fatti altri controlli in quanto, se fino a quel momento la foto era privata,
      * allora essa era solo nella galleria privata e in nessun altra galleria.
-     * @param fotoId
+     * @param fotoId Id della foto da rendere pubblica
      */
     public void setFotografiaPubblica(Integer fotoId) {
         if (fotoId == null){
@@ -1612,7 +1612,7 @@ public class Controller {
         utentiInMemory.remove(utenteDaEliminare);
     }
 
-    public void eliminazioneUtentiByAdmin(ArrayList<Integer> idsUtentiDaEliminare) {
+    public void eliminazioneUtenteByAdmin(ArrayList<Integer> idsUtentiDaEliminare) {
         if (idsUtentiDaEliminare == null || idsUtentiDaEliminare.isEmpty()) return;
         if (loggedInUtente == null || !loggedInUtente.isAdmin()) return;
 
@@ -1649,7 +1649,7 @@ public class Controller {
         //rompo il legame galleria - foto in memoria
         galleriaPrivata.getFotoContenute().remove(fotoDaEliminare);
 
-        if (fotoDaEliminare.getFotoComponeVideo().size() <= 0) {
+        if (!fotoDaEliminare.getFotoComponeVideo().isEmpty()) {
             //imposto la data di eliminazione in memoria, per la questione video
             fotoDaEliminare.setDataDiEliminazione(LocalDate.now());
 
@@ -1673,8 +1673,6 @@ public class Controller {
 
 
         //rompo il legame tra la foto e la galleria privata nel DB
-        contienePostgresDAO.deleteFotoDaGalleria(fotoDaEliminare.getIdFoto(), galleriaPrivata.getIdGalleria());
-
-        fotografieInMemory.remove(fotoDaEliminare);
+        contienePostgresDAO.deleteFotoDaGalleria(galleriaPrivata.getIdGalleria(), fotoDaEliminare.getIdFoto());
     }
 }

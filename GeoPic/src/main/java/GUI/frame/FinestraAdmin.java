@@ -124,7 +124,7 @@ public class FinestraAdmin extends JFrame {
         pannello.add(scroll, BorderLayout.CENTER);
 
         if (JOptionPane.showConfirmDialog(this, pannello, "Conferma Rimozione", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-            controller.eliminazioneUtentiByAdmin(idSelezionati);
+            controller.eliminazioneUtenteByAdmin(idSelezionati);
             aggiornaTabella();
         }
     }
