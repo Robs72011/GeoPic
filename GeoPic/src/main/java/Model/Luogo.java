@@ -79,6 +79,12 @@ public class Luogo {
         return aggiunta;
     }
 
+    public void removeLuogoRaffiguratoIn(Fotografia f){
+        if(f == null)
+            return;
+        else luogoRaffiguratoIn.remove(f);
+    }
+
     /**
      * Verifica l'uguaglianza tra due luoghi.
      * Due luoghi sono considerati uguali se hanno le stesse coordinate.
