@@ -24,6 +24,7 @@ public class DialogAggiungiFoto extends DialogAggiungi {
     private JTextField txtToponimo;
 
     private final PannelloAggiungiSoggetti pannelloSoggetti;
+    private int gridyForm = 0;
 
     public DialogAggiungiFoto(Frame parentFrame, Controller controller) {
         super(parentFrame, "Aggiungi Nuova Foto", controller);
@@ -31,7 +32,7 @@ public class DialogAggiungiFoto extends DialogAggiungi {
 
         pannelloSoggetti = new PannelloAggiungiSoggetti(controller.getUsernamesInMemory());
 
-        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        JPanel formPanel = new JPanel(new GridBagLayout());
         buildFormDatiBase(formPanel);
         buildFormVisibilita(formPanel);
 
@@ -45,33 +46,46 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         montaContenutoConBottoniSalva(mainPanel, this::salvaFoto);
     }
 
-    private void buildFormDatiBase(JPanel form) {
-        form.add(new JLabel("Dispositivo:"));
-        txtDispositivo = new JTextField();
-        form.add(txtDispositivo);
+    private void addFormField(JPanel form, String labelText, Component component) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = gridyForm;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        form.add(new JLabel(labelText), gbc);
 
-        form.add(new JLabel("Latitudine (es. +41.90): *"));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = gridyForm;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        form.add(component, gbc);
+
+        gridyForm++;
+    }
+
+    private void buildFormDatiBase(JPanel form) {
+        txtDispositivo = new JTextField();
+        addFormField(form, "Dispositivo:", txtDispositivo);
+
         cbSegnoLat = createSignComboBox();
         txtLatitudine = new JFormattedTextField();
-        form.add(buildCoordinatePanel(cbSegnoLat, txtLatitudine, "##.##"));
+        addFormField(form, "Latitudine (es. +41.90): *", buildCoordinatePanel(cbSegnoLat, txtLatitudine, "##.##"));
 
-        form.add(new JLabel("Longitudine (es. +012.49): *"));
         cbSegnoLon = createSignComboBox();
         txtLongitudine = new JFormattedTextField();
-        form.add(buildCoordinatePanel(cbSegnoLon, txtLongitudine, "###.##"));
+        addFormField(form, "Longitudine (es. +012.49): *", buildCoordinatePanel(cbSegnoLon, txtLongitudine, "###.##"));
 
-        form.add(new JLabel("Nome Luogo (Toponimo):"));
         txtToponimo = new JTextField();
-        form.add(txtToponimo);
+        addFormField(form, "Nome Luogo (Toponimo):", txtToponimo);
     }
 
     private void buildFormVisibilita(JPanel form) {
-        form.add(new JLabel("Privata:"));
         chkPrivata = new JCheckBox();
         chkPrivata.setSelected(true);
-        form.add(chkPrivata);
+        addFormField(form, "Privata:", chkPrivata);
 
-        form.add(new JLabel("Condividi in Gallerie (Ctrl+Click):"));
         listGallerieCondivise = new JList<>();
         DefaultListModel<GalleriaCondivisa> modelGallerie = new DefaultListModel<>();
         controller.getGallerieCondiviseUtenteLoggato().forEach(modelGallerie::addElement);
@@ -81,7 +95,14 @@ public class DialogAggiungiFoto extends DialogAggiungi {
 
         JScrollPane scrollGallerie = new JScrollPane(listGallerieCondivise);
         scrollGallerie.setPreferredSize(new Dimension(150, 60));
-        form.add(scrollGallerie);
+        
+        JPanel panelGallerie = new JPanel(new BorderLayout(0, 5));
+        panelGallerie.add(scrollGallerie, BorderLayout.CENTER);
+        JLabel help = new JLabel("Suggerimento: CTRL per selezione multipla.");
+        help.setFont(new Font("Arial", Font.PLAIN, 11));
+        help.setForeground(Color.DARK_GRAY);
+        panelGallerie.add(help, BorderLayout.SOUTH);
+        addFormField(form, "Condividi in Gallerie:", panelGallerie);
 
         chkPrivata.addActionListener(_ -> {
             listGallerieCondivise.setEnabled(!chkPrivata.isSelected());

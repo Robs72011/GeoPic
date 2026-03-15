@@ -1625,7 +1625,16 @@ public class Controller {
 
     }
 
-    public void eliminazioneFotoGalleriaPrivata(Integer idFoto){
+    public void eliminazioneFotoGalleriaPrivata(ArrayList<Integer> idsFotoDaEliminare) {
+        if (idsFotoDaEliminare == null || idsFotoDaEliminare.isEmpty()) return;
+        for (Integer idFoto : idsFotoDaEliminare) {
+            if (idFoto != null) {
+                eliminazioneFotoGalleriaPrivata(idFoto);
+            }
+        }
+    }
+
+    public void eliminazioneFotoGalleriaPrivata(Integer idFoto) {
         //vado a prendere la foto da eliminare direttamente dalla galleria personale dell'utente
         Fotografia fotoDaEliminare = getFotografiaByID(getFotoGalleriaPersonale(), idFoto);
 
@@ -1640,7 +1649,7 @@ public class Controller {
         //rompo il legame galleria - foto in memoria
         galleriaPrivata.getFotoContenute().remove(fotoDaEliminare);
 
-        if(fotoDaEliminare.getFotoComponeVideo().size() <= 0){
+        if (fotoDaEliminare.getFotoComponeVideo().size() <= 0) {
             //imposto la data di eliminazione in memoria, per la questione video
             fotoDaEliminare.setDataDiEliminazione(LocalDate.now());
 

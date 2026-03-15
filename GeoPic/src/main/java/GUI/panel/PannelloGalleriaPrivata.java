@@ -3,7 +3,9 @@ package GUI.panel;
 import Controller.Controller;
 import GUI.dialog.DialogAggiungiFoto;
 import GUI.dialog.DialogAggiungiVideo;
+import GUI.dialog.DialogEliminaFoto;
 import Model.Fotografia;
+import Model.Luogo;
 import Model.Video;
 
 import javax.swing.*;
@@ -57,6 +59,10 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
         });
         popupAzioni.add(itemAggiungiFoto);
 
+        JMenuItem itemEliminaFoto = new JMenuItem("Elimina Foto");
+        itemEliminaFoto.addActionListener(_ -> apriDialogEliminaFoto());
+        popupAzioni.add(itemEliminaFoto);
+
         JMenuItem itemCreaVideo = new JMenuItem("Crea Video");
         itemCreaVideo.addActionListener(_ -> apriDialogCreaVideo());
         popupAzioni.add(itemCreaVideo);
@@ -64,23 +70,19 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
         popupAzioni.addSeparator();
 
         JMenuItem itemTop3 = new JMenuItem("Top 3 Luoghi");
-        itemTop3.addActionListener(_ ->
-                JOptionPane.showMessageDialog(this,
-                        "Funzionalità 'Top 3 Luoghi' da implementare!",
-                        "Classifica",
-                        JOptionPane.INFORMATION_MESSAGE));
+        itemTop3.addActionListener(_ -> mostraTop3Luoghi());
         popupAzioni.add(itemTop3);
 
         menuAzioni.addActionListener(_ -> popupAzioni.show(menuAzioni, 0, menuAzioni.getHeight()));
         menuAzioni.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        rightPanel.add(menuAzioni);
-
-        rightPanel.add(Box.createVerticalStrut(8));
         PannelloRicercaFoto pannelloRicerca = new PannelloRicercaFoto(richiesta ->
                 eseguiRicercaFoto(richiesta.getTipo(), richiesta.getQuery()));
         pannelloRicerca.setMaximumSize(new Dimension(380, 36));
         pannelloRicerca.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
         rightPanel.add(pannelloRicerca);
+        rightPanel.add(Box.createVerticalStrut(8));
+        rightPanel.add(menuAzioni);
 
         JPanel rightContainer = new JPanel(new BorderLayout());
         rightContainer.setOpaque(false);
@@ -98,6 +100,52 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
         if (onRefresh != null) {
             onRefresh.run();
         }
+    }
+
+    private void apriDialogEliminaFoto() {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        Frame owner = parentWindow instanceof Frame ? (Frame) parentWindow : null;
+
+        DialogEliminaFoto dialog = new DialogEliminaFoto(owner, controller);
+        dialog.setVisible(true);
+
+        if (onRefresh != null) {
+            onRefresh.run();
+        }
+    }
+
+    private void mostraTop3Luoghi() {
+        ArrayList<Luogo> topLuoghi = controller.getTop3Luoghi();
+
+        if (topLuoghi.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Nessun luogo disponibile per la classifica.",
+                    "Top 3 Luoghi",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("I 3 luoghi più fotografati:\n\n");
+
+        for (int i = 0; i < topLuoghi.size(); i++) {
+            Luogo luogo = topLuoghi.get(i);
+            sb.append(i + 1).append(". ");
+                    if(!luogo.getNomeMnemonico().isEmpty()) {
+                                sb.append(luogo.getNomeMnemonico() != null ? luogo.getNomeMnemonico() : "Sconosciuto")
+                                .append(" (Coordinate: ").append(luogo.getCoordinate()).append(")\n");
+                    }
+        }
+
+        JTextArea area = new JTextArea(sb.toString());
+        area.setEditable(false);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setPreferredSize(new Dimension(350, 150));
+
+        JOptionPane.showMessageDialog(this, scroll, "Top 3 Luoghi", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void eseguiRicercaFoto(String tipoRicerca, String query) {
