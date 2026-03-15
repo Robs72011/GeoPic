@@ -8,21 +8,15 @@ import Model.GalleriaCondivisa;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
 
-/**
- * Dialogo modale per l'inserimento di una nuova fotografia nel sistema.
- * Fornisce un form con campi per il dispositivo, le coordinate geografiche,
- * la visibilità e la gestione dei soggetti associati alla foto.
- */
 public class DialogAggiungiFoto extends DialogAggiungi {
 
     private JTextField txtDispositivo;
     private JCheckBox chkPrivata;
     private JList<GalleriaCondivisa> listGallerieCondivise;
-    
+
     private JComboBox<String> cbSegnoLat;
     private JFormattedTextField txtLatitudine;
     private JComboBox<String> cbSegnoLon;
@@ -31,99 +25,67 @@ public class DialogAggiungiFoto extends DialogAggiungi {
 
     private final PannelloAggiungiSoggetti pannelloSoggetti;
 
-    /**
-     * Costruisce il dialog box di inserimento foto.
-     * @param parentFrame Il frame padre che ha richiesto l'apertura.
-     * @param controller Il riferimento al controller per le operazioni di business logic e persistenza.
-     */
     public DialogAggiungiFoto(Frame parentFrame, Controller controller) {
         super(parentFrame, "Aggiungi Nuova Foto", controller);
-        ArrayList<String> nomiUtentiDisponibili = controller.getUsernamesInMemory();
+        configuraDimensioni(550, 700, 500, 650, true);
 
-        setSize(550, 700);
-        setMinimumSize(new Dimension(500, 650));
+        pannelloSoggetti = new PannelloAggiungiSoggetti(controller.getUsernamesInMemory());
 
-        JPanel mainPanel = creaMainPanel();
-
-        // Form base a griglia
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
-        buildSezioneDatiBaseELuogo(formPanel);
-        buildSezioneVisibilitaEGallerie(formPanel);
+        buildFormDatiBase(formPanel);
+        buildFormVisibilita(formPanel);
 
-        // Sezione Soggetti Dinamica (Ora estratta nella classe separata GestioneSoggettiPanel)
-        pannelloSoggetti = new PannelloAggiungiSoggetti(nomiUtentiDisponibili);
-
-        // Pannello superiore con Form Base + Spazio Vuoto
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(formPanel, BorderLayout.NORTH);
 
+        JPanel mainPanel = creaMainPanel();
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(pannelloSoggetti, BorderLayout.CENTER);
 
-        add(mainPanel, BorderLayout.CENTER);
-        add(creaPannelloBottoni(this::salvaFoto), BorderLayout.SOUTH);
+        montaContenutoConBottoniSalva(mainPanel, this::salvaFoto);
     }
 
-    private void buildSezioneDatiBaseELuogo(JPanel formPanel) {
-        // 1. Dispositivo
-        formPanel.add(new JLabel("Dispositivo:"));
+    private void buildFormDatiBase(JPanel form) {
+        form.add(new JLabel("Dispositivo:"));
         txtDispositivo = new JTextField();
-        formPanel.add(txtDispositivo);
+        form.add(txtDispositivo);
 
-        // 2. Luogo: Coordinate e Toponimo
-        formPanel.add(new JLabel("Latitudine (es. +41.90): *"));
+        form.add(new JLabel("Latitudine (es. +41.90): *"));
         cbSegnoLat = createSignComboBox();
         txtLatitudine = new JFormattedTextField();
-        formPanel.add(buildCoordinatePanel(cbSegnoLat, txtLatitudine, "##.##"));
+        form.add(buildCoordinatePanel(cbSegnoLat, txtLatitudine, "##.##"));
 
-        formPanel.add(new JLabel("Longitudine (es. +012.49): *"));
+        form.add(new JLabel("Longitudine (es. +012.49): *"));
         cbSegnoLon = createSignComboBox();
         txtLongitudine = new JFormattedTextField();
-        formPanel.add(buildCoordinatePanel(cbSegnoLon, txtLongitudine, "###.##"));
+        form.add(buildCoordinatePanel(cbSegnoLon, txtLongitudine, "###.##"));
 
-        formPanel.add(new JLabel("Nome Luogo (Toponimo):"));
+        form.add(new JLabel("Nome Luogo (Toponimo):"));
         txtToponimo = new JTextField();
-        formPanel.add(txtToponimo);
+        form.add(txtToponimo);
     }
 
-    private void buildSezioneVisibilitaEGallerie(JPanel formPanel) {
-        // 3. Visibilità
-        formPanel.add(new JLabel("Privata:"));
+    private void buildFormVisibilita(JPanel form) {
+        form.add(new JLabel("Privata:"));
         chkPrivata = new JCheckBox();
         chkPrivata.setSelected(true);
-        formPanel.add(chkPrivata);
+        form.add(chkPrivata);
 
-        // Pannello gallerie condivise
-        formPanel.add(new JLabel("Condividi in Gallerie (Ctrl+Click):"));
+        form.add(new JLabel("Condividi in Gallerie (Ctrl+Click):"));
         listGallerieCondivise = new JList<>();
-        ArrayList<GalleriaCondivisa> gallerieCondivise = controller.getGallerieCondiviseUtenteLoggato();
         DefaultListModel<GalleriaCondivisa> modelGallerie = new DefaultListModel<>();
-        for(GalleriaCondivisa g : gallerieCondivise) modelGallerie.addElement(g);
+        controller.getGallerieCondiviseUtenteLoggato().forEach(modelGallerie::addElement);
         listGallerieCondivise.setModel(modelGallerie);
         listGallerieCondivise.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        listGallerieCondivise.setEnabled(false); // Inizialmente è privata, quindi lista disabilitata
+        listGallerieCondivise.setEnabled(false);
 
-        listGallerieCondivise.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof GalleriaCondivisa) {
-                    setText(((GalleriaCondivisa) value).getNomeGalleria());
-                }
-                return this;
-            }
-        });
-        
         JScrollPane scrollGallerie = new JScrollPane(listGallerieCondivise);
         scrollGallerie.setPreferredSize(new Dimension(150, 60));
-        formPanel.add(scrollGallerie);
+        form.add(scrollGallerie);
 
         chkPrivata.addActionListener(_ -> {
-            boolean isPrivata = chkPrivata.isSelected();
-            listGallerieCondivise.setEnabled(!isPrivata);
-            if (isPrivata) {
-                listGallerieCondivise.clearSelection();
-            }
+            listGallerieCondivise.setEnabled(!chkPrivata.isSelected());
+            if (chkPrivata.isSelected()) listGallerieCondivise.clearSelection();
         });
     }
 
@@ -154,11 +116,9 @@ public class DialogAggiungiFoto extends DialogAggiungi {
     private void salvaFoto() {
         String dispositivo = txtDispositivo.getText().trim();
         boolean visibilita = !chkPrivata.isSelected();
-        List<GalleriaCondivisa> gallerieCondiviseSelezionate = visibilita
-                ? listGallerieCondivise.getSelectedValuesList()
-                : new ArrayList<>();
+        ArrayList<GalleriaCondivisa> gallerieCondiviseSelezionate = getGallerieCondiviseSelezionate(visibilita);
         
-        if (dispositivo.isEmpty()) {
+        if (isBlank(dispositivo)) {
             mostraErrore("Il campo 'Dispositivo' è obbligatorio.");
             return;
         }
@@ -173,49 +133,34 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         ArrayList<String> nomiSoggettiFinali = new ArrayList<>();
         ArrayList<String> categorieSoggettiFinali = new ArrayList<>();
 
-        for (PannelloAggiungiSoggetti.SoggettoRowPanel riga : pannelloSoggetti.getRigheSoggetti()) {
-            String categoria = riga.getCategoria();
-            if ("Nessuno".equals(categoria)) continue;
-
-            if ("Utente".equals(categoria)) {
-                String utenteSelezionato = riga.getUtenteSelezionato();
-                if (utenteSelezionato.isEmpty()) {
-                    mostraErrore("Hai scelto la categoria 'Utente' ma non hai selezionato nessuno dalla lista.");
-                    return;
-                }
-                nomiSoggettiFinali.add(utenteSelezionato);
-                categorieSoggettiFinali.add("Utente");
-            } else {
-                String nomeSoggetto = riga.getNome();
-                if (nomeSoggetto.isEmpty()) {
-                    mostraErrore("Hai selezionato una categoria ('" + categoria + "') ma non hai inserito il nome.");
-                    return;
-                }
-                nomiSoggettiFinali.add(nomeSoggetto);
-                categorieSoggettiFinali.add(categoria);
-            }
+        String erroreSoggetti = pannelloSoggetti.popolaSoggettiSelezionati(nomiSoggettiFinali, categorieSoggettiFinali);
+        if (erroreSoggetti != null) {
+            mostraErrore(erroreSoggetti);
+            return;
         }
 
-        try {
-            Fotografia nuovaFoto = controller.creazioneNuovaFoto(
-                dispositivo, 
-                visibilita, 
-                coordinate, 
-                toponimo, 
-                nomiSoggettiFinali, 
-                categorieSoggettiFinali
-            );
+        Fotografia nuovaFoto = controller.creazioneNuovaFotoConCondivisione(
+            dispositivo,
+            visibilita,
+            coordinate,
+            toponimo,
+            nomiSoggettiFinali,
+            categorieSoggettiFinali,
+            gallerieCondiviseSelezionate
+        );
 
-            if (nuovaFoto != null) {
-                controller.AggiungiFotoCondivisa(nuovaFoto, gallerieCondiviseSelezionate);
-                mostraMessaggio("Foto aggiunta con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-                dispose(); // Chiude la dialog e innesca il refresh
-            } else {
-                mostraErrore("Errore durante il salvataggio nel database.");
-            }
-        } catch (Exception e) {
-            mostraErrore("Eccezione Imprevista: " + e.getMessage());
+        if (nuovaFoto != null) {
+            mostraSuccessoEChiudi("Foto aggiunta con successo!");
+        } else {
+            mostraErrore("Errore durante il salvataggio nel database.");
         }
+    }
+
+    private ArrayList<GalleriaCondivisa> getGallerieCondiviseSelezionate(boolean visibilita) {
+        if (!visibilita) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(listGallerieCondivise.getSelectedValuesList());
     }
 
     private String checkAndBuildCoordinates() {
@@ -243,14 +188,16 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         String topoEsistente = controller.getToponimoEsistente(coordinate);
         
         if (topoEsistente != null && !toponimo.equals(topoEsistente)) {
-            int scelta = JOptionPane.showConfirmDialog(this,
+                boolean confermato = conferma(
                     "Attenzione: nel sistema esiste già un luogo con le coordinate " + coordinate + ".\n" +
                     "Il toponimo storico esistente è '" + topoEsistente + "'.\n" +
                     "Il toponimo nuovo ('" + toponimo + "') verrà ignorato.\n" +
                     "Vuoi procedere associando la foto al luogo storico esistente?",
-                    "Luogo Già Esistente", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            
-            if (scelta != JOptionPane.YES_OPTION) {
+                    "Luogo Già Esistente",
+                    JOptionPane.WARNING_MESSAGE
+                );
+
+                if (!confermato) {
                 return null; 
             }
         }

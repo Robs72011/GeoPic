@@ -1,5 +1,6 @@
-package GUI.visualizzatore;
+package GUI.panel;
 
+import Controller.Controller;
 import Model.Video;
 
 import javax.swing.*;
@@ -8,11 +9,11 @@ import java.util.List;
 
 /**
  * Pannello avanzato per la visualizzazione e la riproduzione di slideshow video.
- * Estende {@link VisualizzatoreFoto} aggiungendo componenti per la visualizzazione
+ * Estende {@link PannelloVisualizzatoreFoto} aggiungendo componenti per la visualizzazione
  * della descrizione associata al video e una "thumbnail strip" (colonna laterale)
  * che elenca le fotografie che compongono lo slideshow.
  */
-public class VisualizzatoreSlideshow extends VisualizzatoreFoto {
+public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto {
     private final JTextArea descriptionArea;
     private JScrollPane thumbnailStrip;
 
@@ -21,8 +22,8 @@ public class VisualizzatoreSlideshow extends VisualizzatoreFoto {
      * @param onBackClick Callback invocata al clic sul pulsante "Indietro" per
      * gestire il ritorno alla vista principale.
      */
-    public VisualizzatoreSlideshow(Runnable onBackClick) {
-        super(List.of(), onBackClick); // Inizializza con una lista vuota finché non viene scelto lo slideshow
+    public PannelloVisualizzatoreSlideshow(Runnable onBackClick, Controller controller) {
+        super(List.of(), onBackClick, controller); // Inizializza con una lista vuota finché non viene scelto lo slideshow
 
         descriptionArea = createDescriptionArea();
         

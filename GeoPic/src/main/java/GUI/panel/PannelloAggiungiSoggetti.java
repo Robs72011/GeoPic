@@ -61,8 +61,28 @@ public class PannelloAggiungiSoggetti extends JPanel {
         containerSoggetti.add(riga);
     }
 
-    public List<SoggettoRowPanel> getRigheSoggetti() {
-        return righeSoggetti;
+    /**
+     * Estrae i soggetti selezionati riempiendo le liste fornite.
+     * Ritorna null se va tutto bene, o un messaggio d'errore.
+     */
+    public String popolaSoggettiSelezionati(ArrayList<String> nomi, ArrayList<String> categorie) {
+        for (SoggettoRowPanel riga : righeSoggetti) {
+            String cat = riga.getCategoria();
+            if ("Nessuno".equals(cat)) continue;
+
+            if ("Utente".equals(cat)) {
+                String u = riga.getUtenteSelezionato();
+                if (u.isEmpty()) return "Hai scelto la categoria 'Utente' ma non hai selezionato nessuno dalla lista.";
+                nomi.add(u);
+                categorie.add("Utente");
+            } else {
+                String n = riga.getNome();
+                if (n.isEmpty()) return "Hai selezionato una categoria ('" + cat + "') ma non hai inserito il nome.";
+                nomi.add(n);
+                categorie.add(cat);
+            }
+        }
+        return null;
     }
 
     /**

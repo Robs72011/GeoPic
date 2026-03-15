@@ -16,13 +16,11 @@ public class DialogAggiungiUtente extends DialogAggiungi {
 
     public DialogAggiungiUtente(Frame parentFrame, Controller controller) {
         super(parentFrame, "Aggiungi Nuovo Utente", controller);
-        setSize(350, 200);
-        setResizable(false);
+        configuraDimensioni(350, 200, 350, 200, false);
 
         JPanel mainPanel = creaMainPanel();
         buildSezioneForm(mainPanel);
-        add(mainPanel, BorderLayout.CENTER);
-        add(creaPannelloBottoni(this::salvaUtente), BorderLayout.SOUTH);
+        montaContenutoConBottoniSalva(mainPanel, this::salvaUtente);
     }
 
     private void buildSezioneForm(JPanel mainPanel) {
@@ -44,11 +42,11 @@ public class DialogAggiungiUtente extends DialogAggiungi {
     }
 
     private void salvaUtente() {
-        String username = txtUsername.getText().trim();
-        String password = new String(txtPassword.getPassword()).trim();
+        String username = trimToEmpty(txtUsername.getText());
+        String password = trimToEmpty(new String(txtPassword.getPassword()));
         boolean isAdmin = chkAdmin.isSelected();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (isBlank(username) || isBlank(password)) {
             mostraErrore("Username e Password sono obbligatori.");
             return;
         }
@@ -56,8 +54,7 @@ public class DialogAggiungiUtente extends DialogAggiungi {
         try {
             boolean success = controller.creazioneNuovoUtente(username, password, isAdmin, false);
             if (success) {
-                mostraMessaggio("Utente aggiunto con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+                mostraSuccessoEChiudi("Utente aggiunto con successo!");
             } else {
                 mostraMessaggio("Errore durante la creazione dell'utente. Potrebbe già esistere uno username identico.", "Errore", JOptionPane.ERROR_MESSAGE);
             }

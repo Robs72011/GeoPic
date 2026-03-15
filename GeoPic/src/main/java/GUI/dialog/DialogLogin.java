@@ -14,9 +14,6 @@ public class DialogLogin extends JDialog {
     private final JTextField campoUtente = new JTextField(15);
     private final JPasswordField campoPassword = new JPasswordField(15);
     private int esitoAutenticazione = 0;
-    
-    private String utenteLoggato;
-    private String passwordLoggata;
 
     public DialogLogin(Controller controller) {
         setTitle("Login");
@@ -95,8 +92,6 @@ public class DialogLogin extends JDialog {
             int auth = controller.authentication(u, p);
             if (auth == 1 || auth == 2) {
                 esitoAutenticazione = auth;
-                utenteLoggato = u;
-                passwordLoggata = p;
                 JOptionPane.showMessageDialog(this, "Accesso effettuato con: " + u, "Accesso Effettuato", JOptionPane.INFORMATION_MESSAGE);
                 dispose(); // Chiude il dialog ed esce dal blocco
             } else {
@@ -120,11 +115,5 @@ public class DialogLogin extends JDialog {
         setVisible(true);
         return esitoAutenticazione;
     }
-
-    /** @return Il nome utente loggato con successo. */
-    public String getUtente() { return utenteLoggato; }
-
-    /** @return La password utilizzata per il login effettuato. */
-    public String getPassword() { return passwordLoggata; }
 }
 

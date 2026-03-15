@@ -1,11 +1,13 @@
 package GUI.contenitore;
 
+import GUI.frame.FinestraVisualizzatoreFoto;
 import GUI.panel.PannelloGalleria;
-import GUI.visualizzatore.VisualizzatoreFoto;
 import Controller.Controller;
 import Model.Fotografia;
 import Model.GalleriaCondivisa;
 
+import javax.swing.*;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -24,35 +26,51 @@ public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
 
     @Override
     public void refresh() {
-        removeAll();
+        beginRefresh();
 
-        ArrayList<Fotografia> foto = galleriaCondivisa.getFotoContenute();
-
-        VisualizzatoreFoto imageSelector = new VisualizzatoreFoto(foto, () -> cardLayout.show(this, GRID));
+        ArrayList<Fotografia> foto = new ArrayList<>(galleriaCondivisa.getFotoContenute());
 
         PannelloGalleria pannelloGalleria = new PannelloGalleria(
                 foto,
-                clickedIndex -> {
-                    cardLayout.show(this, DETAIL);
-                    imageSelector.mostraMetadati(clickedIndex);
-                },
+                clickedIndex -> apriFrameFoto(foto, clickedIndex),
                 Collections.emptyList(),
                 _ -> {
                     // Nessun video nei panel privati
                 },
                 controller,
-                this::refresh, // OnRefresh
+                this::refresh,
                 "Galleria Condivisa: " + galleriaCondivisa.getNomeGalleria(),
                 "ID: " + galleriaCondivisa.getIdGalleria(),
-                false // Non mostrare bottone 'Aggiungi foto'
+                true,
+                false,
+                PannelloGalleria.createAddPhotoToSharedGalleryAction(
+                    this,
+                    controller,
+                    galleriaCondivisa,
+                    this::refresh
+                )
         );
 
-        add(pannelloGalleria, GRID);
-        add(imageSelector, DETAIL);
+        add(pannelloGalleria, BorderLayout.CENTER);
 
-        cardLayout.show(this, GRID);
-        
-        revalidate();
-        repaint();
+        finalizeRefresh();
+    }
+
+    private void apriFrameFoto(ArrayList<Fotografia> foto, int clickedIndex) {
+        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (parent == null) {
+            return;
+        }
+
+        FinestraVisualizzatoreFoto dettaglio = new FinestraVisualizzatoreFoto(
+                controller,
+                parent,
+                new ArrayList<>(foto),
+                clickedIndex,
+                this::refresh
+        );
+        dettaglio.setLocationRelativeTo(parent);
+        dettaglio.setVisible(true);
+        parent.setVisible(false);
     }
 }

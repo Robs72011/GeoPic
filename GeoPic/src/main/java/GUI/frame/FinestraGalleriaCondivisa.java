@@ -6,18 +6,60 @@ import Model.GalleriaCondivisa;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- * Finestra dedicata alla visualizzazione di una singola galleria condivisa.
+ * Frame di dettaglio per una galleria condivisa.
+ * Restituisce il controllo al frame lista gallerie condivise.
  */
 public class FinestraGalleriaCondivisa extends JFrame {
 
-    public FinestraGalleriaCondivisa(Controller controller, GalleriaCondivisa galleriaCondivisa) {
-        setTitle("Galleria Condivisa - " + galleriaCondivisa.getNomeGalleria());
+    private final JFrame parentFrame;
+    private final ContenitoreGalleriaCondivisa contenitore;
+
+    public FinestraGalleriaCondivisa(Controller controller, JFrame parentFrame, GalleriaCondivisa galleriaCondivisa) {
+        this.parentFrame = parentFrame;
+
+        String nomeGalleria = galleriaCondivisa != null ? galleriaCondivisa.getNomeGalleria() : "Condivisa";
+        setTitle("Galleria Condivisa - " + nomeGalleria);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(FinestraUtente.FRAME_WIDTH, FinestraUtente.FRAME_HEIGHT);
         setMinimumSize(new Dimension(FinestraUtente.FRAME_MIN_WIDTH, FinestraUtente.FRAME_MIN_HEIGHT));
 
-        add(new ContenitoreGalleriaCondivisa(controller, galleriaCondivisa));
+        contenitore = new ContenitoreGalleriaCondivisa(controller, galleriaCondivisa);
+
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JButton btnIndietro = new JButton("< Indietro");
+        btnIndietro.addActionListener(_ -> tornaAlPadre());
+
+        JLabel titolo = new JLabel(" Torna alla selezione", SwingConstants.LEFT);
+        titolo.setFont(new Font("Arial", Font.BOLD, 15));
+
+        header.add(btnIndietro, BorderLayout.WEST);
+        header.add(titolo, BorderLayout.CENTER);
+
+        JPanel root = new JPanel(new BorderLayout());
+        root.add(header, BorderLayout.NORTH);
+        root.add(contenitore, BorderLayout.CENTER);
+        add(root);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                tornaAlPadre();
+            }
+        });
+    }
+
+    private void tornaAlPadre() {
+        contenitore.refresh();
+        if (parentFrame != null) {
+            parentFrame.repaint();
+            parentFrame.setVisible(true);
+        }
+        dispose();
     }
 }

@@ -33,6 +33,17 @@ public abstract class DialogAggiungi extends JDialog {
         return mainPanel;
     }
 
+    protected void configuraDimensioni(int width, int height, int minWidth, int minHeight, boolean resizable) {
+        setSize(width, height);
+        setMinimumSize(new Dimension(minWidth, minHeight));
+        setResizable(resizable);
+    }
+
+    protected void montaContenutoConBottoniSalva(JPanel mainPanel, Runnable onSalva) {
+        add(mainPanel, BorderLayout.CENTER);
+        add(creaPannelloBottoni(onSalva), BorderLayout.SOUTH);
+    }
+
     /**
      * Crea il pannello con i bottoni Salva e Annulla allineati a destra.
      * Il bottone Salva è impostato come default button (invocabile con Invio).
@@ -59,5 +70,33 @@ public abstract class DialogAggiungi extends JDialog {
 
     protected void mostraErrore(String messaggio) {
         mostraMessaggio(messaggio, "Errore", JOptionPane.ERROR_MESSAGE);
+    }
+
+    protected void mostraSuccessoEChiudi(String messaggio) {
+        mostraSuccessoEChiudi(messaggio, "Successo");
+    }
+
+    protected void mostraSuccessoEChiudi(String messaggio, String titolo) {
+        mostraMessaggio(messaggio, titolo, JOptionPane.INFORMATION_MESSAGE);
+        dispose();
+    }
+
+    protected boolean conferma(Object messaggio, String titolo, int tipoMessaggio) {
+        int scelta = JOptionPane.showConfirmDialog(
+                this,
+                messaggio,
+                titolo,
+                JOptionPane.YES_NO_OPTION,
+                tipoMessaggio
+        );
+        return scelta == JOptionPane.YES_OPTION;
+    }
+
+    protected String trimToEmpty(String valore) {
+        return valore == null ? "" : valore.trim();
+    }
+
+    protected boolean isBlank(String valore) {
+        return trimToEmpty(valore).isEmpty();
     }
 }
