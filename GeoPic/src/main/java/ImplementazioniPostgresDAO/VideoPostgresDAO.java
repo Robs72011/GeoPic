@@ -30,7 +30,7 @@ public class VideoPostgresDAO implements VideoDAO {
      */
     @Override
     public Integer insertVideo(String titoloVideo, String descrizione, int galleria) {
-        String statement = "INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES (?, ?, ?)";
+        String statement = "INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES (?, ?, ?) RETURNING IDVideo";
 
         try(PreparedStatement aggiuntaVideo = connection.prepareStatement(statement)){
 
@@ -38,14 +38,10 @@ public class VideoPostgresDAO implements VideoDAO {
             aggiuntaVideo.setString(2, descrizione);
             aggiuntaVideo.setInt(3, galleria);
 
-            aggiuntaVideo.executeUpdate();
-
-            try(ResultSet rs = aggiuntaVideo.getGeneratedKeys()){
+            try(ResultSet rs = aggiuntaVideo.executeQuery()){
                 if(rs.next()){
-                    return rs.getInt(1);
+                    return rs.getInt("IDVideo");
                 }
-            }catch (SQLException sqle){
-                sqle.printStackTrace();
             }
         }catch(SQLException sqle){
             sqle.printStackTrace();

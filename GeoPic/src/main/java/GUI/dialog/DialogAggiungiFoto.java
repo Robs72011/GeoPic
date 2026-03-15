@@ -126,8 +126,13 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         String coordinate = checkAndBuildCoordinates();
         if (coordinate == null) return; // Errore già gestito
 
-        String toponimo = valutaToponimo(coordinate);
-        if (toponimo == null) return;
+        String[] luogoRisolto = valutaLuogo(coordinate);
+        if (luogoRisolto == null) {
+            return;
+        }
+
+        String coordinateFinali = luogoRisolto[0];
+        String toponimoFinale = luogoRisolto[1];
 
         // Recuperiamo tutti i soggetti interrogando il nuovo pannello esterno
         ArrayList<String> nomiSoggettiFinali = new ArrayList<>();
@@ -142,8 +147,8 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         Fotografia nuovaFoto = controller.creazioneNuovaFotoConCondivisione(
             dispositivo,
             visibilita,
-            coordinate,
-            toponimo,
+            coordinateFinali,
+            toponimoFinale,
             nomiSoggettiFinali,
             categorieSoggettiFinali,
             gallerieCondiviseSelezionate
@@ -179,10 +184,27 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         return controller.normalizzaCoordinate(latSign, latVal, lonSign, lonVal);
     }
 
-    private String valutaToponimo(String coordinate) {
+    private String[] valutaLuogo(String coordinate) {
         String toponimo = txtToponimo.getText().trim();
         if (toponimo.isEmpty()) {
             toponimo = "Sconosciuto";
+        }
+
+        String coordinateStoriche = controller.getCoordinateEsistentiByToponimo(toponimo);
+        if (coordinateStoriche != null && !coordinateStoriche.equals(coordinate)) {
+            boolean confermato = conferma(
+                    "Attenzione: il toponimo '" + toponimo + "' esiste già con coordinate " + coordinateStoriche + ".\n" +
+                    "Le coordinate inserite (" + coordinate + ") verranno sostituite con quelle storiche.\n" +
+                    "Vuoi procedere?",
+                    "Toponimo Già Esistente",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (!confermato) {
+                return null;
+            }
+
+            return new String[]{coordinateStoriche, toponimo};
         }
 
         String topoEsistente = controller.getToponimoEsistente(coordinate);
@@ -198,9 +220,12 @@ public class DialogAggiungiFoto extends DialogAggiungi {
                 );
 
                 if (!confermato) {
-                return null; 
+                return null;
             }
+
+            return new String[]{coordinate, topoEsistente};
         }
-        return toponimo;
+
+        return new String[]{coordinate, toponimo};
     }
 }

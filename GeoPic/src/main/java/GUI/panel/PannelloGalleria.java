@@ -3,12 +3,15 @@ package GUI.panel;
 import GUI.utility.WrapLayout;
 import GUI.dialog.DialogAggiungiFotoGalleriaCondivisa;
 import GUI.dialog.DialogAggiungiFoto;
+import GUI.dialog.DialogAggiungiVideo;
 import Model.Fotografia;
 import Model.GalleriaCondivisa;
 import Model.Video;
+import Model.Soggetto;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
@@ -18,6 +21,7 @@ public class PannelloGalleria extends JPanel {
     private static final int IMAGE_SIZE = 160;
 
     private final Runnable onRefresh;
+    private final List<Fotografia> fotografieMostrate;
 
     /**
      * Costruisce il pannello principale della galleria, organizzando header,
@@ -64,6 +68,7 @@ public class PannelloGalleria extends JPanel {
                             boolean showSearchButtons,
                             Runnable onAddPhotoCustomAction) {
         this.onRefresh = onRefresh;
+                    this.fotografieMostrate = fotografie != null ? new ArrayList<>(fotografie) : List.of();
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -92,7 +97,7 @@ public class PannelloGalleria extends JPanel {
         }
 
         add(topPanel, BorderLayout.NORTH);
-        add(creaGalleriaImmagini(fotografie, onImageClick), BorderLayout.CENTER);
+        add(creaGalleriaImmagini(this.fotografieMostrate, onImageClick), BorderLayout.CENTER);
     }
 
     /**
@@ -127,61 +132,57 @@ public class PannelloGalleria extends JPanel {
 
         headerPanel.add(userInfoPanel, BorderLayout.WEST);
 
-        int buttonRows = 0;
-        if (showSearchButtons) {
-            buttonRows += 3;
-        }
+        JPanel rightPanel = new JPanel();
+        rightPanel.setOpaque(false);
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+
+        JButton menuAzioni = createStyledButton("Azioni", _ -> {});
+        JPopupMenu popupAzioni = new JPopupMenu();
+
         if (showAddPhotoButton) {
-            buttonRows += 1;
+            JMenuItem itemAggiungiFoto = new JMenuItem("Aggiungi Foto");
+            itemAggiungiFoto.addActionListener(_ -> {
+                if (onAddPhotoCustomAction != null) {
+                    onAddPhotoCustomAction.run();
+                } else {
+                    apriDialogAggiungiFoto(controller);
+                }
+            });
+            popupAzioni.add(itemAggiungiFoto);
+
+            JMenuItem itemCreaVideo = new JMenuItem("Crea Video");
+            itemCreaVideo.addActionListener(_ -> apriDialogCreaVideo(controller));
+            popupAzioni.add(itemCreaVideo);
+
+            popupAzioni.addSeparator();
         }
-        if (buttonRows == 0) {
-            buttonRows = 1;
-        }
 
-        JPanel buttonPanel = new JPanel(new GridLayout(buttonRows, 1, 0, 5));
-        buttonPanel.setOpaque(false);
+        JMenuItem itemTop3 = new JMenuItem("Top 3 Luoghi");
+        itemTop3.addActionListener(_ ->
+                JOptionPane.showMessageDialog(this,
+                        "Funzionalità 'Top 3 Luoghi' da implementare!",
+                        "Classifica",
+                        JOptionPane.INFORMATION_MESSAGE));
+        popupAzioni.add(itemTop3);
 
-        JButton addPhotoButton = createStyledButton("Aggiungi Foto", _ -> {
-            if (onAddPhotoCustomAction != null) {
-                onAddPhotoCustomAction.run();
-            } else {
-                apriDialogAggiungiFoto(controller);
-            }
-        });
-
-        JButton btnFotoStessoLuogo = createStyledButton("Foto per Luogo", _ -> 
-            JOptionPane.showMessageDialog(this,
-                    "Funzionalità 'Foto per Luogo' da implementare!",
-                    "Ricerca",
-                    JOptionPane.INFORMATION_MESSAGE));
-
-        JButton btnFotoStessoSoggetto = createStyledButton("Foto per Soggetto", _ -> 
-            JOptionPane.showMessageDialog(this,
-                    "Funzionalità 'Foto per Soggetto' da implementare!",
-                    "Ricerca",
-                    JOptionPane.INFORMATION_MESSAGE));
-
-        JButton btnTop3Luoghi = createStyledButton("Top 3 Luoghi", _ -> 
-            JOptionPane.showMessageDialog(this,
-                    "Funzionalità 'Top 3 Luoghi' da implementare!",
-                    "Classifica",
-                    JOptionPane.INFORMATION_MESSAGE));
+        menuAzioni.addActionListener(_ -> popupAzioni.show(menuAzioni, 0, menuAzioni.getHeight()));
+        menuAzioni.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        rightPanel.add(menuAzioni);
 
         if (showSearchButtons) {
-            buttonPanel.add(btnFotoStessoLuogo);
-            buttonPanel.add(btnFotoStessoSoggetto);
-            buttonPanel.add(btnTop3Luoghi);
-        }
-        if (showAddPhotoButton) {
-            buttonPanel.add(addPhotoButton);
+            rightPanel.add(Box.createVerticalStrut(8));
+            PannelloRicercaFoto pannelloRicerca = new PannelloRicercaFoto(richiesta ->
+                    eseguiRicercaFoto(richiesta.getTipo(), richiesta.getQuery()));
+            pannelloRicerca.setMaximumSize(new Dimension(380, 36));
+            pannelloRicerca.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            rightPanel.add(pannelloRicerca);
         }
 
-        // Contenitore per non stretchare a dismisura i bottoni nel BorderLayout.EAST
-        JPanel buttonContainer = new JPanel(new BorderLayout());
-        buttonContainer.setOpaque(false);
-        buttonContainer.add(buttonPanel, BorderLayout.NORTH);
+        JPanel rightContainer = new JPanel(new BorderLayout());
+        rightContainer.setOpaque(false);
+        rightContainer.add(rightPanel, BorderLayout.NORTH);
 
-        headerPanel.add(buttonContainer, BorderLayout.EAST);
+        headerPanel.add(rightContainer, BorderLayout.EAST);
         return headerPanel;
     }
 
@@ -210,6 +211,103 @@ public class PannelloGalleria extends JPanel {
         if (onRefresh != null) {
             onRefresh.run();
         }
+    }
+
+    private void apriDialogCreaVideo(Controller.Controller controller) {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        Frame owner = parentWindow instanceof Frame ? (Frame) parentWindow : null;
+
+        DialogAggiungiVideo dialog = new DialogAggiungiVideo(owner, controller);
+        dialog.setVisible(true);
+
+        if (onRefresh != null) {
+            onRefresh.run();
+        }
+    }
+
+    private void eseguiRicercaFoto(String tipoRicerca, String query) {
+        String filtro = query != null ? query.trim().toLowerCase() : "";
+        if (filtro.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Inserisci un testo da cercare.",
+                    "Ricerca",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        List<Fotografia> risultati = new ArrayList<>();
+
+        for (Fotografia foto : fotografieMostrate) {
+            if (foto == null) {
+                continue;
+            }
+
+            if (PannelloRicercaFoto.TIPO_LUOGO.equalsIgnoreCase(tipoRicerca)) {
+                if (foto.getLuogo() == null) {
+                    continue;
+                }
+                String nomeLuogo = foto.getLuogo().getNomeMnemonico() != null
+                        ? foto.getLuogo().getNomeMnemonico().toLowerCase()
+                        : "";
+                String coordinate = foto.getLuogo().getCoordinate() != null
+                        ? foto.getLuogo().getCoordinate().toLowerCase()
+                        : "";
+
+                if (nomeLuogo.contains(filtro) || coordinate.contains(filtro)) {
+                    risultati.add(foto);
+                }
+            } else {
+                if (foto.getSoggetti() == null || foto.getSoggetti().isEmpty()) {
+                    continue;
+                }
+
+                for (Soggetto soggetto : foto.getSoggetti()) {
+                    String nome = soggetto.getNomeSoggetto() != null
+                            ? soggetto.getNomeSoggetto().toLowerCase()
+                            : "";
+                    String categoria = soggetto.getCategoria() != null
+                            ? soggetto.getCategoria().toLowerCase()
+                            : "";
+                    if (nome.contains(filtro) || categoria.contains(filtro)) {
+                        risultati.add(foto);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (risultati.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Nessun risultato trovato per: " + query,
+                    "Ricerca",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Risultati trovati: ").append(risultati.size()).append("\n\n");
+
+        int max = Math.min(20, risultati.size());
+        for (int i = 0; i < max; i++) {
+            Fotografia foto = risultati.get(i);
+            sb.append("- ID ").append(foto.getIdFoto())
+                    .append(" | Dispositivo: ")
+                    .append(foto.getDispositivo() != null ? foto.getDispositivo() : "N/D")
+                    .append("\n");
+        }
+        if (risultati.size() > max) {
+            sb.append("\n...");
+        }
+
+        JTextArea area = new JTextArea(sb.toString());
+        area.setEditable(false);
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setPreferredSize(new Dimension(420, 260));
+
+        JOptionPane.showMessageDialog(this, scroll, "Risultati Ricerca", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static Runnable createAddPhotoToSharedGalleryAction(JComponent source,

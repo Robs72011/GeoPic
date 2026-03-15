@@ -883,6 +883,34 @@ public class Controller {
     }
 
     /**
+     * Verifica se un toponimo esiste già e ne restituisce le coordinate storiche.
+     *
+     * @param toponimo il nome del luogo da cercare
+     * @return le coordinate esistenti per quel toponimo, oppure null se non esiste
+     */
+    public String getCoordinateEsistentiByToponimo(String toponimo) {
+        if (toponimo == null) {
+            return null;
+        }
+
+        String topoNormalizzato = toponimo.trim();
+        if (topoNormalizzato.isEmpty()) {
+            return null;
+        }
+
+        for (Luogo luogo : luoghiInMemory) {
+            if (luogo == null || luogo.getNomeMnemonico() == null) {
+                continue;
+            }
+            if (luogo.getNomeMnemonico().equalsIgnoreCase(topoNormalizzato)) {
+                return luogo.getCoordinate();
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Registra un nuovo utente nel sistema e gli assegna automaticamente una galleria personale.
      * @param username   Il nome univoco scelto dall'utente.
      * @param password   La password per l'accesso.
@@ -926,9 +954,17 @@ public class Controller {
             return null;
         }
 
-        //Se il luogo non esiste, viene creato e inserito in memoria e nel DB
+        // Se il luogo non esiste per coordinate, proviamo a riutilizzare quello storico per toponimo.
         Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
-        if(luogo == null) {
+        if (luogo == null) {
+            String coordinateEsistenti = getCoordinateEsistentiByToponimo(toponimo);
+            if (coordinateEsistenti != null) {
+                luogo = getLuogoByCoordinate(luoghiInMemory, coordinateEsistenti);
+                coordinate = coordinateEsistenti;
+            }
+        }
+
+        if (luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
             luogo = new Luogo(coordinate, toponimo, new ArrayList<>());
             luoghiInMemory.add(luogo);
@@ -1337,14 +1373,18 @@ public class Controller {
      * @note Se l'inserimento nel database fallisce (ID restituito nullo), l'operazione viene interrotta
      * senza modificare lo stato della memoria.
      */
-    public void creazioneVideo(String titolo, String descrizione, Integer[] foto){
+    public boolean creazioneVideo(String titolo, String descrizione, Integer[] foto){
         GalleriaPrivata galPrivUtente = getGalleriaPersonale();
+        if (galPrivUtente == null || foto == null || foto.length == 0) {
+            return false;
+        }
+
         Integer newVideoId = videoPostgresDAO.insertVideo(titolo, descrizione,
                 galPrivUtente.getIdGalleria());
 
         if(newVideoId == null){
             System.out.println("Impossibile crare il video.");
-            return;
+            return false;
         }
 
         ArrayList<Fotografia> fotoCompongonoVideo = new ArrayList<>();
@@ -1364,6 +1404,7 @@ public class Controller {
         }
 
         galPrivUtente.addVideo(newVideo);
+        return true;
     }
 
     /**
