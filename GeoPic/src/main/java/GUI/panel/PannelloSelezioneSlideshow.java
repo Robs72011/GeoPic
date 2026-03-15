@@ -25,6 +25,7 @@ public class PannelloSelezioneSlideshow extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 15));
 
         JPanel container = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        container.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
 
         for (Video slideshow : slideshows) {
             JPanel card = creaCard(slideshow, onClick);

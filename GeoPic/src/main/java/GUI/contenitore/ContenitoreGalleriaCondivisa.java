@@ -2,6 +2,7 @@ package GUI.contenitore;
 
 import GUI.frame.FinestraVisualizzatoreFoto;
 import GUI.panel.PannelloGalleria;
+import GUI.panel.PannelloGalleriaCondivisa;
 import Controller.Controller;
 import Model.Fotografia;
 import Model.GalleriaCondivisa;
@@ -9,7 +10,6 @@ import Model.GalleriaCondivisa;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Contenitore per la navigazione interna di una galleria condivisa.
@@ -30,25 +30,12 @@ public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
 
         ArrayList<Fotografia> foto = new ArrayList<>(galleriaCondivisa.getFotoContenute());
 
-        PannelloGalleria pannelloGalleria = new PannelloGalleria(
+        PannelloGalleria pannelloGalleria = new PannelloGalleriaCondivisa(
                 foto,
                 clickedIndex -> apriFrameFoto(foto, clickedIndex),
-                Collections.emptyList(),
-                _ -> {
-                    // Nessun video nei panel privati
-                },
                 controller,
                 this::refresh,
-                "Galleria Condivisa: " + galleriaCondivisa.getNomeGalleria(),
-                "ID: " + galleriaCondivisa.getIdGalleria(),
-                true,
-                false,
-                PannelloGalleria.createAddPhotoToSharedGalleryAction(
-                    this,
-                    controller,
-                    galleriaCondivisa,
-                    this::refresh
-                )
+                galleriaCondivisa
         );
 
         add(pannelloGalleria, BorderLayout.CENTER);
@@ -56,21 +43,4 @@ public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
         finalizeRefresh();
     }
 
-    private void apriFrameFoto(ArrayList<Fotografia> foto, int clickedIndex) {
-        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (parent == null) {
-            return;
-        }
-
-        FinestraVisualizzatoreFoto dettaglio = new FinestraVisualizzatoreFoto(
-                controller,
-                parent,
-                new ArrayList<>(foto),
-                clickedIndex,
-                this::refresh
-        );
-        dettaglio.setLocationRelativeTo(parent);
-        dettaglio.setVisible(true);
-        parent.setVisible(false);
-    }
 }
