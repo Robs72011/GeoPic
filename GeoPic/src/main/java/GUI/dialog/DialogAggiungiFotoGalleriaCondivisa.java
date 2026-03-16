@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Dialog modale per aggiungere foto esistenti della galleria privata
@@ -66,12 +65,13 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         };
 
         for (Fotografia foto : fotoCandidabili) {
+            Object[] d = controller.formattaRigaTabellaFoto(foto);
             model.addRow(new Object[]{
                     Boolean.FALSE,
-                String.valueOf(foto.getIdFoto()),
-                foto.getDispositivo() != null ? foto.getDispositivo() : "N/D",
-                foto.getDataDiScatto() != null ? foto.getDataDiScatto().toString() : "N/D",
-                    foto.isVisibile() ? "Pubblica" : "Privata"
+                    d[0],
+                    d[1],
+                    d[2],
+                    d[3]
             });
         }
 
@@ -86,8 +86,8 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
     }
 
     private void salvaFotoSelezionate() {
-        List<Fotografia> fotoSelezionate = new ArrayList<>();
-        List<Fotografia> fotoPrivateSelezionate = new ArrayList<>();
+        ArrayList<Fotografia> fotoSelezionate = new ArrayList<>();
+        ArrayList<Fotografia> fotoPrivateSelezionate = new ArrayList<>();
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             Object selected = tableModel.getValueAt(i, 0);
@@ -108,13 +108,15 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         }
 
         if (!fotoPrivateSelezionate.isEmpty()) {
-            boolean confermato = conferma(
+            int scelta = JOptionPane.showConfirmDialog(
+                    this,
                     creaPannelloConfermaPrivatizzate(fotoPrivateSelezionate),
                     "Conferma Cambio Visibilita",
+                    JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
             );
 
-            if (!confermato) {
+            if (scelta != JOptionPane.YES_OPTION) {
                 return;
             }
         }
@@ -129,7 +131,7 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         mostraSuccessoEChiudi(messaggio);
     }
 
-    private JPanel creaPannelloConfermaPrivatizzate(List<Fotografia> fotoPrivateSelezionate) {
+    private JPanel creaPannelloConfermaPrivatizzate(ArrayList<Fotografia> fotoPrivateSelezionate) {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
 
         JLabel messaggio = new JLabel("Le seguenti foto sono private e verranno rese pubbliche se aggiunte:");
@@ -146,7 +148,7 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         return panel;
     }
 
-    private DefaultTableModel creaTableModelSoloLettura(List<Fotografia> foto) {
+    private DefaultTableModel creaTableModelSoloLettura(ArrayList<Fotografia> foto) {
         DefaultTableModel model = new DefaultTableModel(new Object[]{"ID", "Dispositivo", "Data Scatto", "Visibilità"}, 0) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -160,11 +162,12 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         };
 
         for (Fotografia f : foto) {
+            Object[] d = controller.formattaRigaTabellaFoto(f);
             model.addRow(new Object[]{
-                    String.valueOf(f.getIdFoto()),
-                    f.getDispositivo() != null ? f.getDispositivo() : "N/D",
-                    f.getDataDiScatto() != null ? f.getDataDiScatto().toString() : "N/D",
-                    f.isVisibile() ? "Pubblica" : "Privata"
+                    d[0],
+                    d[1],
+                    d[2],
+                    d[3]
             });
         }
 

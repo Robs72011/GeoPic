@@ -18,16 +18,10 @@ public class DialogAggiungiGalleriaCondivisa extends DialogAggiungi {
         super(parentFrame, "Nuova Galleria Condivisa", controller);
 
         DefaultListModel<String> modelPartecipanti = new DefaultListModel<>();
-        ArrayList<String> usernames = controller.getUsernamesInMemory();
-        String utenteLoggato = controller.getLoggedInUtente() != null
-                ? controller.getLoggedInUtente().getUsername()
-                : null;
+        ArrayList<String> usernames = controller.getUsernamesCandidabiliPerGalleria();
 
         for (String username : usernames) {
             if (username == null) {
-                continue;
-            }
-            if (utenteLoggato != null && utenteLoggato.equals(username)) {
                 continue;
             }
             modelPartecipanti.addElement(username);

@@ -6,7 +6,6 @@ import Model.Fotografia;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Dialog modale per la creazione di un nuovo video a partire da foto della galleria personale.
@@ -16,7 +15,7 @@ public class DialogAggiungiVideo extends DialogAggiungi {
     private final JTextField campoTitolo;
     private final JTextArea areaDescrizione;
     private final JList<String> listaFoto;
-    private final List<Integer> idFotoDisponibili;
+    private final ArrayList<Integer> idFotoDisponibili;
 
     public DialogAggiungiVideo(Frame parentFrame, Controller controller) {
         super(parentFrame, "Crea Nuovo Video", controller);
@@ -91,7 +90,7 @@ public class DialogAggiungiVideo extends DialogAggiungi {
         model.clear();
         idFotoDisponibili.clear();
 
-        List<Fotografia> fotoDisponibili = controller.getFotoGalleriaPersonale();
+        ArrayList<Fotografia> fotoDisponibili = controller.getFotoGalleriaPersonale();
         if (fotoDisponibili == null) {
             return;
         }
@@ -101,8 +100,7 @@ public class DialogAggiungiVideo extends DialogAggiungi {
                 continue;
             }
             idFotoDisponibili.add(foto.getIdFoto());
-            String dispositivo = foto.getDispositivo() != null ? foto.getDispositivo() : "N/D";
-            model.addElement("ID " + foto.getIdFoto() + " - " + dispositivo);
+            model.addElement(controller.formattaFotoPerLista(foto));
         }
     }
 

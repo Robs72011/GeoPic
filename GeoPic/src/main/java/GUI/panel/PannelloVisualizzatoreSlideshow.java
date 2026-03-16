@@ -7,7 +7,6 @@ import Model.Video;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Pannello avanzato per la visualizzazione e la riproduzione di slideshow video.
@@ -103,7 +102,7 @@ public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto 
      * @param fotografie Lista delle {@link Model.Fotografia} contenute nel video.
      * @return {@link JPanel} verticale contenente i metadati delle foto.
      */
-    private JPanel createThumbnailContent(List<Fotografia> fotografie) {
+    private JPanel createThumbnailContent(ArrayList<Fotografia> fotografie) {
         JPanel thumbPanel = new JPanel();
         thumbPanel.setLayout(new BoxLayout(thumbPanel, BoxLayout.Y_AXIS));
         thumbPanel.setPreferredSize(new Dimension(150, 0));
@@ -111,7 +110,7 @@ public class PannelloVisualizzatoreSlideshow extends PannelloVisualizzatoreFoto 
 
         if (fotografie != null) {
             for (Fotografia foto : new ArrayList<>(fotografie)) {
-                JLabel thumbLabel = new JLabel("<html><b>Foto ID:</b> " + foto.getIdFoto() + " <br><i>" + foto.getDataDiScatto() + "</i></html>");
+                JLabel thumbLabel = new JLabel(controller.formattaThumbnailVideoHtml(foto));
                 thumbLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 thumbPanel.add(thumbLabel);
             }

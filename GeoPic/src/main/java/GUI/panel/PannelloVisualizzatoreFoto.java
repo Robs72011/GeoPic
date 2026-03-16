@@ -2,7 +2,6 @@ package GUI.panel;
 
 import Controller.Controller;
 import Model.Fotografia;
-import Model.Soggetto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     protected final JPanel pannelloBottoni;
     private final JPanel pannelloSud;
     private final JButton btnPrivatizza;
-    private final Controller controller;
+    protected final Controller controller;
 
 
     /**
@@ -96,27 +95,23 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     }
 
     private boolean haFotografie() {
-        return !fotografie.isEmpty();
+        return fotografie.isEmpty();
     }
 
     private void naviga(int delta) {
-        if (!haFotografie()) {
+        if (haFotografie()) {
             return;
         }
         mostraMetadati((indiceCorrente + delta + fotografie.size()) % fotografie.size());
     }
 
     private void toggleVisibilitaFoto() {
-        if (!haFotografie()) {
+        if (haFotografie()) {
             return;
         }
 
         Fotografia fotoCorrente = fotografie.get(indiceCorrente);
         if (fotoCorrente == null || fotoCorrente.getIdFoto() == null) {
-            return;
-        }
-
-        if (!controller.utenteLoggatoPuoGestireVisibilitaFoto(fotoCorrente.getIdFoto())) {
             return;
         }
 
@@ -140,7 +135,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         if (!aggiornamentoOk) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Non e' stato possibile aggiornare la visibilita' della foto.",
+                    "Non è stato possibile aggiornare la visibilità della foto.\nL'operazione non è consentita o si è verificato un errore.",
                     "Operazione non completata",
                     JOptionPane.WARNING_MESSAGE
             );
@@ -151,25 +146,20 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     }
 
     private void aggiornaBottoneVisibilita(Fotografia foto) {
-        if (foto == null) {
-            btnPrivatizza.setText("\uD83D\uDD12 Gestione Visibilita");
-            btnPrivatizza.setEnabled(false);
+        if (foto == null || controller.getLoggedInUtente() == null) {
             btnPrivatizza.setVisible(false);
             return;
         }
 
-        boolean utentePuoGestire = foto.getIdFoto() != null
-            && controller.utenteLoggatoPuoGestireVisibilitaFoto(foto.getIdFoto());
-        btnPrivatizza.setVisible(utentePuoGestire);
-        btnPrivatizza.setEnabled(utentePuoGestire);
-        if (!utentePuoGestire) {
-            return;
-        }
+        boolean isOwner = controller.isUtenteLoggatoAutoreDi(foto);
+        btnPrivatizza.setVisible(isOwner);
 
-        if (foto.isVisibile()) {
-            btnPrivatizza.setText("\uD83D\uDD12 Rendi Privata");
-        } else {
-            btnPrivatizza.setText("\uD83D\uDD13 Rendi Pubblica");
+        if (isOwner) {
+            if (foto.isVisibile()) {
+                btnPrivatizza.setText("\uD83D\uDD12 Rendi Privata");
+            } else {
+                btnPrivatizza.setText("\uD83D\uDD13 Rendi Pubblica");
+            }
         }
     }
 
@@ -179,7 +169,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
      * @param index L'indice della fotografia nella lista {@code fotografie}.
      */
     public void mostraMetadati(int index) {
-        if (!haFotografie()) {
+        if (haFotografie()) {
             imageLabel.setText("Nessuna fotografia da mostrare.");
             return;
         }
@@ -192,47 +182,6 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         Fotografia foto = fotografie.get(indiceCorrente);
         aggiornaBottoneVisibilita(foto);
 
-        imageLabel.setText(costruisciHtmlMetadati(foto));
-    }
-
-    protected String costruisciHtmlMetadati(Fotografia foto) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html><body style='text-align: left; padding: 20px;'>");
-        sb.append("<h1>Dettagli Fotografia</h1>");
-        sb.append("<p><b>ID Foto:</b> ").append(foto.getIdFoto()).append("</p>");
-        sb.append("<p><b>Autore:</b> ").append(foto.getAutore().getUsername()).append("</p>");
-        sb.append("<p><b>Visibilità:</b> ").append(foto.isVisibile() ? "Pubblica" : "Privata").append("</p>");
-        sb.append("<p><b>Dispositivo:</b> ").append(foto.getDispositivo()).append("</p>");
-        sb.append("<p><b>Data Scatto:</b> ").append(foto.getDataDiScatto()).append("</p>");
-        sb.append("<hr>");
-
-        if (foto.getLuogo() != null) {
-            sb.append("<h2>Dettagli Luogo</h2>");
-            sb.append("<p><b>Nome Luogo:</b> ").append(foto.getLuogo().getNomeMnemonico()).append("</p>");
-            sb.append("<p><b>Coordinate:</b> ").append(foto.getLuogo().getCoordinate()).append("</p>");
-        } else {
-            sb.append("<p>Nessun luogo associato.</p>");
-        }
-        sb.append("<hr>");
-
-        sb.append("<h2>Soggetti</h2>");
-        if (foto.getSoggetti() != null && !foto.getSoggetti().isEmpty()) {
-            sb.append("<ul>");
-            for (Soggetto s : foto.getSoggetti()) {
-                sb.append("<li>").append(s.getNomeSoggetto());
-                if (s.getCategoria() != null && !s.getCategoria().isEmpty()) {
-                    sb.append(" (").append(s.getCategoria()).append(")");
-                }
-                sb.append("</li>");
-            }
-            sb.append("</ul>");
-        } else {
-            sb.append("<p>Nessun soggetto presente in questa foto.</p>");
-        }
-
-        sb.append("</body></html>");
-        return sb.toString();
+        imageLabel.setText(controller.formattaDettagliFotografiaHtml(foto));
     }
 }
-
-

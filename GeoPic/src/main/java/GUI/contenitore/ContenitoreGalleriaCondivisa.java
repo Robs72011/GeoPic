@@ -1,13 +1,11 @@
 package GUI.contenitore;
 
-import GUI.frame.FinestraVisualizzatoreFoto;
 import GUI.panel.PannelloGalleria;
 import GUI.panel.PannelloGalleriaCondivisa;
 import Controller.Controller;
 import Model.Fotografia;
 import Model.GalleriaCondivisa;
 
-import javax.swing.*;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 
@@ -28,7 +26,7 @@ public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
     public void refresh() {
         beginRefresh();
 
-        ArrayList<Fotografia> foto = new ArrayList<>(galleriaCondivisa.getFotoContenute());
+        ArrayList<Fotografia> foto = controller.getFotoDaGalleriaCondivisa(galleriaCondivisa);
 
         PannelloGalleria pannelloGalleria = new PannelloGalleriaCondivisa(
                 foto,

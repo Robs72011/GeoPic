@@ -2,10 +2,11 @@ package GUI.panel;
 
 import GUI.utility.CardFactory;
 import Model.Video;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /**
@@ -15,12 +16,15 @@ import java.util.function.Consumer;
  */
 public class PannelloSelezioneSlideshow extends JPanel {
 
+    private final Controller controller;
+
     /**
      * Crea un pannello carosello contenente le card per ogni slideshow presente nella lista.
      * @param slideshows La lista degli oggetti {@link Video} da visualizzare.
      * @param onClick Una callback che riceve il video selezionato per gestirne la riproduzione
      */
-    public PannelloSelezioneSlideshow(List<Video> slideshows, Consumer<Video> onClick) {
+    public PannelloSelezioneSlideshow(ArrayList<Video> slideshows, Consumer<Video> onClick, Controller controller) {
+        this.controller = controller;
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 15));
 
@@ -43,13 +47,13 @@ public class PannelloSelezioneSlideshow extends JPanel {
 
     /**
      * Crea e configura un singolo componente grafico (card) per uno slideshow.
-     * per gestire il clic dell'utente.
+     * Per gestire il clic dell'utente.
      * @param slideshow Il video associato alla card.
      * @param onClick La callback da eseguire al clic.
      * @return {@link JPanel} configurato come card interattiva.
      */
     private JPanel creaCard(Video slideshow, Consumer<Video> onClick) {
-        String titolo = slideshow.getTitolo() != null ? slideshow.getTitolo() : "Senza titolo";
+        String titolo = controller.formattaTitoloSlideshow(slideshow);
         String titleHtml = "<html><div style='text-align: center;'><b>" + titolo + "</b></div></html>";
         String footerText = "Video ID: " + slideshow.getIdVideo();
 
