@@ -1,6 +1,8 @@
 package GUI.frame;
 
 import GUI.dialog.DialogAggiungiUtente;
+import GUI.dialog.DialogLogin;
+import GUI.frame.FinestraUtente;
 import GUI.Main;
 
 import Controller.Controller;
@@ -69,7 +71,19 @@ public class FinestraAdmin extends JFrame {
 
         btnLogout.addActionListener(_ -> {
             dispose();
-            Main.main(new String[]{});
+            // Avvia il pannello di login
+            DialogLogin dialog = new DialogLogin(controller);
+            int authenticate = dialog.mostraDialogo();
+
+            // Gestisce la navigazione post-autenticazione
+            if(authenticate == 1) {
+                // Avvia l'interfaccia principale per l'utente standard
+                new FinestraUtente(controller);
+            }
+            else if(authenticate == 2){
+                // Avvia l'interfaccia di amministrazione
+                new FinestraAdmin(controller);
+            }
         });
 
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -81,32 +95,15 @@ public class FinestraAdmin extends JFrame {
 
     private void confermaEliminazione() {
         ArrayList<Integer> idSelezionati = new ArrayList<>();
-        Integer idAdminLoggato = controller.getLoggedInUtente() != null
-                ? controller.getLoggedInUtente().getIdUtente()
-                : null;
-        boolean adminSelezionato = false;
         DefaultTableModel anteprima = new DefaultTableModel(new String[]{"ID", "Username", "Admin"}, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
 
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             if (Boolean.TRUE.equals(tableModel.getValueAt(i, 0)) && tableModel.getValueAt(i, 1) instanceof Integer id) {
-                if (idAdminLoggato != null && idAdminLoggato.equals(id)) {
-                    adminSelezionato = true;
-                    continue;
-                }
                 idSelezionati.add(id);
                 anteprima.addRow(new Object[]{ tableModel.getValueAt(i, 1), tableModel.getValueAt(i, 2), tableModel.getValueAt(i, 3) });
             }
-        }
-
-        if (adminSelezionato) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Non puoi eliminare te stesso come amministratore. La tua selezione verrà ignorata.",
-                    "Operazione non consentita",
-                    JOptionPane.WARNING_MESSAGE
-            );
         }
 
         if (idSelezionati.isEmpty()) {

@@ -138,7 +138,7 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         String dispositivo = txtDispositivo.getText().trim();
         boolean visibilita = !chkPrivata.isSelected();
         ArrayList<GalleriaCondivisa> gallerieCondiviseSelezionate = getGallerieCondiviseSelezionate(visibilita);
-        
+
         if (isBlank(dispositivo)) {
             mostraErrore("Il campo 'Dispositivo' è obbligatorio.");
             return;
@@ -147,13 +147,10 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         String coordinate = checkAndBuildCoordinates();
         if (coordinate == null) return; // Errore già gestito
 
-        String[] luogoRisolto = valutaLuogo(coordinate);
-        if (luogoRisolto == null) {
-            return;
+        String toponimo = txtToponimo.getText().trim();
+        if (toponimo.isEmpty()) {
+            toponimo = "Sconosciuto";
         }
-
-        String coordinateFinali = luogoRisolto[0];
-        String toponimoFinale = luogoRisolto[1];
 
         // Recuperiamo tutti i soggetti interrogando il nuovo pannello esterno
         ArrayList<String> nomiSoggettiFinali = new ArrayList<>();
@@ -166,13 +163,13 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         }
 
         Fotografia nuovaFoto = controller.creazioneNuovaFotoConCondivisione(
-            dispositivo,
-            visibilita,
-            coordinateFinali,
-            toponimoFinale,
-            nomiSoggettiFinali,
-            categorieSoggettiFinali,
-            gallerieCondiviseSelezionate
+                dispositivo,
+                visibilita,
+                coordinate,
+                toponimo,
+                nomiSoggettiFinali,
+                categorieSoggettiFinali,
+                gallerieCondiviseSelezionate
         );
 
         if (nuovaFoto != null) {
@@ -205,48 +202,5 @@ public class DialogAggiungiFoto extends DialogAggiungi {
         return controller.normalizzaCoordinate(latSign, latVal, lonSign, lonVal);
     }
 
-    private String[] valutaLuogo(String coordinate) {
-        String toponimo = txtToponimo.getText().trim();
-        if (toponimo.isEmpty()) {
-            toponimo = "Sconosciuto";
-        }
 
-        String coordinateStoriche = controller.getCoordinateEsistentiByToponimo(toponimo);
-        if (coordinateStoriche != null && !coordinateStoriche.equals(coordinate)) {
-            boolean confermato = conferma(
-                    "Attenzione: il toponimo '" + toponimo + "' esiste già con coordinate " + coordinateStoriche + ".\n" +
-                    "Le coordinate inserite (" + coordinate + ") verranno sostituite con quelle storiche.\n" +
-                    "Vuoi procedere?",
-                    "Toponimo Già Esistente",
-                    JOptionPane.WARNING_MESSAGE
-            );
-
-            if (!confermato) {
-                return null;
-            }
-
-            return new String[]{coordinateStoriche, toponimo};
-        }
-
-        String topoEsistente = controller.getToponimoEsistente(coordinate);
-        
-        if (topoEsistente != null && !toponimo.equals(topoEsistente)) {
-                boolean confermato = conferma(
-                    "Attenzione: nel sistema esiste già un luogo con le coordinate " + coordinate + ".\n" +
-                    "Il toponimo storico esistente è '" + topoEsistente + "'.\n" +
-                    "Il toponimo nuovo ('" + toponimo + "') verrà ignorato.\n" +
-                    "Vuoi procedere associando la foto al luogo storico esistente?",
-                    "Luogo Già Esistente",
-                    JOptionPane.WARNING_MESSAGE
-                );
-
-                if (!confermato) {
-                return null;
-            }
-
-            return new String[]{coordinate, topoEsistente};
-        }
-
-        return new String[]{coordinate, toponimo};
-    }
 }

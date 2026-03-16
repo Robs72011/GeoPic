@@ -954,16 +954,18 @@ public class Controller {
             return null;
         }
 
-        // Se il luogo non esiste per coordinate, proviamo a riutilizzare quello storico per toponimo.
-        Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
-        if (luogo == null) {
-            String coordinateEsistenti = getCoordinateEsistentiByToponimo(toponimo);
-            if (coordinateEsistenti != null) {
-                luogo = getLuogoByCoordinate(luoghiInMemory, coordinateEsistenti);
-                coordinate = coordinateEsistenti;
+        // Logica "First-Come, First-Served" per la gestione automatica dei conflitti
+        String coordinateStoriche = getCoordinateEsistentiByToponimo(toponimo);
+        if (coordinateStoriche != null) {
+            coordinate = coordinateStoriche; // Usa le coordinate storiche, ignorando quelle fornite
+        } else {
+            String toponimoEsistente = getToponimoEsistente(coordinate);
+            if (toponimoEsistente != null) {
+                toponimo = toponimoEsistente; // Usa il toponimo storico, ignorando quello fornito
             }
         }
 
+        Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
         if (luogo == null) {
             luogoPostgresDAO.insertLuogo(coordinate, toponimo);
             luogo = new Luogo(coordinate, toponimo, new ArrayList<>());
@@ -1310,15 +1312,6 @@ public class Controller {
 
             foto.setVisibility(true);
         }
-    }
-
-    public boolean utenteLoggatoPuoGestireVisibilitaFoto(Integer fotoId) {
-        if (fotoId == null) {
-            return false;
-        }
-
-        Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
-        return utentePuoGestireVisibilitaFoto(foto);
     }
 
     public boolean aggiornaVisibilitaFotografia(Integer fotoId, boolean visibile) {

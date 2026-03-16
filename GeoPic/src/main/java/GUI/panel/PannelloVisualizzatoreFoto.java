@@ -116,10 +116,6 @@ public class PannelloVisualizzatoreFoto extends JPanel {
             return;
         }
 
-        if (!controller.utenteLoggatoPuoGestireVisibilitaFoto(fotoCorrente.getIdFoto())) {
-            return;
-        }
-
         boolean fotoPubblica = fotoCorrente.isVisibile();
 
         String messaggio = fotoPubblica
@@ -140,7 +136,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         if (!aggiornamentoOk) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Non e' stato possibile aggiornare la visibilita' della foto.",
+                    "Non è stato possibile aggiornare la visibilità della foto.\nL'operazione non è consentita o si è verificato un errore.",
                     "Operazione non completata",
                     JOptionPane.WARNING_MESSAGE
             );
@@ -151,25 +147,23 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     }
 
     private void aggiornaBottoneVisibilita(Fotografia foto) {
-        if (foto == null) {
-            btnPrivatizza.setText("\uD83D\uDD12 Gestione Visibilita");
-            btnPrivatizza.setEnabled(false);
+        if (foto == null || controller.getLoggedInUtente() == null) {
             btnPrivatizza.setVisible(false);
             return;
         }
 
-        boolean utentePuoGestire = foto.getIdFoto() != null
-            && controller.utenteLoggatoPuoGestireVisibilitaFoto(foto.getIdFoto());
-        btnPrivatizza.setVisible(utentePuoGestire);
-        btnPrivatizza.setEnabled(utentePuoGestire);
-        if (!utentePuoGestire) {
-            return;
-        }
+        // The button is only visible if the logged-in user is the author of the photo.
+        // This is a usability feature, not a business rule check.
+        // The controller is still the final authority.
+        boolean isOwner = controller.getLoggedInUtente().equals(foto.getAutore());
+        btnPrivatizza.setVisible(isOwner);
 
-        if (foto.isVisibile()) {
-            btnPrivatizza.setText("\uD83D\uDD12 Rendi Privata");
-        } else {
-            btnPrivatizza.setText("\uD83D\uDD13 Rendi Pubblica");
+        if (isOwner) {
+            if (foto.isVisibile()) {
+                btnPrivatizza.setText("\uD83D\uDD12 Rendi Privata");
+            } else {
+                btnPrivatizza.setText("\uD83D\uDD13 Rendi Pubblica");
+            }
         }
     }
 
