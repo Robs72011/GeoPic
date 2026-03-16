@@ -5,7 +5,6 @@ import GUI.dialog.DialogAggiungiFoto;
 import GUI.dialog.DialogAggiungiVideo;
 import GUI.dialog.DialogEliminaFoto;
 import Model.Fotografia;
-import Model.Luogo;
 import Model.Video;
 
 import javax.swing.*;
@@ -14,10 +13,13 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
+
 /**
  * Implementazione concreta del pannello galleria per la galleria personale.
  */
 public class PannelloGalleriaPrivata extends PannelloGalleria {
+
+    private final String TIPO_LUOGO = "Luogo";
 
     public PannelloGalleriaPrivata(ArrayList<Fotografia> fotografie,
                                    IntConsumer onImageClick,
@@ -75,8 +77,8 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
 
         menuAzioni.addActionListener(_ -> popupAzioni.show(menuAzioni, 0, menuAzioni.getHeight()));
         menuAzioni.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        PannelloRicercaFoto pannelloRicerca = new PannelloRicercaFoto(richiesta ->
-                eseguiRicercaFoto(richiesta.tipo(), richiesta.query()));
+
+        JPanel pannelloRicerca = creaPannelloRicerca();
         pannelloRicerca.setMaximumSize(new Dimension(380, 36));
         pannelloRicerca.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
@@ -88,6 +90,34 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
         rightContainer.setOpaque(false);
         rightContainer.add(rightPanel, BorderLayout.NORTH);
         return rightContainer;
+    }
+
+    private JPanel creaPannelloRicerca() {
+        JPanel pannelloRicerca = new JPanel(new BorderLayout(8, 0));
+        pannelloRicerca.setOpaque(false);
+
+        String TIPO_SOGGETTO = "Soggetto";
+        JComboBox<String> comboTipoRicerca = new JComboBox<>(new String[]{TIPO_LUOGO, TIPO_SOGGETTO});
+        JTextField campoRicerca = new JTextField(18);
+        JButton btnCerca = new JButton("Cerca");
+
+        JPanel inputPanel = new JPanel(new BorderLayout(6, 0));
+        inputPanel.setOpaque(false);
+        inputPanel.add(comboTipoRicerca, BorderLayout.WEST);
+        inputPanel.add(campoRicerca, BorderLayout.CENTER);
+
+        Runnable azioneRicerca = () -> eseguiRicercaFoto(
+                (String) comboTipoRicerca.getSelectedItem(),
+                campoRicerca.getText()
+        );
+
+        btnCerca.addActionListener(_ -> azioneRicerca.run());
+        campoRicerca.addActionListener(_ -> azioneRicerca.run());
+
+        pannelloRicerca.add(inputPanel, BorderLayout.CENTER);
+        pannelloRicerca.add(btnCerca, BorderLayout.EAST);
+
+        return pannelloRicerca;
     }
 
     private void apriDialogCreaVideo() {
@@ -115,9 +145,9 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
     }
 
     private void mostraTop3Luoghi() {
-        ArrayList<Luogo> topLuoghi = controller.getTop3Luoghi();
+        String testoTop3 = controller.formattaTop3LuoghiTestuale();
 
-        if (topLuoghi.isEmpty()) {
+        if (testoTop3 == null) {
             JOptionPane.showMessageDialog(this,
                     "Nessun luogo disponibile per la classifica.",
                     "Top 3 Luoghi",
@@ -125,19 +155,7 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("I 3 luoghi più fotografati:\n\n");
-
-        for (int i = 0; i < topLuoghi.size(); i++) {
-            Luogo luogo = topLuoghi.get(i);
-            sb.append(i + 1).append(". ");
-                    if(!luogo.getNomeMnemonico().isEmpty()) {
-                                sb.append(luogo.getNomeMnemonico() != null ? luogo.getNomeMnemonico() : "Sconosciuto")
-                                .append(" (Coordinate: ").append(luogo.getCoordinate()).append(")\n");
-                    }
-        }
-
-        JTextArea area = new JTextArea(sb.toString());
+        JTextArea area = new JTextArea(testoTop3);
         area.setEditable(false);
         area.setLineWrap(true);
         area.setWrapStyleWord(true);
@@ -159,7 +177,7 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
         }
 
         ArrayList<Fotografia> risultati;
-        if (PannelloRicercaFoto.TIPO_LUOGO.equalsIgnoreCase(tipoRicerca)) {
+        if (TIPO_LUOGO.equalsIgnoreCase(tipoRicerca)) {
             risultati = controller.ricercaFotoPersonalePerLuogo(filtro);
         } else {
             risultati = controller.ricercaFotoPersonalePerSoggetto(filtro);
@@ -173,22 +191,9 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Risultati trovati: ").append(risultati.size()).append("\n\n");
-
-        int max = Math.min(20, risultati.size());
-        for (int i = 0; i < max; i++) {
-            Fotografia foto = risultati.get(i);
-            sb.append("- ID ").append(foto.getIdFoto())
-                    .append(" | Dispositivo: ")
-                    .append(foto.getDispositivo() != null ? foto.getDispositivo() : "N/D")
-                    .append("\n");
-        }
-        if (risultati.size() > max) {
-            sb.append("\n...");
-        }
-
-        JTextArea area = new JTextArea(sb.toString());
+        // Deleghiamo la formattazione al Controller nel rispetto del pattern BCE
+        String testoRisultati = controller.formattaRisultatiRicercaTestuale(risultati);
+        JTextArea area = new JTextArea(testoRisultati);
         area.setEditable(false);
         area.setLineWrap(true);
         area.setWrapStyleWord(true);

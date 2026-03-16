@@ -1,29 +1,24 @@
 import Controller.Controller;
-import DAO.UtenteDAO;
-import ImplementazioniPostgresDAO.UtentePostgresDAO;
-import Model.Fotografia;
-import Model.Utente;
+import GUI.dialog.DialogLogin;
+import GUI.frame.FinestraAdmin;
+import GUI.frame.FinestraUtente;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Scanner;
-
-import static java.lang.Thread.sleep;
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);  // Create a Scanner object
+        SwingUtilities.invokeLater(() -> {
+            Controller controller = new Controller();
+            controller.loadInMemory();
 
-        System.out.print("Enter username: ");
-        String username = scanner.nextLine();  // Read user input
+            DialogLogin dialog = new DialogLogin(controller);
+            int authenticate = dialog.mostraDialogo();
 
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();  // Read user input
-
-        Controller controller = new Controller();
-
-        controller.loadInMemory();
-
-        System.out.println(controller.authentication(username, password));
+            if (authenticate == 1) {
+                new FinestraUtente(controller);
+            } else if (authenticate == 2) {
+                new FinestraAdmin(controller);
+            }
+        });
     }
 }

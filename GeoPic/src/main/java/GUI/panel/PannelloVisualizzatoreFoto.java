@@ -2,7 +2,6 @@ package GUI.panel;
 
 import Controller.Controller;
 import Model.Fotografia;
-import Model.Soggetto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     protected final JPanel pannelloBottoni;
     private final JPanel pannelloSud;
     private final JButton btnPrivatizza;
-    private final Controller controller;
+    protected final Controller controller;
 
 
     /**
@@ -152,10 +151,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
             return;
         }
 
-        // The button is only visible if the logged-in user is the author of the photo.
-        // This is a usability feature, not a business rule check.
-        // The controller is still the final authority.
-        boolean isOwner = controller.getLoggedInUtente().equals(foto.getAutore());
+        boolean isOwner = controller.isUtenteLoggatoAutoreDi(foto);
         btnPrivatizza.setVisible(isOwner);
 
         if (isOwner) {
@@ -186,47 +182,6 @@ public class PannelloVisualizzatoreFoto extends JPanel {
         Fotografia foto = fotografie.get(indiceCorrente);
         aggiornaBottoneVisibilita(foto);
 
-        imageLabel.setText(costruisciHtmlMetadati(foto));
-    }
-
-    protected String costruisciHtmlMetadati(Fotografia foto) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html><body style='text-align: left; padding: 20px;'>");
-        sb.append("<h1>Dettagli Fotografia</h1>");
-        sb.append("<p><b>ID Foto:</b> ").append(foto.getIdFoto()).append("</p>");
-        sb.append("<p><b>Autore:</b> ").append(foto.getAutore().getUsername()).append("</p>");
-        sb.append("<p><b>Visibilità:</b> ").append(foto.isVisibile() ? "Pubblica" : "Privata").append("</p>");
-        sb.append("<p><b>Dispositivo:</b> ").append(foto.getDispositivo()).append("</p>");
-        sb.append("<p><b>Data Scatto:</b> ").append(foto.getDataDiScatto()).append("</p>");
-        sb.append("<hr>");
-
-        if (foto.getLuogo() != null) {
-            sb.append("<h2>Dettagli Luogo</h2>");
-            sb.append("<p><b>Nome Luogo:</b> ").append(foto.getLuogo().getNomeMnemonico()).append("</p>");
-            sb.append("<p><b>Coordinate:</b> ").append(foto.getLuogo().getCoordinate()).append("</p>");
-        } else {
-            sb.append("<p>Nessun luogo associato.</p>");
-        }
-        sb.append("<hr>");
-
-        sb.append("<h2>Soggetti</h2>");
-        if (foto.getSoggetti() != null && !foto.getSoggetti().isEmpty()) {
-            sb.append("<ul>");
-            for (Soggetto s : foto.getSoggetti()) {
-                sb.append("<li>").append(s.getNomeSoggetto());
-                if (s.getCategoria() != null && !s.getCategoria().isEmpty()) {
-                    sb.append(" (").append(s.getCategoria()).append(")");
-                }
-                sb.append("</li>");
-            }
-            sb.append("</ul>");
-        } else {
-            sb.append("<p>Nessun soggetto presente in questa foto.</p>");
-        }
-
-        sb.append("</body></html>");
-        return sb.toString();
+        imageLabel.setText(controller.formattaDettagliFotografiaHtml(foto));
     }
 }
-
-

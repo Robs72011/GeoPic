@@ -129,7 +129,7 @@ public class FinestraAdmin extends JFrame {
         ArrayList<Utente> utenti = controller.getUtentiInMemory();
         if (utenti != null) {
             for (Utente u : utenti) {
-                tableModel.addRow(new Object[]{ Boolean.FALSE, u.getIdUtente(), u.getUsername(), u.isAdmin() ? "Sì" : "No", u.isSoggetto() ? "Sì" : "No" });
+                tableModel.addRow(controller.formattaRigaTabellaUtente(u));
             }
         }
     }

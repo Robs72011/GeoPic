@@ -37,9 +37,8 @@ public abstract class PannelloGalleria extends JPanel {
         String headerTitle = customTitle;
         String headerSubtitle = customSubtitle;
         if (headerTitle == null || headerSubtitle == null) {
-            Model.Utente utenteCorrente = controller.getLoggedInUtente();
-            String username = utenteCorrente != null ? utenteCorrente.getUsername() : "Sconosciuto";
-            String idUtente = utenteCorrente != null ? String.valueOf(utenteCorrente.getIdUtente()) : "N/D";
+            String username = controller.getUsernameUtenteLoggato();
+            String idUtente = controller.getIdUtenteLoggatoTestuale();
 
             headerTitle = "Galleria Personale di " + username;
             headerSubtitle = "ID: " + idUtente;
@@ -50,7 +49,7 @@ public abstract class PannelloGalleria extends JPanel {
         topPanel.add(creaHeader(headerTitle, headerSubtitle), BorderLayout.NORTH);
 
         if (slideshowList != null && !slideshowList.isEmpty()) {
-            PannelloSelezioneSlideshow carousel = new PannelloSelezioneSlideshow(slideshowList, onSlideshowClick);
+            PannelloSelezioneSlideshow carousel = new PannelloSelezioneSlideshow(slideshowList, onSlideshowClick, controller);
             topPanel.add(carousel, BorderLayout.SOUTH);
         }
 
@@ -138,7 +137,7 @@ public abstract class PannelloGalleria extends JPanel {
      * @return {@link JButton} formattato per la visualizzazione nella griglia.
      */
     private JButton creaImmagine(Fotografia Foto) {
-        JButton button = new JButton("<html><div style='text-align: center;'><b>ID Foto: " + Foto.getIdFoto() + "</b><br/>" + "Dispositivo:<br/>" + Foto.getDispositivo() + "</div></html>");
+        JButton button = new JButton(controller.formattaDescrizioneImmagineHtml(Foto));
         button.setPreferredSize(new Dimension(IMAGE_SIZE, IMAGE_SIZE));
         button.setBackground(new Color(240, 240, 240));
         button.setBorder(BorderFactory.createLineBorder(Color.GRAY));

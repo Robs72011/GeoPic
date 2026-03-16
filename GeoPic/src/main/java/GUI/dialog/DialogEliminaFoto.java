@@ -6,7 +6,6 @@ import Model.Fotografia;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DialogEliminaFoto extends JDialog {
     private final Controller controller;
@@ -26,7 +25,7 @@ public class DialogEliminaFoto extends JDialog {
 
         DefaultListModel<FotografiaListItem> listModel = new DefaultListModel<>();
         for (Fotografia foto : controller.getFotoGalleriaPersonale()) {
-            listModel.addElement(new FotografiaListItem(foto));
+            listModel.addElement(new FotografiaListItem(foto, controller.formattaFotoPerEliminazione(foto)));
         }
 
         listaFoto = new JList<>(listModel);
@@ -57,7 +56,7 @@ public class DialogEliminaFoto extends JDialog {
     }
 
     private void eliminaFotoSelezionate() {
-        List<FotografiaListItem> selezionate = listaFoto.getSelectedValuesList();
+        ArrayList<FotografiaListItem> selezionate = new ArrayList<>(listaFoto.getSelectedValuesList());
         if (selezionate.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nessuna foto selezionata.", "Attenzione", JOptionPane.WARNING_MESSAGE);
             return;
@@ -72,10 +71,10 @@ public class DialogEliminaFoto extends JDialog {
         }
     }
 
-    private record FotografiaListItem(Fotografia foto) {
+    private record FotografiaListItem(Fotografia foto, String testoFormattato) {
         @Override
         public String toString() {
-            return "ID: " + foto.getIdFoto() + " | Dispositivo: " + (foto.getDispositivo() != null ? foto.getDispositivo() : "N/D") + " (" + foto.getDataDiScatto() + ")";
+            return testoFormattato;
         }
     }
 }

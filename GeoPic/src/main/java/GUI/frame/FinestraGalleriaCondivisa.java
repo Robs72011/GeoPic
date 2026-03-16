@@ -21,7 +21,7 @@ public class FinestraGalleriaCondivisa extends JFrame {
     public FinestraGalleriaCondivisa(Controller controller, JFrame parentFrame, GalleriaCondivisa galleriaCondivisa) {
         this.parentFrame = parentFrame;
 
-        String nomeGalleria = galleriaCondivisa != null ? galleriaCondivisa.getNomeGalleria() : "Condivisa";
+        String nomeGalleria = controller.getNomeSempliceGalleriaCondivisa(galleriaCondivisa);
         setTitle("Galleria Condivisa - " + nomeGalleria);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(FinestraUtente.FRAME_WIDTH, FinestraUtente.FRAME_HEIGHT);

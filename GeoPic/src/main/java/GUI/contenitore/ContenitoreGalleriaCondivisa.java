@@ -26,7 +26,7 @@ public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
     public void refresh() {
         beginRefresh();
 
-        ArrayList<Fotografia> foto = new ArrayList<>(galleriaCondivisa.getFotoContenute());
+        ArrayList<Fotografia> foto = controller.getFotoDaGalleriaCondivisa(galleriaCondivisa);
 
         PannelloGalleria pannelloGalleria = new PannelloGalleriaCondivisa(
                 foto,

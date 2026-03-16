@@ -5,14 +5,11 @@ import GUI.dialog.DialogAggiungiGalleriaCondivisa;
 import GUI.utility.CardFactory;
 import GUI.utility.WrapLayout;
 import Model.GalleriaCondivisa;
-import Model.Utente;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Tab che visualizza le gallerie condivise dell'utente loggato tramite card a griglia.
@@ -45,7 +42,7 @@ public class PannelloSelezioneGallerieCondivise extends JPanel {
 
         JPanel gridPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
 
-        List<GalleriaCondivisa> gallerieCondivise = controller.getGallerieCondiviseUtenteLoggato();
+        ArrayList<GalleriaCondivisa> gallerieCondivise = controller.getGallerieCondiviseUtenteLoggato();
         for (GalleriaCondivisa galleria : gallerieCondivise) {
             gridPanel.add(createSharedGalleryCard(galleria));
         }
@@ -66,7 +63,7 @@ public class PannelloSelezioneGallerieCondivise extends JPanel {
     }
 
     private JPanel createSharedGalleryCard(GalleriaCondivisa galleriaCondivisa) {
-        String partecipantiText = formatPartecipanti(galleriaCondivisa.getPartecipanti());
+        String partecipantiText = controller.formattaPartecipantiGalleria(galleriaCondivisa);
 
         String titleHtml = "<html><div style='text-align: center;'>"
             + "<b>" + escapeHtml(galleriaCondivisa.getNomeGalleria()) + "</b>"
@@ -95,16 +92,6 @@ public class PannelloSelezioneGallerieCondivise extends JPanel {
                 onGalleriaSelected.accept(galleriaCondivisa);
             }
         );
-    }
-
-    private String formatPartecipanti(ArrayList<Utente> partecipanti) {
-        if (partecipanti == null || partecipanti.isEmpty()) {
-            return "Nessun partecipante";
-        }
-
-        return partecipanti.stream()
-                .map(Utente::getUsername)
-                .collect(Collectors.joining(", "));
     }
 
     private String escapeHtml(String text) {

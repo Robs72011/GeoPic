@@ -1475,6 +1475,32 @@ public class Controller {
     }
 
     /**
+     * Formatta i risultati della ricerca per la visualizzazione testuale nel Boundary.
+     * Applica le regole di business per la presentazione, come il limite massimo di risultati mostrati.
+     * @param risultati Lista di fotografie da formattare
+     * @return Stringa formattata pronta per la GUI
+     */
+    public String formattaRisultatiRicercaTestuale(ArrayList<Fotografia> risultati) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Risultati trovati: ").append(risultati.size()).append("\n\n");
+
+        int max = Math.min(20, risultati.size());
+        for (int i = 0; i < max; i++) {
+            Fotografia foto = risultati.get(i);
+            sb.append("- ID ").append(foto.getIdFoto())
+                    .append(" | Dispositivo: ")
+                    .append(foto.getDispositivo() != null ? foto.getDispositivo() : "N/D")
+                    .append("\n");
+        }
+
+        if (risultati.size() > max) {
+            sb.append("\n...");
+        }
+        return sb.toString();
+    }
+
+
+    /**
      * Identifica i tre luoghi più ricorrenti nelle fotografie salvate nel sistema.
      * Vengono filtrate le foto che non hanno un luogo associato.
      * @return Un {@link ArrayList} di {@link Luogo} contenente i primi 3 luoghi per numero di scatti,
@@ -1493,6 +1519,174 @@ public class Controller {
                 .sorted(java.util.Comparator.comparing(conteggi::get).reversed()) // Ordiniamo per popolarità
                 .limit(3) // Prendiamo il podio
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Formatta i tre luoghi più ricorrenti per la visualizzazione testuale nel Boundary.
+     * @return Stringa formattata contenente la classifica, oppure null se non vi sono luoghi da mostrare.
+     */
+    public String formattaTop3LuoghiTestuale() {
+        ArrayList<Luogo> topLuoghi = getTop3Luoghi();
+
+        if (topLuoghi.isEmpty()) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("I 3 luoghi più fotografati:\n\n");
+
+        for (int i = 0; i < topLuoghi.size(); i++) {
+            Luogo luogo = topLuoghi.get(i);
+            String nomeMnemonico = luogo.getNomeMnemonico();
+
+            sb.append(i + 1).append(". ");
+
+            if (nomeMnemonico != null && !nomeMnemonico.isEmpty()) {
+                sb.append(nomeMnemonico);
+            } else {
+                sb.append("Sconosciuto");
+            }
+
+            sb.append(" (Coordinate: ").append(luogo.getCoordinate()).append(")\n");
+        }
+        return sb.toString();
+    }
+
+    // --- METODI DI FORMATTAZIONE E BUSINESS LOGIC PER LA VIEW (BCE PATTERN) ---
+
+    public String formattaDettagliFotografiaHtml(Fotografia foto) {
+        if (foto == null) return "Nessuna fotografia da mostrare.";
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><body style='text-align: left; padding: 20px;'>");
+        sb.append("<h1>Dettagli Fotografia</h1>");
+        sb.append("<p><b>ID Foto:</b> ").append(foto.getIdFoto()).append("</p>");
+        sb.append("<p><b>Autore:</b> ").append(foto.getAutore() != null ? foto.getAutore().getUsername() : "Sconosciuto").append("</p>");
+        sb.append("<p><b>Visibilità:</b> ").append(foto.isVisibile() ? "Pubblica" : "Privata").append("</p>");
+        sb.append("<p><b>Dispositivo:</b> ").append(foto.getDispositivo() != null ? foto.getDispositivo() : "N/D").append("</p>");
+        sb.append("<p><b>Data Scatto:</b> ").append(foto.getDataDiScatto()).append("</p>");
+        sb.append("<hr>");
+
+        if (foto.getLuogo() != null) {
+            sb.append("<h2>Dettagli Luogo</h2>");
+            sb.append("<p><b>Nome Luogo:</b> ").append(foto.getLuogo().getNomeMnemonico()).append("</p>");
+            sb.append("<p><b>Coordinate:</b> ").append(foto.getLuogo().getCoordinate()).append("</p>");
+        } else {
+            sb.append("<p>Nessun luogo associato.</p>");
+        }
+        sb.append("<hr>");
+
+        sb.append("<h2>Soggetti</h2>");
+        if (foto.getSoggetti() != null && !foto.getSoggetti().isEmpty()) {
+            sb.append("<ul>");
+            for (Soggetto s : foto.getSoggetti()) {
+                sb.append("<li>").append(s.getNomeSoggetto());
+                if (s.getCategoria() != null && !s.getCategoria().isEmpty()) {
+                    sb.append(" (").append(s.getCategoria()).append(")");
+                }
+                sb.append("</li>");
+            }
+            sb.append("</ul>");
+        } else {
+            sb.append("<p>Nessun soggetto presente in questa foto.</p>");
+        }
+        sb.append("</body></html>");
+        return sb.toString();
+    }
+
+    public boolean isUtenteLoggatoAutoreDi(Fotografia foto) {
+        if (loggedInUtente == null || foto == null || foto.getAutore() == null) return false;
+        return loggedInUtente.equals(foto.getAutore());
+    }
+
+    public String getUsernameUtenteLoggato() {
+        return loggedInUtente != null ? loggedInUtente.getUsername() : "Sconosciuto";
+    }
+
+    public String getIdUtenteLoggatoTestuale() {
+        return loggedInUtente != null ? String.valueOf(loggedInUtente.getIdUtente()) : "N/D";
+    }
+
+    public String formattaDescrizioneImmagineHtml(Fotografia foto) {
+        if (foto == null) return "";
+        return "<html><div style='text-align: center;'><b>ID Foto: " + foto.getIdFoto() + "</b><br/>Dispositivo:<br/>" + (foto.getDispositivo() != null ? foto.getDispositivo() : "N/D") + "</div></html>";
+    }
+
+    public String formattaThumbnailVideoHtml(Fotografia foto) {
+        if (foto == null) return "";
+        return "<html><b>Foto ID:</b> " + foto.getIdFoto() + " <br><i>" + foto.getDataDiScatto() + "</i></html>";
+    }
+
+    public String formattaPartecipantiGalleria(GalleriaCondivisa galleria) {
+        if (galleria == null || galleria.getPartecipanti() == null || galleria.getPartecipanti().isEmpty()) {
+            return "Nessun partecipante";
+        }
+        return galleria.getPartecipanti().stream()
+                .map(Utente::getUsername)
+                .collect(Collectors.joining(", "));
+    }
+
+    public String formattaTitoloSlideshow(Video slideshow) {
+        if (slideshow == null || slideshow.getTitolo() == null || slideshow.getTitolo().isEmpty()) {
+            return "Senza titolo";
+        }
+        return slideshow.getTitolo();
+    }
+
+    public String getTitoloGalleriaCondivisa(GalleriaCondivisa galleria) {
+        return galleria != null ? "Galleria Condivisa: " + galleria.getNomeGalleria() : "Galleria Condivisa";
+    }
+
+    public String getSottotitoloGalleriaCondivisa(GalleriaCondivisa galleria) {
+        return galleria != null ? "ID: " + galleria.getIdGalleria() : "ID: N/D";
+    }
+
+    public String getNomeSempliceGalleriaCondivisa(GalleriaCondivisa galleria) {
+        return (galleria != null && galleria.getNomeGalleria() != null) ? galleria.getNomeGalleria() : "Condivisa";
+    }
+
+    public ArrayList<Fotografia> getFotoDaGalleriaCondivisa(GalleriaCondivisa galleria) {
+        return galleria != null && galleria.getFotoContenute() != null ? new ArrayList<>(galleria.getFotoContenute()) : new ArrayList<>();
+    }
+
+    public ArrayList<String> getUsernamesCandidabiliPerGalleria() {
+        ArrayList<String> allUsers = getUsernamesInMemory();
+        String loggedIn = getUsernameUtenteLoggato();
+        allUsers.remove(loggedIn);
+        return allUsers;
+    }
+
+    public String formattaFotoPerLista(Fotografia foto) {
+        if (foto == null || foto.getIdFoto() == null) return "N/D";
+        String dispositivo = foto.getDispositivo() != null ? foto.getDispositivo() : "N/D";
+        return "ID " + foto.getIdFoto() + " - " + dispositivo;
+    }
+
+    public String formattaFotoPerEliminazione(Fotografia foto) {
+        if (foto == null) return "";
+        return "ID: " + foto.getIdFoto() + " | Dispositivo: " +
+                (foto.getDispositivo() != null ? foto.getDispositivo() : "N/D") +
+                " (" + foto.getDataDiScatto() + ")";
+    }
+
+    public Object[] formattaRigaTabellaFoto(Fotografia foto) {
+        if (foto == null) return new Object[]{"N/D", "N/D", "N/D", "N/D"};
+        return new Object[]{
+                String.valueOf(foto.getIdFoto()),
+                foto.getDispositivo() != null ? foto.getDispositivo() : "N/D",
+                foto.getDataDiScatto() != null ? foto.getDataDiScatto().toString() : "N/D",
+                foto.isVisibile() ? "Pubblica" : "Privata"
+        };
+    }
+
+    public Object[] formattaRigaTabellaUtente(Utente u) {
+        if (u == null) return new Object[]{Boolean.FALSE, "N/D", "N/D", "N/D", "N/D"};
+        return new Object[]{
+                Boolean.FALSE,
+                u.getIdUtente(),
+                u.getUsername() != null ? u.getUsername() : "Sconosciuto",
+                u.isAdmin() ? "Sì" : "No",
+                u.isSoggetto() ? "Sì" : "No"
+        };
     }
 
 

@@ -3,7 +3,6 @@ package GUI.panel;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Pannello separato per la gestione dinamica dei soggetti. (Usato nella dialog AggiungiFotoDialog)
@@ -11,7 +10,7 @@ import java.util.List;
  */
 public class PannelloAggiungiSoggetti extends JPanel {
     private final JPanel containerSoggetti;
-    private final List<SoggettoRowPanel> righeSoggetti;
+    private final ArrayList<SoggettoRowPanel> righeSoggetti;
     private final ArrayList<String> nomiUtentiDisponibili;
 
     public PannelloAggiungiSoggetti(ArrayList<String> nomiUtentiDisponibili) {

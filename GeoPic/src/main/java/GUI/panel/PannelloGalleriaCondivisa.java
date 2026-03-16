@@ -25,12 +25,8 @@ public class PannelloGalleriaCondivisa extends PannelloGalleria {
         super(fotografie, onImageClick, controller, onRefresh);
         this.galleriaCondivisa = galleriaCondivisa;
 
-        String titolo = galleriaCondivisa != null
-                ? "Galleria Condivisa: " + galleriaCondivisa.getNomeGalleria()
-                : "Galleria Condivisa";
-        String sottotitolo = galleriaCondivisa != null
-                ? "ID: " + galleriaCondivisa.getIdGalleria()
-                : "ID: N/D";
+        String titolo = controller.getTitoloGalleriaCondivisa(galleriaCondivisa);
+        String sottotitolo = controller.getSottotitoloGalleriaCondivisa(galleriaCondivisa);
 
         inizializzaPannello(
                 titolo,
