@@ -1771,7 +1771,7 @@ public class Controller {
         //aggiorno l'autore delle foto che devono rimanere
         for(Fotografia foto : fotoDaPreservare){
             foto.setAutore(loggedInUtente);
-            fotografiaPostgresDAO.updateAutore(loggedInUtente.getIdUtente(),  foto.getIdFoto());
+            fotografiaPostgresDAO.updateAutore(foto.getIdFoto(), loggedInUtente.getIdUtente());
         }
 
 
