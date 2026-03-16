@@ -1732,9 +1732,10 @@ public class Controller {
 
                 // i soggetti nella foto NON sono degli utenti
                 if(utentiInFoto.isEmpty()){
-                    // se la foto non e' da preservare perche' non e' in un video, la aggiungo alle foto da eliminare
-                    if(!fotoDaPreservare.contains(foto)) fotoDaEliminare.add(foto);
-
+                    // se la foto e' da preservare perche' in un video continuo
+                    if(fotoDaPreservare.contains(foto)) continue;
+                    // se non e' in un video la aggiungo alle foto da eliminare
+                    else fotoDaEliminare.add(foto);
                 }else{ // i soggetti nella foto sono degli utenti
                     for(Galleria gal : foto.getGalleriaContenitrice()){
                         if(gal instanceof GalleriaCondivisa galCond){
@@ -1744,7 +1745,6 @@ public class Controller {
                                 // se nella foto ci sono utenti che non sono l'utente deve essere eliminato
                                 if(utentiInFoto.contains(utente) && utente != utenteDaEliminare){
                                     fotoDaPreservare.add(foto); // la conserva
-                                    break;
                                 }else galleriaDaCuiTogliereLaFoto.add(galCond); //altrimenti conservo la galleria da cui la foto deve essere tolta
                             }
                         }
@@ -1759,20 +1759,19 @@ public class Controller {
 
                 contienePostgresDAO.deleteFotoDaGalleria(gal.getIdGalleria(), foto.getIdFoto());
             }
-
         }
 
         //elimino le foto dal db e dalla memoria
-        for(Fotografia fe : fotoDaEliminare){
-            fotografieInMemory.remove(fe);
+        for(Fotografia foto : fotoDaEliminare){
+            fotografieInMemory.remove(foto);
 
-            fotografiaPostgresDAO.deleteFotografia(fe.getIdFoto());
+            fotografiaPostgresDAO.deleteFotografia(foto.getIdFoto());
         }
 
         //aggiorno l'autore delle foto che devono rimanere
-        for(Fotografia fp : fotoDaPreservare){
-            fp.setAutore(loggedInUtente);
-            fotografiaPostgresDAO.updateAutore(fp.getIdFoto(), loggedInUtente.getIdUtente());
+        for(Fotografia foto : fotoDaPreservare){
+            foto.setAutore(loggedInUtente);
+            fotografiaPostgresDAO.updateAutore(foto.getIdFoto(), loggedInUtente.getIdUtente());
         }
 
 
@@ -1810,6 +1809,11 @@ public class Controller {
         utentiInMemory.remove(utenteDaEliminare);
     }
 
+    /**
+     * Gestisce l'eliminazione massiva di utenti da parte di un amministratore.
+     * Verifica i permessi dell'utente loggato e impedisce l'auto-eliminazione.
+     * @param idsUtentiDaEliminare La lista degli ID degli utenti da rimuovere.
+     */
     public void eliminazioneUtenteByAdmin(ArrayList<Integer> idsUtentiDaEliminare) {
         if (idsUtentiDaEliminare == null || idsUtentiDaEliminare.isEmpty()) return;
         if (loggedInUtente == null || !loggedInUtente.isAdmin()) return;
@@ -1822,6 +1826,11 @@ public class Controller {
         }
     }
 
+
+    /**
+     * Avvia l'iter di eliminazione per un elenco di fotografie presenti nella galleria privata.
+     * @param idsFotoDaEliminare La lista degli ID delle fotografie da eliminare.
+     */
     public void eliminazioneFotoGalleriaPrivata(ArrayList<Integer> idsFotoDaEliminare) {
         if (idsFotoDaEliminare == null || idsFotoDaEliminare.isEmpty()) return;
         for (Integer idFoto : idsFotoDaEliminare) {
@@ -1831,6 +1840,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Esegue l'eliminazione di una singola fotografia dalla galleria privata.
+     * Il metodo si occupa di rimuovere i riferimenti reciproci in memoria, gestire la persistenza
+     * della data di eliminazione (per i vincoli relativi ai video) e aggiornare il database tramite DAO.
+     * @param idFoto L'identificativo univoco della foto da rimuovere.
+     */
     public void eliminazioneFotoGalleriaPrivata(Integer idFoto) {
         //vado a prendere la foto da eliminare direttamente dalla galleria personale dell'utente
         Fotografia fotoDaEliminare = getFotografiaByID(getFotoGalleriaPersonale(), idFoto);

@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
 
+/**
+ * Finestra di dialogo per l'inserimento di nuove fotografie, che gestisce la validazione dei metadati,
+ * la geolocalizzazione, le opzioni di condivisione e l'associazione dei soggetti ritratti.
+ */
 public class DialogAggiungiFoto extends DialogAggiungi {
 
     private JTextField txtDispositivo;

@@ -47,7 +47,6 @@ public abstract class DialogAggiungi extends JDialog {
     /**
      * Crea il pannello con i bottoni Salva e Annulla allineati a destra.
      * Il bottone Salva è impostato come default button (invocabile con Invio).
-     *
      * @param onSalva il metodo da eseguire al click di Salva
      */
     protected JPanel creaPannelloBottoni(Runnable onSalva) {

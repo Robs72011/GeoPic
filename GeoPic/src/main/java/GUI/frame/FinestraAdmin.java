@@ -12,6 +12,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Interfaccia principale per l'amministratore, che consente la visualizzazione,
+ * l'aggiunta e la rimozione massiva degli utenti registrati nel sistema.
+ */
 public class FinestraAdmin extends JFrame {
 
     private final Controller controller;

@@ -7,6 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Finestra di dialogo per la selezione e l'eliminazione multipla di fotografie private.
+ * Gestisce il popolamento della lista, la conferma dell'utente e l'invio delle richieste al controller.
+ */
 public class DialogEliminaFoto extends JDialog {
     private final Controller controller;
     private final JList<FotografiaListItem> listaFoto;
