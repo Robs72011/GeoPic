@@ -1732,10 +1732,9 @@ public class Controller {
 
                 // i soggetti nella foto NON sono degli utenti
                 if(utentiInFoto.isEmpty()){
-                    // se la foto e' da preservare perche' in un video continuo
-                    if(fotoDaPreservare.contains(foto)) continue;
-                    // se non e' in un video la aggiungo alle foto da eliminare
-                    else fotoDaEliminare.add(foto);
+                    // se la foto non e' da preservare perche' non e' in un video, la aggiungo alle foto da eliminare
+                    if(!fotoDaPreservare.contains(foto)) fotoDaEliminare.add(foto);
+
                 }else{ // i soggetti nella foto sono degli utenti
                     for(Galleria gal : foto.getGalleriaContenitrice()){
                         if(gal instanceof GalleriaCondivisa galCond){
@@ -1745,6 +1744,7 @@ public class Controller {
                                 // se nella foto ci sono utenti che non sono l'utente deve essere eliminato
                                 if(utentiInFoto.contains(utente) && utente != utenteDaEliminare){
                                     fotoDaPreservare.add(foto); // la conserva
+                                    break;
                                 }else galleriaDaCuiTogliereLaFoto.add(galCond); //altrimenti conservo la galleria da cui la foto deve essere tolta
                             }
                         }
@@ -1759,19 +1759,20 @@ public class Controller {
 
                 contienePostgresDAO.deleteFotoDaGalleria(gal.getIdGalleria(), foto.getIdFoto());
             }
+
         }
 
         //elimino le foto dal db e dalla memoria
-        for(Fotografia foto : fotoDaEliminare){
-            fotografieInMemory.remove(foto);
+        for(Fotografia fe : fotoDaEliminare){
+            fotografieInMemory.remove(fe);
 
-            fotografiaPostgresDAO.deleteFotografia(foto.getIdFoto());
+            fotografiaPostgresDAO.deleteFotografia(fe.getIdFoto());
         }
 
         //aggiorno l'autore delle foto che devono rimanere
-        for(Fotografia foto : fotoDaPreservare){
-            foto.setAutore(loggedInUtente);
-            fotografiaPostgresDAO.updateAutore(loggedInUtente.getIdUtente(),  foto.getIdFoto());
+        for(Fotografia fp : fotoDaPreservare){
+            fp.setAutore(loggedInUtente);
+            fotografiaPostgresDAO.updateAutore(fp.getIdFoto(), loggedInUtente.getIdUtente());
         }
 
 
