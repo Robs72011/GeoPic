@@ -117,4 +117,18 @@ public class GalleriaPostgresDAO implements GalleriaDAO {
             sqle.printStackTrace();
         }
     }
+
+    public void updateOwner(Integer idGalleria, Integer idProprietario) {
+        String statement = "UPDATE galleria.GALLERIA SET Proprietario = ? WHERE IDGalleria = ?";
+
+        try(PreparedStatement query = connection.prepareStatement(statement)) {
+            query.setInt(1, idProprietario);
+            query.setInt(2, idGalleria);
+
+            query.executeUpdate();
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
 }

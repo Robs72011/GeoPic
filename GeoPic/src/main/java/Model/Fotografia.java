@@ -277,9 +277,9 @@ public class Fotografia {
     }
 
     /**
-     * Controlla se la foto e' contenuta in una galleria condivisa
-     * @return {@code true} se la foto e' presente in una galleria condivisa,
-     * {@code false} se la galleria e' presente solo nella galleria privata
+     * Controlla se la foto è contenuta in una galleria condivisa
+     * @return {@code true} se la foto è presente in una galleria condivisa,
+     * {@code false} se la galleria è presente solo nella galleria privata
      */
     public boolean isFotoInGalleriaCondivisa(){
         for(Galleria galleria : this.galleriaContenitrice){
@@ -288,6 +288,29 @@ public class Fotografia {
             }
         }
         return false;
+    }
+
+    /**
+     * Controlla se foto fa parte di un video
+     * @return {@code true} se la foto fa parte di un video, {@code false} se non ne fa parte
+     */
+    public boolean isFotoPartOfVideo(){
+        return !this.fotoComponeVideo.isEmpty();
+    }
+
+    /**
+     *
+     * @return {@code ArrayList} di {@link Utente} che sono nella foto
+     */
+    public ArrayList<Utente> getUtentiInFoto(){
+        ArrayList<Utente> utentiInFoto =  new ArrayList<>();
+
+        for(Soggetto soggetto : this.getSoggetti()){
+            if(soggetto.isUtente() && soggetto.getUtenteRappresentato() != null)
+                utentiInFoto.add(soggetto.getUtenteRappresentato());
+        }
+
+        return utentiInFoto;
     }
 
     /**
