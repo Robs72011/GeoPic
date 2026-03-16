@@ -17,7 +17,7 @@ public class DialogLogin extends JDialog {
 
     public DialogLogin(Controller controller) {
         setTitle("Login");
-        setModal(true); // Fondamentale: blocca il resto dell'app finche e aperto
+        setModal(true); // Fondamentale: blocca il resto dell'app finché e aperto
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
         // Pannello contenitore principale per dare margine
@@ -108,7 +108,7 @@ public class DialogLogin extends JDialog {
     }
 
     /**
-     * Mostra la finestra di dialogo e blocca l'esecuzione corrente finche non viene chiusa.
+     * Mostra la finestra di dialogo e blocca l'esecuzione corrente finché non viene chiusa.
      * @return 2 se admin, 1 se utente standard.
      */
     public int mostraDialogo() {

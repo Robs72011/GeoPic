@@ -76,7 +76,7 @@ public class PannelloGalleriaPrivata extends PannelloGalleria {
         menuAzioni.addActionListener(_ -> popupAzioni.show(menuAzioni, 0, menuAzioni.getHeight()));
         menuAzioni.setAlignmentX(Component.RIGHT_ALIGNMENT);
         PannelloRicercaFoto pannelloRicerca = new PannelloRicercaFoto(richiesta ->
-                eseguiRicercaFoto(richiesta.getTipo(), richiesta.getQuery()));
+                eseguiRicercaFoto(richiesta.tipo(), richiesta.query()));
         pannelloRicerca.setMaximumSize(new Dimension(380, 36));
         pannelloRicerca.setAlignmentX(Component.RIGHT_ALIGNMENT);
 

@@ -2,8 +2,6 @@ package GUI.frame;
 
 import GUI.dialog.DialogAggiungiUtente;
 import GUI.dialog.DialogLogin;
-import GUI.frame.FinestraUtente;
-import GUI.Main;
 
 import Controller.Controller;
 

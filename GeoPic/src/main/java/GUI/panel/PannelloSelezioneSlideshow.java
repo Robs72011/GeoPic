@@ -43,7 +43,7 @@ public class PannelloSelezioneSlideshow extends JPanel {
 
     /**
      * Crea e configura un singolo componente grafico (card) per uno slideshow.
-     * per gestire il clic dell'utente.
+     * Per gestire il clic dell'utente.
      * @param slideshow Il video associato alla card.
      * @param onClick La callback da eseguire al clic.
      * @return {@link JPanel} configurato come card interattiva.

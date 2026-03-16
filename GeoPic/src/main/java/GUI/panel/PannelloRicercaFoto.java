@@ -32,8 +32,8 @@ public class PannelloRicercaFoto extends JPanel {
         add(inputPanel, BorderLayout.CENTER);
         add(btnCerca, BorderLayout.EAST);
 
-        btnCerca.addActionListener(e -> invocaRicerca(onSearch));
-        campoRicerca.addActionListener(e -> invocaRicerca(onSearch));
+        btnCerca.addActionListener(_ -> invocaRicerca(onSearch));
+        campoRicerca.addActionListener(_ -> invocaRicerca(onSearch));
     }
 
     private void invocaRicerca(Consumer<RichiestaRicerca> onSearch) {
@@ -46,21 +46,6 @@ public class PannelloRicercaFoto extends JPanel {
         onSearch.accept(new RichiestaRicerca(tipo, query));
     }
 
-    public static class RichiestaRicerca {
-        private final String tipo;
-        private final String query;
-
-        public RichiestaRicerca(String tipo, String query) {
-            this.tipo = tipo;
-            this.query = query;
-        }
-
-        public String getTipo() {
-            return tipo;
-        }
-
-        public String getQuery() {
-            return query;
-        }
+    public record RichiestaRicerca(String tipo, String query) {
     }
 }

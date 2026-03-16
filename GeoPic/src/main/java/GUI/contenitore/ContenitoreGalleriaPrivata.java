@@ -1,6 +1,5 @@
 package GUI.contenitore;
 
-import GUI.frame.FinestraVisualizzatoreFoto;
 import GUI.frame.FinestraVisualizzatoreSlideshow;
 import GUI.panel.PannelloGalleriaPrivata;
 

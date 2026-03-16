@@ -108,13 +108,15 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         }
 
         if (!fotoPrivateSelezionate.isEmpty()) {
-            boolean confermato = conferma(
+            int scelta = JOptionPane.showConfirmDialog(
+                    this,
                     creaPannelloConfermaPrivatizzate(fotoPrivateSelezionate),
                     "Conferma Cambio Visibilita",
+                    JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
             );
 
-            if (!confermato) {
+            if (scelta != JOptionPane.YES_OPTION) {
                 return;
             }
         }
@@ -169,5 +171,22 @@ public class DialogAggiungiFotoGalleriaCondivisa extends DialogAggiungi {
         }
 
         return model;
+    }
+
+    protected void mostraSuccessoEChiudi(String messaggio) {
+        mostraSuccessoEChiudi(messaggio, "Successo");
+    }
+
+    protected void mostraSuccessoEChiudi(String messaggio, String titolo) {
+        mostraMessaggio(messaggio, titolo, JOptionPane.INFORMATION_MESSAGE);
+        dispose();
+    }
+
+    protected String trimToEmpty(String valore) {
+        return valore == null ? "" : valore.trim();
+    }
+
+    protected boolean isBlank(String valore) {
+        return trimToEmpty(valore).isEmpty();
     }
 }

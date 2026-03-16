@@ -1,12 +1,9 @@
 package GUI.panel;
 
 import GUI.utility.WrapLayout;
-import GUI.dialog.DialogAggiungiFotoGalleriaCondivisa;
-import GUI.dialog.DialogAggiungiFoto;
 import Model.Fotografia;
-import Model.GalleriaCondivisa;
 import Model.Video;
-
+import Controller.Controller;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,14 +14,14 @@ public abstract class PannelloGalleria extends JPanel {
 
     private static final int IMAGE_SIZE = 160;
 
-    protected final Controller.Controller controller;
+    protected final Controller controller;
     protected final Runnable onRefresh;
     private final ArrayList<Fotografia> fotografieMostrate;
     private final IntConsumer onImageClick;
 
     protected PannelloGalleria(ArrayList<Fotografia> fotografie,
                                IntConsumer onImageClick,
-                               Controller.Controller controller,
+                               Controller controller,
                                Runnable onRefresh) {
         this.controller = controller;
         this.onRefresh = onRefresh;

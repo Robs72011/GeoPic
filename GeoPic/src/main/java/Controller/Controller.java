@@ -770,8 +770,7 @@ public class Controller {
      * Recupera l'elenco di tutte le fotografie presenti nella galleria privata dell'utente loggato.
      * @return Una lista di oggetti {@link Fotografia} contenuti nella galleria personale,
      * oppure una lista vuota se l'utente non è loggato o la galleria è vuota.
-     */
-    /**
+     *
      * Recupera la galleria personale (privata) dell'utente loggato.
      */
     public GalleriaPrivata getGalleriaPersonale() {
@@ -857,7 +856,7 @@ public class Controller {
      * @param latVal  Il valore numerico della latitudine.
      * @param lonSign Il segno della longitudine (+ o -).
      * @param lonVal  Il valore numerico della longitudine.
-     * @return Una stringa unica nel formato "segnoValore,segnoValore".
+     * @return Una stringa unica nel formato "segnoValore, segnoValore".
      */
     public String normalizzaCoordinate(String latSign, String latVal, String lonSign, String lonVal) {
         try {
@@ -1067,7 +1066,7 @@ public class Controller {
         if(autoreGalPriv != null)
             autoreGalPriv.addFotoAGalleria(newFoto);
 
-        //Aggiungiamo la foto alla lista dei luoghi in cui e' raffigurato il luogo (lato luogo)
+        //Aggiungiamo la foto alla lista dei luoghi in cui è raffigurato il luogo (lato luogo)
         luogo.addLuogoRaffiguratoIn(newFoto);
 
         return newFoto;
@@ -1121,7 +1120,7 @@ public class Controller {
             return;
         }
 
-        // Se la foto e' privata, la rendiamo pubblica prima di condividerla.
+        // Se la foto è privata, la rendiamo pubblica prima di condividerla.
         if (!fotoDaCondividere.isVisibile()) {
             setFotografiaPubblica(fotoDaCondividere.getIdFoto());
             if (!fotoDaCondividere.isVisibile()) {
@@ -1259,7 +1258,7 @@ public class Controller {
 
         Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
 
-        if (!utentePuoGestireVisibilitaFoto(foto)) {
+        if (utentePuoGestireVisibilitaFoto(foto)) {
             System.out.println("Non e' possibile modificare la visibilita' di una foto non propria.");
             return;
         }
@@ -1302,7 +1301,7 @@ public class Controller {
 
         Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
 
-        if (!utentePuoGestireVisibilitaFoto(foto)) {
+        if (utentePuoGestireVisibilitaFoto(foto)) {
             System.out.println("Non e' possibile modificare la visibilita' di una foto non propria.");
             return;
         }
@@ -1320,11 +1319,11 @@ public class Controller {
         }
 
         Fotografia foto = getFotografiaByID(fotografieInMemory, fotoId);
-        if (!utentePuoGestireVisibilitaFoto(foto)) {
+        if (utentePuoGestireVisibilitaFoto(foto)) {
             return false;
         }
 
-        if (foto.isVisibile() == visibile) {
+        if (foto != null && foto.isVisibile() == visibile) {
             return true;
         }
 
@@ -1340,13 +1339,13 @@ public class Controller {
 
     private boolean utentePuoGestireVisibilitaFoto(Fotografia foto) {
         if (loggedInUtente == null || foto == null || foto.getAutore() == null) {
-            return false;
+            return true;
         }
 
         Integer idUtenteLoggato = loggedInUtente.getIdUtente();
         Integer idAutoreFoto = foto.getAutore().getIdUtente();
 
-        return idUtenteLoggato != null && idUtenteLoggato.equals(idAutoreFoto);
+        return idUtenteLoggato == null || !idUtenteLoggato.equals(idAutoreFoto);
     }
 
     /**
@@ -1398,41 +1397,6 @@ public class Controller {
 
         galPrivUtente.addVideo(newVideo);
         return true;
-    }
-
-    /**
-     * Metodo che recuperare tutte le foto scattate in un luogo
-     * @param coordinate Coordinate del luogo per cui si vogliono vedere tutte le foto
-     * @return ArrayList di Fotografie scattate alle coordinate passate
-     */
-    public ArrayList<Fotografia> getAllFotoScattateInUnLuogo(String coordinate){
-
-        Luogo luogo = getLuogoByCoordinate(luoghiInMemory, coordinate);
-        if(luogo == null){
-            return new ArrayList<>();
-        }else {
-            return fotografieInMemory.stream()
-                    .filter(f -> f.getLuogo() != null && f.getLuogo().equals(luogo))
-                    .collect(Collectors.toCollection(ArrayList::new));
-        }
-    }
-
-    /**
-     * Recupera tutte le fotografie in cui appare un determinato soggetto, identificato dal nome.
-     * @param nomeSoggetto Il nome del soggetto da ricercare.
-     * @return Un {@link ArrayList} di {@link Fotografia} contenente il soggetto specificato;
-     * restituisce una lista vuota se il soggetto non esiste o non è presente in alcuna foto.
-     */
-    public ArrayList<Fotografia> getAllFotoConStessoSoggetto(String nomeSoggetto){
-        Soggetto soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
-
-        if(soggetto == null){
-            return new ArrayList<>();
-        }else{
-            return fotografieInMemory.stream()
-                    .filter(f -> f.getSoggetti().contains(soggetto))
-                    .collect(Collectors.toCollection(ArrayList::new));
-        }
     }
 
     /**
@@ -1517,15 +1481,20 @@ public class Controller {
      * ordinati dal più frequente al meno frequente.
      */
     public ArrayList<Luogo> getTop3Luoghi(){
-        return fotografieInMemory.stream()
+        // Calcoliamo la frequenza di ciascun luogo basandoci sulle fotografie
+        Map<Luogo, Long> conteggi = fotografieInMemory.stream()
                 .filter(f -> f.getLuogo() != null)
-                .collect(Collectors.groupingBy(Fotografia::getLuogo, Collectors.counting()))
-                .entrySet().stream()
-                .sorted(Map.Entry.<Luogo, Long>comparingByValue().reversed())
-                .limit(3)
-                .map(Map.Entry::getKey)
+                .collect(Collectors.groupingBy(Fotografia::getLuogo, Collectors.counting()));
+
+        // Usiamo getLuoghiInMemory() per ottenere la lista di luoghi e la ordiniamo
+        // in base alla frequenza calcolata, per poi prendere i primi 3.
+        return getLuoghiInMemory().stream()
+                .filter(conteggi::containsKey) // Consideriamo solo luoghi presenti nelle foto
+                .sorted(java.util.Comparator.comparing(conteggi::get).reversed()) // Ordiniamo per popolarità
+                .limit(3) // Prendiamo il podio
                 .collect(Collectors.toCollection(ArrayList::new));
     }
+
 
     /**
      * Esegue l'eliminazione di un utente dal sistema da parte di un amministratore,

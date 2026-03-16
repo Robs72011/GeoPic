@@ -96,18 +96,18 @@ public class PannelloVisualizzatoreFoto extends JPanel {
     }
 
     private boolean haFotografie() {
-        return !fotografie.isEmpty();
+        return fotografie.isEmpty();
     }
 
     private void naviga(int delta) {
-        if (!haFotografie()) {
+        if (haFotografie()) {
             return;
         }
         mostraMetadati((indiceCorrente + delta + fotografie.size()) % fotografie.size());
     }
 
     private void toggleVisibilitaFoto() {
-        if (!haFotografie()) {
+        if (haFotografie()) {
             return;
         }
 
@@ -173,7 +173,7 @@ public class PannelloVisualizzatoreFoto extends JPanel {
      * @param index L'indice della fotografia nella lista {@code fotografie}.
      */
     public void mostraMetadati(int index) {
-        if (!haFotografie()) {
+        if (haFotografie()) {
             imageLabel.setText("Nessuna fotografia da mostrare.");
             return;
         }
