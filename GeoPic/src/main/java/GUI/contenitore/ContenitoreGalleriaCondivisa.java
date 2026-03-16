@@ -16,12 +16,21 @@ import java.util.ArrayList;
 public class ContenitoreGalleriaCondivisa extends ContenitoreGalleria {
     private final GalleriaCondivisa galleriaCondivisa;
 
+    /**
+     * Costruisce il contenitore per la galleria condivisa specificata.
+     * @param controller        Il controller di sistema per le interazioni.
+     * @param galleriaCondivisa L'istanza di {@link GalleriaCondivisa} da visualizzare.
+     */
     public ContenitoreGalleriaCondivisa(Controller controller, GalleriaCondivisa galleriaCondivisa) {
         super(controller);
         this.galleriaCondivisa = galleriaCondivisa;
         refresh(); // Effettua la prima costruzione
     }
 
+    /**
+     * Aggiorna l'interfaccia grafica recuperando dal controller le fotografie
+     * contenute nella galleria condivisa corrente e rigenerando il pannello di visualizzazione.
+     */
     @Override
     public void refresh() {
         beginRefresh();

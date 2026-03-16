@@ -1809,6 +1809,11 @@ public class Controller {
         utentiInMemory.remove(utenteDaEliminare);
     }
 
+    /**
+     * Gestisce l'eliminazione massiva di utenti da parte di un amministratore.
+     * Verifica i permessi dell'utente loggato e impedisce l'auto-eliminazione.
+     * @param idsUtentiDaEliminare La lista degli ID degli utenti da rimuovere.
+     */
     public void eliminazioneUtenteByAdmin(ArrayList<Integer> idsUtentiDaEliminare) {
         if (idsUtentiDaEliminare == null || idsUtentiDaEliminare.isEmpty()) return;
         if (loggedInUtente == null || !loggedInUtente.isAdmin()) return;
@@ -1821,6 +1826,11 @@ public class Controller {
         }
     }
 
+
+    /**
+     * Avvia l'iter di eliminazione per un elenco di fotografie presenti nella galleria privata.
+     * @param idsFotoDaEliminare La lista degli ID delle fotografie da eliminare.
+     */
     public void eliminazioneFotoGalleriaPrivata(ArrayList<Integer> idsFotoDaEliminare) {
         if (idsFotoDaEliminare == null || idsFotoDaEliminare.isEmpty()) return;
         for (Integer idFoto : idsFotoDaEliminare) {
@@ -1830,6 +1840,12 @@ public class Controller {
         }
     }
 
+    /**
+     * Esegue l'eliminazione di una singola fotografia dalla galleria privata.
+     * Il metodo si occupa di rimuovere i riferimenti reciproci in memoria, gestire la persistenza
+     * della data di eliminazione (per i vincoli relativi ai video) e aggiornare il database tramite DAO.
+     * @param idFoto L'identificativo univoco della foto da rimuovere.
+     */
     public void eliminazioneFotoGalleriaPrivata(Integer idFoto) {
         //vado a prendere la foto da eliminare direttamente dalla galleria personale dell'utente
         Fotografia fotoDaEliminare = getFotografiaByID(getFotoGalleriaPersonale(), idFoto);

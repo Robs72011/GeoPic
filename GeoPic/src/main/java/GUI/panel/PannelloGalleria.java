@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
+/**
+ * Classe base astratta per la visualizzazione di gallerie: gestisce il layout
+ * dell'header, la griglia responsiva delle foto e il carousel degli slideshow.
+ */
 public abstract class PannelloGalleria extends JPanel {
 
     private static final int IMAGE_SIZE = 160;
