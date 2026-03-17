@@ -1075,7 +1075,21 @@ public class Controller {
     }
 
     /**
-     *
+     * Coordina la procedura di creazione di una nuova fotografia, gestendo la persistenza,
+     * l'associazione geografica, il tagging dei soggetti e la condivisione in più gallerie.
+     * Il metodo opera in due fasi principali:
+     * Invoca {@link #creazioneNuovaFoto} per generare l'oggetto Fotografia,
+     * salvarlo nel database e collegarlo ai Soggetti e al Luogo indicati.
+     * Se la creazione ha successo, associa la nuova foto alle {@link GalleriaCondivisa}
+     * specificate nella lista dei parametri.
+     * @param dispositivo                 Il nome del dispositivo che ha scattato la foto.
+     * @param visibilita                 Il flag di visibilità (true per pubblica/condivisa).
+     * @param coordinate                 Stringa formattata delle coordinate geografiche.
+     * @param toponimo                   Il nome del luogo associato allo scatto.
+     * @param nomiSoggetti               Lista dei nomi dei soggetti da taggare nella foto.
+     * @param categorieSoggetti          Lista delle categorie corrispondenti ai soggetti.
+     * @param gallerieCondiviseSelezionate Lista delle gallerie condivise in cui inserire la foto.
+     * @return L'istanza di {@link Fotografia} creata e collegata, oppure {@code null} se la creazione fallisce.
      */
     public Fotografia creazioneNuovaFotoConCondivisione(String dispositivo,
                                                         boolean visibilita,
