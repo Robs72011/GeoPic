@@ -1,7 +1,6 @@
 package GUI.frame;
 
 import GUI.dialog.DialogAggiungiUtente;
-import GUI.dialog.DialogLogin;
 
 import Controller.Controller;
 
@@ -62,7 +61,6 @@ public class FinestraAdmin extends JFrame {
     private JPanel buildBottoni() {
         JButton btnAggiungi = new JButton("Aggiungi Utente");
         JButton btnRimuovi = new JButton("Rimuovi Selezionati");
-        JButton btnLogout = new JButton("Logout");
 
         btnAggiungi.addActionListener(_ -> {
             new DialogAggiungiUtente(this, controller).setVisible(true);
@@ -71,27 +69,9 @@ public class FinestraAdmin extends JFrame {
 
         btnRimuovi.addActionListener(_ -> confermaEliminazione());
 
-        btnLogout.addActionListener(_ -> {
-            dispose();
-            // Avvia il pannello di login
-            DialogLogin dialog = new DialogLogin(controller);
-            int authenticate = dialog.mostraDialogo();
-
-            // Gestisce la navigazione post-autenticazione
-            if(authenticate == 1) {
-                // Avvia l'interfaccia principale per l'utente standard
-                new FinestraUtente(controller);
-            }
-            else if(authenticate == 2){
-                // Avvia l'interfaccia di amministrazione
-                new FinestraAdmin(controller);
-            }
-        });
-
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel.add(btnAggiungi);
         panel.add(btnRimuovi);
-        panel.add(btnLogout);
         return panel;
     }
 
