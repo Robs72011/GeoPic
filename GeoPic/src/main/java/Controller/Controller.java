@@ -1653,6 +1653,7 @@ public class Controller {
     public ArrayList<String> getUsernamesCandidabiliPerGalleria() {
         ArrayList<String> allUsers = new ArrayList<>();
         String loggedIn = getUsernameUtenteLoggato();
+        allUsers.remove(loggedIn);
 
         if (utentiInMemory != null) {
             for (Utente u : utentiInMemory) {
@@ -1712,6 +1713,7 @@ public class Controller {
      * @param idUtenteDaEliminare L'identificativo univoco dell'utente da rimuovere.
      * @throws SecurityException Se l'utente attualmente loggato non ha privilegi di amministratore.
      */
+
     public void eliminazioneUtenteByAdmin(Integer idUtenteDaEliminare){
         if(!loggedInUtente.isAdmin()){
             System.out.println("L'utente loggato non e' admin.");
@@ -1744,18 +1746,9 @@ public class Controller {
             if(foto.isFotoInGalleriaCondivisa()){
                 ArrayList<Utente> utentiInFoto = new ArrayList<>(foto.getUtentiInFoto());
 
-                /*// i soggetti nella foto NON sono degli utenti
-                if(utentiInFoto.isEmpty()){
-                    for(Galleria gal : foto.getGalleriaContenitrice()){
-                        if(gal instanceof GalleriaCondivisa galCond){
-                            galleriaDaCuiTogliereLaFoto.add(galCond);
-                        }
-                    }
-
-                 */
                 if(utentiInFoto.isEmpty() && !photoStays){
-                    //System.out.println("ti amo");
-                    //System.out.println(foto.getIdFoto());
+                    System.out.println("ti amo");
+                    System.out.println(foto.getIdFoto());
                     fotoDaEliminare.add(foto);
 
                 }else{ // i soggetti nella foto sono degli utenti
@@ -1773,13 +1766,8 @@ public class Controller {
                                 // se nella foto ci sono utenti che non sono l'utente da eliminare deve essere conservata
                                 if(utentiInFoto.contains(partecipante) && !partecipante.equals(utenteDaEliminare)){
                                     validSoggetto = true;
-                                    /*
-                                    if(!fotoDaPreservare.contains(foto))
-                                        fotoDaPreservare.add(foto); // la conserva
-
-                                     */
                                     break;
-                                }//else galleriaDaCuiTogliereLaFoto.add(galCond); //altrimenti conservo la galleria da cui la foto deve essere tolta
+                                }
                             }
 
                             if(validSoggetto) photoStays = true;
@@ -1809,7 +1797,7 @@ public class Controller {
         //elimino le foto dal db e dalla memoria
         for(Fotografia foto : fotoDaEliminare){
 
-            //System.out.println(foto.getIdFoto());
+            System.out.println(foto.getIdFoto());
             fotografieInMemory.remove(foto);
 
             fotografiaPostgresDAO.deleteFotografia(foto.getIdFoto());
@@ -1841,13 +1829,6 @@ public class Controller {
             }
         }
 
-        // Rimuovo l'utente dalle gallerie condivise a cui partecipa (ma di cui non è proprietario)
-        for (GalleriaCondivisa galCond : new ArrayList<>(utenteDaEliminare.getUtentePartecipaGalleriaCondivisa())) {
-            galCond.getPartecipanti().remove(utenteDaEliminare);
-            partecipaPostgresDAO.deletePartecipante(galCond.getIdGalleria(), utenteDaEliminare.getIdUtente());
-        }
-        utenteDaEliminare.getUtentePartecipaGalleriaCondivisa().clear();
-
 
         //vado eliminare la galleria privata dell'utente che sta per essere eliminato
         for(Galleria gal : utenteDaEliminare.getGalleriePossedute()){
@@ -1865,15 +1846,10 @@ public class Controller {
             }
         }
 
-        // Rimuovo il collegamento tra Utente e Soggetto in memoria se esiste
-        Soggetto soggettoCorrispondente = getSoggettoByUtente(soggettiInMemory, utenteDaEliminare);
-        if (soggettoCorrispondente != null) {
-            soggettoCorrispondente.setUtenteRappresentato(null);
-        }
-
         utentePostgresDAO.deleteUtente(utenteDaEliminare.getIdUtente());
         utentiInMemory.remove(utenteDaEliminare);
     }
+
 
     /**
      * Gestisce l'eliminazione massiva di utenti da parte di un amministratore.
