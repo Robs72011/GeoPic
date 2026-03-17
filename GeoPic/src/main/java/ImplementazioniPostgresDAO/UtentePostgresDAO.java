@@ -130,4 +130,20 @@ public class UtentePostgresDAO implements UtenteDAO {
             return null;
         }
     }
+
+
+    public void updateIsSoggetto(Integer idUtente, boolean isSoggetto){
+        String statement = "UPDATE galleria.UTENTE SET isSoggetto = ? WHERE idUtente = ?";
+
+        try(PreparedStatement aggiuntaUtente = connection.prepareStatement(statement)) {
+
+            aggiuntaUtente.setBoolean(1, isSoggetto);
+            aggiuntaUtente.setInt(2, idUtente);
+
+            aggiuntaUtente.executeUpdate();
+
+        }catch(SQLException sqle){
+            sqle.printStackTrace();
+        }
+    }
 }

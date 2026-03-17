@@ -4,7 +4,13 @@ BEGIN;
 INSERT INTO galleria.UTENTE (Username, Password, IsAdmin, IsSoggetto) VALUES
 ('admin', 'pass1', TRUE, FALSE),
 ('luca_b', 'pass2', FALSE, FALSE),
-('maria_v', 'pass3', FALSE, TRUE);
+('maria_v', 'pass3', FALSE, TRUE),
+('paolo', 'paolo', false, false),
+('vale_p', 'kiki', false, false),
+('luca_p', 'ai', false, false),
+('gigio', 'tasso', false, false),
+('gabbo', 'dsq', false, false),
+('manuela', 'rossa', false, false);
 
 -- 2. LUOGHI (Coordinate: CHAR(14))
 INSERT INTO galleria.LUOGO (Coordinate, Toponimo) VALUES
@@ -21,7 +27,13 @@ INSERT INTO galleria.GALLERIA (NomeGalleria, Condivisa, Proprietario) VALUES
 ('Privata Luca', FALSE, '00002'),
 ('Privata Maria', FALSE, '00003'),
 ('Viaggio di Gruppo Roma', TRUE, '00001'),
-('Gita a Napoli', TRUE, '00002'); -- Proprietario: 00002
+('Gita a Napoli', TRUE, '00002'), -- Proprietario: 00002
+('Galleria privata di Paolo', false, 4),
+('Galleria privata di vale_p', false, 5),
+('Galleria privata di luca_p', false, 6),
+('Galleria privata di Gigio', false, 7),
+('Galleria privata di Gabbo', false, 8),
+('Galleria privata di M	nuela', false, 9);
 
 -- 4. FOTOGRAFIE
 INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto) VALUES

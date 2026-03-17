@@ -1028,6 +1028,7 @@ public class Controller {
                     }
 
                     utenteSoggetto.setSoggetto(true);
+                    utentePostgresDAO.updateIsSoggetto(utenteSoggetto.getIdUtente(), true);
                 } else {
                     soggetto = getSoggettoByNomeSoggetto(soggettiInMemory, nomeSoggetto);
 
@@ -1712,12 +1713,17 @@ public class Controller {
         Utente utenteDaEliminare = getUtenteByID(utentiInMemory, idUtenteDaEliminare);
         if(utenteDaEliminare == null) return;
 
-        ArrayList<Fotografia> fotoDaEliminare = new ArrayList<>(utenteDaEliminare.getFotoScattate());
-        ArrayList<Fotografia> fotoDaPreservare = new ArrayList<>(utenteDaEliminare.getFotoScattate());
-        ArrayList<Galleria> galleriaDaCuiTogliereLaFoto = new ArrayList<>();
+        ArrayList<Fotografia> fotoDaEliminare = new ArrayList<>();
+        ArrayList<Fotografia> fotoDaPreservare = new ArrayList<>();
 
         for(Fotografia foto : utenteDaEliminare.getFotoScattate()){
+
+            ArrayList<Galleria> galleriaDaCuiTogliereLaFoto = new ArrayList<>();
+            boolean photoStays = false;
+
             if(foto.isFotoPartOfVideo()){
+
+                photoStays = true;
                 // qui impostiamo la data di eliminazione perche' e' l'unico caso in cui l'impostiamo
                 foto.setDataDiEliminazione(LocalDate.now());
                 fotografiaPostgresDAO.updateDataEliminazione(foto.getIdFoto(),  foto.getDataDiEliminazione());
@@ -1730,27 +1736,56 @@ public class Controller {
             if(foto.isFotoInGalleriaCondivisa()){
                 ArrayList<Utente> utentiInFoto = new ArrayList<>(foto.getUtentiInFoto());
 
-                // i soggetti nella foto NON sono degli utenti
+                /*// i soggetti nella foto NON sono degli utenti
                 if(utentiInFoto.isEmpty()){
-                    // se la foto e' da preservare perche' in un video continuo
-                    if(fotoDaPreservare.contains(foto)) continue;
-                    // se non e' in un video la aggiungo alle foto da eliminare
-                    else fotoDaEliminare.add(foto);
-                }else{ // i soggetti nella foto sono degli utenti
                     for(Galleria gal : foto.getGalleriaContenitrice()){
                         if(gal instanceof GalleriaCondivisa galCond){
-                            ArrayList<Utente> partecipanti = new ArrayList<>(galCond.getPartecipanti());
-
-                            for(Utente utente : partecipanti){
-                                // se nella foto ci sono utenti che non sono l'utente deve essere eliminato
-                                if(utentiInFoto.contains(utente) && utente != utenteDaEliminare){
-                                    fotoDaPreservare.add(foto); // la conserva
-                                }else galleriaDaCuiTogliereLaFoto.add(galCond); //altrimenti conservo la galleria da cui la foto deve essere tolta
-                            }
+                            galleriaDaCuiTogliereLaFoto.add(galCond);
                         }
                     }
+
+                 */
+                if(utentiInFoto.isEmpty() && !photoStays){
+                    //System.out.println("ti amo");
+                    //System.out.println(foto.getIdFoto());
+                    fotoDaEliminare.add(foto);
+
+                }else{ // i soggetti nella foto sono degli utenti
+
+                    //ciclo sulle gallerie in cui e' contenuta la foto
+                    for(Galleria gal : foto.getGalleriaContenitrice()){
+                        if(gal instanceof GalleriaCondivisa galCond){
+
+                            //mi vado a prendere i partecipanti della galleria
+                            ArrayList<Utente> partecipanti = new ArrayList<>(galCond.getPartecipanti());
+
+                            boolean validSoggetto = false;
+
+                            for(Utente partecipante : partecipanti){
+                                // se nella foto ci sono utenti che non sono l'utente da eliminare deve essere conservata
+                                if(utentiInFoto.contains(partecipante) && !partecipante.equals(utenteDaEliminare)){
+                                    validSoggetto = true;
+                                    /*
+                                    if(!fotoDaPreservare.contains(foto))
+                                        fotoDaPreservare.add(foto); // la conserva
+
+                                     */
+                                    break;
+                                }//else galleriaDaCuiTogliereLaFoto.add(galCond); //altrimenti conservo la galleria da cui la foto deve essere tolta
+                            }
+
+                            if(validSoggetto) photoStays = true;
+                            else galleriaDaCuiTogliereLaFoto.add(galCond);
+                        }
+                    }
+
+                    if(photoStays && !fotoDaPreservare.contains(foto)) fotoDaPreservare.add(foto);
+                    else if(!photoStays && !fotoDaEliminare.contains(foto)) fotoDaEliminare.add(foto);
                 }
-            }else fotoDaEliminare.add(foto);
+            }else{
+                if(!photoStays && !fotoDaEliminare.contains(foto)) fotoDaEliminare.add(foto);
+                else if (photoStays && !fotoDaPreservare.contains(foto)) fotoDaPreservare.add(foto);
+            }
 
             // tolgo effettivamente la foto dalla galleria in cui non va bene
             for(Galleria gal : galleriaDaCuiTogliereLaFoto){
@@ -1759,10 +1794,14 @@ public class Controller {
 
                 contienePostgresDAO.deleteFotoDaGalleria(gal.getIdGalleria(), foto.getIdFoto());
             }
+
+            galleriaDaCuiTogliereLaFoto.clear();
         }
 
         //elimino le foto dal db e dalla memoria
         for(Fotografia foto : fotoDaEliminare){
+
+            //System.out.println(foto.getIdFoto());
             fotografieInMemory.remove(foto);
 
             fotografiaPostgresDAO.deleteFotografia(foto.getIdFoto());
@@ -1775,16 +1814,22 @@ public class Controller {
         }
 
 
-        // vado a trasferire la proprieta' delle gallerie condivise a un nuovo utente
         for(Galleria gal : new ArrayList<>(utenteDaEliminare.getGalleriePossedute())){
+            // vado a trasferire la proprieta' delle gallerie condivise a un nuovo utente
             if(gal instanceof GalleriaCondivisa galCond){
-                Utente newOwner = galCond.getPartecipanti().getLast();
+                //l'owner della galleria cond diventa admin
+                Utente newOwner = loggedInUtente;
                 galCond.setProprietario(newOwner);
-                galCond.getPartecipanti().remove(newOwner);
                 utenteDaEliminare.getGalleriePossedute().remove(galCond);
 
                 galleriaPostgresDAO.updateOwner(galCond.getIdGalleria(), newOwner.getIdUtente());
-                partecipaPostgresDAO.deletePartecipante(galCond.getIdGalleria(), newOwner.getIdUtente());
+            }
+        }
+
+        for(Galleria gal : new ArrayList<>(utenteDaEliminare.getUtentePartecipaGalleriaCondivisa())) {
+            if(gal instanceof GalleriaCondivisa galCond) {
+                galCond.getPartecipanti().remove(utenteDaEliminare);
+                partecipaPostgresDAO.deletePartecipante(galCond.getIdGalleria(), utenteDaEliminare.getIdUtente());
             }
         }
 
@@ -1871,5 +1916,10 @@ public class Controller {
 
         //rompo il legame tra la foto e la galleria privata nel DB
         contienePostgresDAO.deleteFotoDaGalleria(galleriaPrivata.getIdGalleria(), fotoDaEliminare.getIdFoto());
+
+        if(!fotoDaEliminare.isFotoInGalleriaCondivisa() && !fotoDaEliminare.isFotoPartOfVideo()){
+
+            fotografiaPostgresDAO.deleteFotografia(fotoDaEliminare.getIdFoto());
+        }
     }
 }

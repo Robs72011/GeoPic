@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS galleria.FOTOGRAFIA(
     
     CONSTRAINT autore_fk FOREIGN KEY (Autore) 
         REFERENCES galleria.UTENTE(IDUtente) 
-        ON UPDATE CASCADE ON DELETE CASCADE, 
+        ON UPDATE CASCADE ON DELETE NO ACTION, 
         
     CONSTRAINT luogo_fk FOREIGN KEY (Coordinate) 
         REFERENCES galleria.LUOGO(Coordinate) 
