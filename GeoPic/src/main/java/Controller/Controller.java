@@ -1650,9 +1650,17 @@ public class Controller {
     }
 
     public ArrayList<String> getUsernamesCandidabiliPerGalleria() {
-        ArrayList<String> allUsers = getUsernamesInMemory();
+        ArrayList<String> allUsers = new ArrayList<>();
         String loggedIn = getUsernameUtenteLoggato();
-        allUsers.remove(loggedIn);
+
+        if (utentiInMemory != null) {
+            for (Utente u : utentiInMemory) {
+                // Escludo l'utente loggato e tutti gli admin
+                if (!u.getUsername().equals(loggedIn) && !u.isAdmin()) {
+                    allUsers.add(u.getUsername());
+                }
+            }
+        }
         return allUsers;
     }
 
@@ -1788,6 +1796,13 @@ public class Controller {
             }
         }
 
+        // Rimuovo l'utente dalle gallerie condivise a cui partecipa (ma di cui non è proprietario)
+        for (GalleriaCondivisa galCond : new ArrayList<>(utenteDaEliminare.getUtentePartecipaGalleriaCondivisa())) {
+            galCond.getPartecipanti().remove(utenteDaEliminare);
+            partecipaPostgresDAO.deletePartecipante(galCond.getIdGalleria(), utenteDaEliminare.getIdUtente());
+        }
+        utenteDaEliminare.getUtentePartecipaGalleriaCondivisa().clear();
+
 
         //vado eliminare la galleria privata dell'utente che sta per essere eliminato
         for(Galleria gal : utenteDaEliminare.getGalleriePossedute()){
@@ -1803,6 +1818,12 @@ public class Controller {
                 galleriePrivateInMemory.remove(galPriv);
                 galleriaPostgresDAO.deleteGalleria(galPriv.getIdGalleria());
             }
+        }
+
+        // Rimuovo il collegamento tra Utente e Soggetto in memoria se esiste
+        Soggetto soggettoCorrispondente = getSoggettoByUtente(soggettiInMemory, utenteDaEliminare);
+        if (soggettoCorrispondente != null) {
+            soggettoCorrispondente.setUtenteRappresentato(null);
         }
 
         utentePostgresDAO.deleteUtente(utenteDaEliminare.getIdUtente());
