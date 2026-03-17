@@ -1074,6 +1074,9 @@ public class Controller {
         return newFoto;
     }
 
+    /**
+     *
+     */
     public Fotografia creazioneNuovaFotoConCondivisione(String dispositivo,
                                                         boolean visibilita,
                                                         String coordinate,
@@ -1747,8 +1750,7 @@ public class Controller {
                 ArrayList<Utente> utentiInFoto = new ArrayList<>(foto.getUtentiInFoto());
 
                 if(utentiInFoto.isEmpty() && !photoStays){
-                    System.out.println("ti amo");
-                    System.out.println(foto.getIdFoto());
+                    //System.out.println("ti amo");
                     fotoDaEliminare.add(foto);
 
                 }else{ // i soggetti nella foto sono degli utenti
