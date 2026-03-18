@@ -237,4 +237,80 @@ INSERT INTO galleria.MOSTRA (NomeSoggetto, IDFoto) VALUES
 ('Vesuvio', '0000000005'),
 ('maria_v', '0000000006'); -- Maria si è fatta un selfie a Firenze
 
+-- 1. NUOVI UTENTI 
+-- Il serial partirà dall'ID 10 (visto che il max attuale è 9)
+INSERT INTO galleria.UTENTE (Username, Password, IsAdmin, IsSoggetto) VALUES
+('elena_r', 'elena2024', FALSE, TRUE),    -- Prenderà ID 10
+('marco_v', 'marco99', FALSE, FALSE),     -- Prenderà ID 11
+('sofia_l', 'sofia_pass', FALSE, TRUE),   -- Prenderà ID 12
+('roberto', 'rob123', FALSE, FALSE);      -- Prenderà ID 13
+
+-- 2. NUOVI LUOGHI (Chiave primaria: Coordinate CHAR(14))
+INSERT INTO galleria.LUOGO (Coordinate, Toponimo) VALUES
+('+45.46,+009.19', 'Duomo di Milano'),
+('+45.48,+009.20', 'Bosco Verticale'),
+('+43.31,+011.33', 'Piazza del Campo'),
+('+48.85,+002.29', 'Torre Eiffel');
+
+-- 3. NUOVE GALLERIE
+-- Il serial partirà dall'ID 12 (visto che il max attuale è 11)
+INSERT INTO galleria.GALLERIA (NomeGalleria, Condivisa, Proprietario) VALUES
+('Privata Elena', FALSE, 10),      -- Prenderà ID 12
+('Privata Marco', FALSE, 11),      -- Prenderà ID 13
+('Privata Sofia', FALSE, 12),      -- Prenderà ID 14
+('Privata Roberto', FALSE, 13),    -- Prenderà ID 15
+('Weekend a Milano', TRUE, 10);    -- Prenderà ID 16 (Elena è proprietaria)
+
+-- 4. NUOVE FOTOGRAFIE
+-- Il serial partirà dall'ID 8 (visto che il max attuale è 7)
+INSERT INTO galleria.FOTOGRAFIA (Dispositivo, Autore, Coordinate, Visibilita, DataScatto) VALUES
+('iPhone 14', 10, '+45.46,+009.19', TRUE, '2024-05-10'), -- Prenderà ID 8 (Elena al Duomo)
+('Sony Alpha', 11, '+45.48,+009.20', TRUE, '2024-05-11'), -- Prenderà ID 9 (Marco al Bosco)
+('Google Pixel', 12, '+43.31,+011.33', TRUE, '2024-06-01'),-- Prenderà ID 10 (Sofia a Siena)
+('iPhone 14', 10, '+48.85,+002.29', TRUE, '2024-07-15'), -- Prenderà ID 11 (Elena a Parigi)
+('Samsung S22', 13, '+45.46,+009.19', TRUE, '2024-05-10'); -- Prenderà ID 12 (Roberto al Duomo)
+
+-- 5. NUOVI VIDEO
+-- Il serial partirà dall'ID 5 (visto che il max attuale è 4)
+INSERT INTO galleria.VIDEO (TitoloVideo, Descrizione, Galleria) VALUES
+('Milano Moderna', 'Architettura milanese vista da Marco', 13), -- Prenderà ID 5 (Galleria 13 = Privata Marco)
+('Tour Toscano', 'I colori di Siena', 14),                       -- Prenderà ID 6 (Galleria 14 = Privata Sofia)
+('Elena a Parigi', 'Breve clip sotto la torre', 12);            -- Prenderà ID 7 (Galleria 12 = Privata Elena)
+
+-- 6. PARTECIPA (Partecipanti alla galleria condivisa "Weekend a Milano" di Elena)
+-- La galleria condivisa è la numero 16. Partecipano Marco (11) e Roberto (13)
+INSERT INTO galleria.PARTECIPA (IDGalleria, IDUtente) VALUES
+(16, 11),
+(16, 13);
+
+-- 7. CONTIENE (Associazione Foto -> Galleria)
+INSERT INTO galleria.CONTIENE (IDGalleria, IDFoto) VALUES
+(12, 8),  (16, 8),  -- Foto 8 nella Privata di Elena (12) e nella Condivisa Milano (16)
+(13, 9),  (16, 9),  -- Foto 9 nella Privata di Marco (13) e nella Condivisa Milano (16)
+(14, 10),           -- Foto 10 solo nella Privata di Sofia (14)
+(12, 11),           -- Foto 11 solo nella Privata di Elena (12)
+(15, 12), (16, 12); -- Foto 12 nella Privata di Roberto (15) e nella Condivisa Milano (16)
+
+-- 8. COMPONE (Foto -> Video)
+INSERT INTO galleria.COMPONE (IDVideo, IDFoto) VALUES
+(5, 9),  -- Video "Milano Moderna" (5) contiene la foto del Bosco Verticale (9)
+(6, 10), -- Video "Tour Toscano" (6) contiene la foto di Siena (10)
+(7, 11); -- Video "Elena a Parigi" (7) contiene la foto della Torre Eiffel (11)
+
+-- 9. SOGGETTI (Categorizzati come Utenti o Paesaggi/Architettura)
+-- Nota: Elena e Sofia erano "IsSoggetto = TRUE" al momento dell'inserimento
+INSERT INTO galleria.SOGGETTO (NomeSoggetto, Categoria, IDUtente) VALUES
+('elena_r', 'Utente', 10),
+('sofia_l', 'Utente', 12),
+('Guglia Duomo', 'Architettura', NULL),
+('Skyline Milano', 'Paesaggio', NULL);
+
+-- 10. MOSTRA (Soggetto -> Foto)
+INSERT INTO galleria.MOSTRA (NomeSoggetto, IDFoto) VALUES
+('elena_r', 8),        -- Elena compare nella sua foto al Duomo (8)
+('Guglia Duomo', 8),   -- La stessa foto mostra la Guglia
+('Skyline Milano', 9), -- La foto di Marco (9) mostra lo skyline
+('sofia_l', 10),       -- Sofia compare nella foto a Siena (10)
+('elena_r', 11);       -- Elena compare nella foto a Parigi (11)
+
 COMMIT;
